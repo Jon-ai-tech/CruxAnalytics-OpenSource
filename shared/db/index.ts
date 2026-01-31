@@ -23,9 +23,16 @@ export async function getDb() {
  * Direct export for synchronous access (use with caution)
  * Primarily for use in tRPC routers where DB is guaranteed to be initialized
  */
-export const db = drizzle(process.env.DATABASE_URL || 'mysql://localhost:3306/cruxanalytics', { 
-  schema, 
-  mode: 'default' 
-});
+const getDatabaseUrl = () => {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is not set');
+  }
+  return process.env.DATABASE_URL;
+};
+
+export const db = process.env.DATABASE_URL 
+  ? drizzle(getDatabaseUrl(), { schema, mode: 'default' })
+  : null as any; // Will throw runtime error if accessed without DATABASE_URL
 
 export * from './schema';
+

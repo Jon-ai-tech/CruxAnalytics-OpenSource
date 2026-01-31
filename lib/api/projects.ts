@@ -6,29 +6,37 @@ import { eventEmitter, Events } from '@/lib/event-emitter';
 import { getApiBaseUrl } from '@/constants/oauth';
 import * as Auth from '@/lib/_core/auth';
 
-// Create vanilla tRPC client for use outside React components
-const vanillaClient = createTRPCClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: `${getApiBaseUrl()}/api/trpc`,
-      transformer: superjson,
-      async headers() {
-        const token = await Auth.getSessionToken();
-        return token ? { Authorization: `Bearer ${token}` } : {};
-      },
-      fetch(url, options) {
-        return fetch(url, {
-          ...options,
-          credentials: 'include',
-        });
-      },
-    }),
-  ],
-});
+// Lazy initialization of vanilla tRPC client
+let _vanillaClient: ReturnType<typeof createTRPCClient<AppRouter>> | null = null;
+
+function getVanillaClient() {
+  if (!_vanillaClient) {
+    _vanillaClient = createTRPCClient<AppRouter>({
+      links: [
+        httpBatchLink({
+          url: `${getApiBaseUrl()}/api/trpc`,
+          transformer: superjson,
+          async headers() {
+            const token = await Auth.getSessionToken();
+            return token ? { Authorization: `Bearer ${token}` } : {};
+          },
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: 'include',
+            });
+          },
+        }),
+      ],
+    });
+  }
+  return _vanillaClient;
+}
 
 export async function getAllProjects(): Promise<ProjectData[]> {
   try {
-    const projects = await vanillaClient.projects.list.query();
+    const client = getVanillaClient();
+    const projects = await client.projects.list.query();
     return projects.map(mapDbProjectToProjectData);
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -38,7 +46,8 @@ export async function getAllProjects(): Promise<ProjectData[]> {
 
 export async function getProject(id: string): Promise<ProjectData | null> {
   try {
-    const project = await vanillaClient.projects.get.query({ id });
+    const client = getVanillaClient();
+    const project = await client.projects.get.query({ id });
     return mapDbProjectToProjectData(project);
   } catch (error) {
     console.error('Error fetching project:', error);
@@ -48,16 +57,17 @@ export async function getProject(id: string): Promise<ProjectData | null> {
 
 export async function saveProject(project: ProjectData): Promise<void> {
   try {
+    const client = getVanillaClient();
     if (project.id && !project.id.startsWith('project-') && isValidUUID(project.id)) {
       // Update existing
-      await vanillaClient.projects.update.mutate({
+      await client.projects.update.mutate({
         id: project.id,
         data: mapProjectDataToDbProject(project),
       });
       eventEmitter.emit(Events.PROJECT_UPDATED, project);
     } else {
       // Create new
-      const { id } = await vanillaClient.projects.create.mutate(mapProjectDataToDbProject(project));
+      const { id } = await client.projects.create.mutate(mapProjectDataToDbProject(project));
       eventEmitter.emit(Events.PROJECT_CREATED, { ...project, id });
     }
   } catch (error) {
@@ -71,7 +81,8 @@ export async function updateProject(
   updates: Partial<Omit<ProjectData, 'id' | 'createdAt'>>
 ): Promise<ProjectData | null> {
   try {
-    await vanillaClient.projects.update.mutate({
+    const client = getVanillaClient();
+    await client.projects.update.mutate({
       id,
       data: mapProjectDataToDbProject(updates as ProjectData),
     });
@@ -90,7 +101,8 @@ export async function updateProject(
 
 export async function deleteProject(id: string): Promise<void> {
   try {
-    await vanillaClient.projects.delete.mutate({ id });
+    const client = getVanillaClient();
+    await client.projects.delete.mutate({ id });
     eventEmitter.emit(Events.PROJECT_DELETED, id);
   } catch (error) {
     console.error('Error deleting project:', error);
@@ -100,7 +112,8 @@ export async function deleteProject(id: string): Promise<void> {
 
 export async function duplicateProject(id: string): Promise<ProjectData | null> {
   try {
-    const { id: newId } = await vanillaClient.projects.duplicate.mutate({ id });
+    const client = getVanillaClient();
+    const { id: newId } = await client.projects.duplicate.mutate({ id });
     eventEmitter.emit(Events.PROJECT_DUPLICATED, newId);
     
     // Fetch the duplicated project
@@ -113,7 +126,8 @@ export async function duplicateProject(id: string): Promise<ProjectData | null> 
 
 export async function getAllScenarios(projectId: string): Promise<ScenarioSnapshot[]> {
   try {
-    const scenarios = await vanillaClient.projects.scenarios.list.query({ projectId });
+    const client = getVanillaClient();
+    const scenarios = await client.projects.scenarios.list.query({ projectId });
     return scenarios.map(mapDbScenarioToSnapshot);
   } catch (error) {
     console.error('Error fetching scenarios:', error);
@@ -126,7 +140,8 @@ export async function saveScenarioSnapshot(
   snapshot: Omit<ScenarioSnapshot, 'id' | 'createdAt'>
 ): Promise<void> {
   try {
-    await vanillaClient.projects.scenarios.create.mutate({
+    const client = getVanillaClient();
+    await client.projects.scenarios.create.mutate({
       projectId,
       name: snapshot.name,
       salesAdjustment: snapshot.salesAdjustment,
@@ -147,7 +162,8 @@ export async function deleteScenario(
   scenarioId: string
 ): Promise<void> {
   try {
-    await vanillaClient.projects.scenarios.delete.mutate({ id: scenarioId });
+    const client = getVanillaClient();
+    await client.projects.scenarios.delete.mutate({ id: scenarioId });
     eventEmitter.emit(Events.SNAPSHOT_DELETED, scenarioId);
   } catch (error) {
     console.error('Error deleting scenario:', error);
