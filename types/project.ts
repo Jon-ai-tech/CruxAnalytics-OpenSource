@@ -26,6 +26,12 @@ export interface ProjectData {
   
   // Scenarios
   scenarios?: ScenarioSnapshot[];
+  
+  // New fields for modular architecture
+  businessModel?: 'standard' | 'saas' | 'ecommerce' | 'manufacturing';
+  vanguardInput?: VanguardInput;
+  saasInput?: SaaSInput;
+  riskInput?: RiskInput;
 }
 
 export interface ProjectResults {
@@ -113,4 +119,106 @@ export interface CashFlowData {
   month: number;
   netCashFlow: number;
   cumulativeCashFlow: number;
+}
+
+/**
+ * Vanguard Crux Proprietary Metrics Input
+ */
+export interface VanguardInput {
+  // OFI inputs
+  manualProcessHoursPerWeek: number;
+  averageHourlyCost: number;
+  automationPotential: number; // 0-100%
+  
+  // TFDI inputs
+  maintenanceHoursPerSprint: number;
+  totalDevHoursPerSprint: number;
+  devTeamAnnualCost: number;
+  incidentCostPerMonth: number;
+  
+  // SER inputs
+  currentRevenue: number;
+  previousRevenue: number;
+  currentBurnRate: number;
+  previousBurnRate: number;
+}
+
+/**
+ * SaaS-specific metrics input
+ */
+export interface SaaSInput {
+  averageRevenuePerUser: number;
+  churnRate: number; // monthly %
+  cacCost: number;
+  grossMargin: number; // %
+  startingMRR: number;
+  expansionMRR: number;
+  churnedMRR: number;
+  contractedMRR: number;
+  revenueGrowthRate: number; // %
+  profitMargin: number; // %
+}
+
+/**
+ * Risk metrics input
+ */
+export interface RiskInput {
+  currentCash: number;
+  monthlyBurnRate: number;
+  plannedFundraising?: number;
+  monthlyChurnRate: number;
+  currentMRR: number;
+  averageContractValue: number;
+}
+
+/**
+ * XAI Context for Explainable AI
+ */
+export interface MetricContext {
+  category: 'financial' | 'operational' | 'strategic' | 'risk';
+  formula: string;
+  assumptions: string[];
+  constraints: string[];
+  interpretation: 'positive' | 'negative' | 'neutral';
+  benchmarks?: {
+    industry: number;
+    optimal: number;
+    acceptable: number;
+  };
+  recommendations?: string[];
+}
+
+/**
+ * Enhanced metric with XAI support
+ */
+export interface EnrichedMetric {
+  name: string;
+  value: number;
+  context: MetricContext;
+  timestamp: string;
+}
+
+/**
+ * Complete results with all metric categories
+ */
+export interface EnrichedProjectResults {
+  standard: EnrichedMetric[];      // ROI, NPV, IRR, Payback
+  vanguard: EnrichedMetric[];      // OFI, TFDI, SER
+  saas: EnrichedMetric[];          // LTV/CAC, NRR, Rule of 40
+  risk: EnrichedMetric[];          // Runway, Churn Impact
+  xaiReady: boolean;               // Flag for LLM processing
+  auditLog: AuditEntry[];          // Technical traceability
+  generatedAt: string;
+}
+
+/**
+ * Audit log entry
+ */
+export interface AuditEntry {
+  timestamp: string;
+  action: string;
+  metricsCalculated: string[];
+  engine: string;
+  userId?: string;
+  errorDetails?: any;
 }
