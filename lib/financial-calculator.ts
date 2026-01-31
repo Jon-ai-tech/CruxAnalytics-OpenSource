@@ -1,74 +1,50 @@
 import type { FinancialCalculationInput, FinancialCalculationResult } from '@/types/project';
+import { StandardMetricsCalculator } from '@/lib/infrastructure/calculators/StandardMetricsCalculator';
 
 /**
  * Calculate financial metrics for a business case
+ * 
+ * @deprecated Use CalculationService.calculateStandard() or CalculateFinancialMetrics use case instead.
+ * This function is kept for backward compatibility. 
+ * The new modular architecture provides better separation of concerns, XAI context, 
+ * and supports additional metric categories (Vanguard, SaaS, Risk).
+ * 
+ * Migration example:
+ * ```typescript
+ * // Old way (still works):
+ * const results = calculateFinancialMetrics(input);
+ * 
+ * // New way (recommended):
+ * import { CalculationService } from '@/lib/application/services/CalculationService';
+ * const service = new CalculationService();
+ * const results = await service.calculateStandard(input);
+ * 
+ * // Or use the full use case with XAI enrichment:
+ * import { CalculateFinancialMetrics } from '@/lib/application/use-cases/CalculateFinancialMetrics';
+ * const useCase = new CalculateFinancialMetrics();
+ * const enrichedResults = await useCase.execute(projectData);
+ * ```
+ * 
+ * @see CalculationService
+ * @see CalculateFinancialMetrics
  */
 export function calculateFinancialMetrics(
   input: FinancialCalculationInput
 ): FinancialCalculationResult {
-  const {
-    initialInvestment,
-    discountRate,
-    projectDuration,
-    yearlyRevenue,
-    revenueGrowth,
-    operatingCosts,
-    maintenanceCosts,
-    multiplier = 1.0,
-  } = input;
-
-  // Calculate monthly cash flows
-  const monthlyCashFlow: number[] = [];
-  const cumulativeCashFlow: number[] = [];
-  
-  let cumulative = -initialInvestment;
-  
-  for (let month = 0; month < projectDuration; month++) {
-    const year = Math.floor(month / 12);
-    const growthFactor = Math.pow(1 + revenueGrowth / 100, year);
-    
-    const monthlyRevenue = (yearlyRevenue * growthFactor * multiplier) / 12;
-    const monthlyCosts = (operatingCosts + maintenanceCosts) / 12;
-    
-    const netCashFlow = monthlyRevenue - monthlyCosts;
-    monthlyCashFlow.push(netCashFlow);
-    
-    cumulative += netCashFlow;
-    cumulativeCashFlow.push(cumulative);
-  }
-
-  // Calculate ROI
-  const totalRevenue = monthlyCashFlow.reduce((sum, cf) => sum + cf, 0);
-  const roi = ((totalRevenue - initialInvestment) / initialInvestment) * 100;
-
-  // Calculate NPV
-  const npv = calculateNPV(
-    initialInvestment,
-    monthlyCashFlow,
-    discountRate / 100
-  );
-
-  // Calculate Payback Period
-  const paybackPeriod = calculatePaybackPeriod(
-    initialInvestment,
-    monthlyCashFlow
-  );
-
-  // Calculate IRR using Newton-Raphson method
-  const irr = calculateIRR(initialInvestment, monthlyCashFlow);
-
-  return {
-    roi,
-    npv,
-    paybackPeriod,
-    irr,
-    monthlyCashFlow,
-    cumulativeCashFlow,
-  };
+  // Use new modular calculator for actual calculation
+  const calculator = new StandardMetricsCalculator();
+  return calculator.calculate(input);
+  // Use new modular calculator for actual calculation
+  const calculator = new StandardMetricsCalculator();
+  return calculator.calculate(input);
 }
+
+// Note: The internal calculation functions below are kept for reference but are no longer used.
+// They have been moved to StandardMetricsCalculator for better modularity.
 
 /**
  * Calculate Net Present Value (NPV)
+ * @deprecated Internal function - use StandardMetricsCalculator instead
  */
 function calculateNPV(
   initialInvestment: number,
@@ -163,6 +139,9 @@ function calculateIRR(
 
 /**
  * Calculate metrics for all three scenarios (expected, best, worst)
+ * 
+ * @deprecated Use CalculationService with scenario multipliers instead.
+ * Kept for backward compatibility.
  */
 export function calculateAllScenarios(input: FinancialCalculationInput) {
   const expected = calculateFinancialMetrics({ ...input, multiplier: 1.0 });
@@ -184,6 +163,9 @@ export function calculateAllScenarios(input: FinancialCalculationInput) {
 
 /**
  * Calculate scenario with adjustments (for comparison feature)
+ * 
+ * @deprecated Use CalculationService with adjusted inputs instead.
+ * Kept for backward compatibility.
  */
 export function calculateScenarioWithAdjustments(
   baseInput: FinancialCalculationInput,
