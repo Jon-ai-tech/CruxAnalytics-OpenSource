@@ -2,9 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth theme transitions */
+/* CSS Variables for theme colors */
 :root {
+  /* Light theme colors (default) */
+  --color-primary: #2563EB;
+  --color-background: #FFFFFF;
+  --color-surface: #F8F9FA;
+  --color-foreground: #1A1A1A;
+  --color-muted: #687076;
+  --color-border: #E5E7EB;
+  --color-success: #059669;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-tint: #2563EB;
+  
+  /* Smooth theme transitions */
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme colors */
+:root[data-theme="dark"] {
+  --color-primary: #3B82F6;
+  --color-background: #0A0A0A;
+  --color-surface: #1F1F1F;
+  --color-foreground: #FFFFFF;
+  --color-muted: #9BA1A6;
+  --color-border: #334155;
+  --color-success: #10B981;
+  --color-warning: #FBBF24;
+  --color-error: #F87171;
+  --color-tint: #3B82F6;
 }
 
 * {
