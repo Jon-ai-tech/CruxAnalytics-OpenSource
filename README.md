@@ -102,9 +102,54 @@ OPENAI_MODEL=gpt-4o-mini
 
 # Mock payments for development
 EXPO_PUBLIC_USE_MOCK_PAYMENTS=true
+
+# Mock authentication for development
+NODE_ENV=development
+USE_MOCK_AUTH=true
 ```
 
 > **Note:** Tests automatically skip OpenAI integration tests if `OPENAI_API_KEY` is not set.
+
+---
+
+## Authentication Modes
+
+### Development Mode (Mock Authentication)
+
+For local development without OAuth setup:
+
+1. Set in `.env`:
+   ```env
+   NODE_ENV=development
+   USE_MOCK_AUTH=true
+   ```
+
+2. Restart the server:
+   ```bash
+   pnpm dev
+   ```
+
+3. A mock user will be automatically authenticated with:
+   - Email: `dev@example.com`
+   - Role: `admin`
+   - Subscription: `premium`
+   - Full access to all features
+
+### Production Mode (OAuth Authentication)
+
+For production or when testing real authentication:
+
+1. Set in `.env`:
+   ```env
+   NODE_ENV=production
+   USE_MOCK_AUTH=false
+   OAUTH_SERVER_URL=https://your-app.up.railway.app
+   ```
+
+2. Configure OAuth provider credentials
+3. Users must login through OAuth flow
+
+> ⚠️ **Security Warning:** Mock authentication should NEVER be enabled in production. A warning message will appear in the console if misconfigured.
 
 ---
 

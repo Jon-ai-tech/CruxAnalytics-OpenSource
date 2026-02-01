@@ -27,6 +27,12 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  // Production safety warning for mock authentication
+  if (process.env.NODE_ENV === 'production' && process.env.USE_MOCK_AUTH === 'true') {
+    console.error('⚠️  WARNING: USE_MOCK_AUTH is enabled in production! This is a security risk.');
+    console.error('⚠️  Please set USE_MOCK_AUTH=false or remove it from environment variables.');
+  }
+
   const app = express();
   const server = createServer(app);
 
