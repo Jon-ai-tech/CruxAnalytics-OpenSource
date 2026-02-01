@@ -34,9 +34,6 @@ export function calculateFinancialMetrics(
   // Use new modular calculator for actual calculation
   const calculator = new StandardMetricsCalculator();
   return calculator.calculate(input);
-  // Use new modular calculator for actual calculation
-  const calculator = new StandardMetricsCalculator();
-  return calculator.calculate(input);
 }
 
 // Note: The internal calculation functions below are kept for reference but are no longer used.

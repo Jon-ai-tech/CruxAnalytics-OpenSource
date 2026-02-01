@@ -20,10 +20,17 @@ export default defineConfig({
         '**/*.config.ts',
       ],
     },
+    // Add proper module resolution for superjson and tRPC
+    deps: {
+      inline: ['superjson', '@trpc/client', '@trpc/server']
+    },
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
+      '@shared': path.resolve(__dirname, './shared'),
     },
+    // Ensure proper extension resolution
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
   },
 });
