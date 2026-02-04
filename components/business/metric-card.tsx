@@ -36,18 +36,18 @@ export function MetricCard({
   };
 
   const content = (
-    <View className={cn('bg-surface rounded-2xl p-4 border border-border', className)}>
+    <View className={cn('bg-surface/80 glass dark:glass-dark rounded-2xl p-4 border border-border', className)}>
       <View className="flex-row items-center justify-between mb-2">
-        <Text className="text-sm text-muted">{title}</Text>
+        <Text className="text-sm text-muted font-body-medium">{title}</Text>
         {icon && <View>{icon}</View>}
       </View>
       
-      <Text className={cn('text-2xl font-bold', statusColors[status])}>
+      <Text className={cn('text-2xl font-bold font-heading', statusColors[status])}>
         {value}
       </Text>
       
       {subtitle && (
-        <Text className="text-xs text-muted mt-1">{subtitle}</Text>
+        <Text className="text-xs text-muted mt-1 font-body">{subtitle}</Text>
       )}
     </View>
   );

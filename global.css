@@ -4,17 +4,24 @@
 
 /* CSS Variables for theme colors */
 :root {
-  /* Light theme colors (default) */
-  --color-primary: #2563EB;
+  /* Light theme colors (default) - Vanguard Palette */
+  --color-primary: #00C0D4; /* Teal Vanguard */
   --color-background: #FFFFFF;
   --color-surface: #F8F9FA;
   --color-foreground: #1A1A1A;
   --color-muted: #687076;
   --color-border: #E5E7EB;
-  --color-success: #059669;
-  --color-warning: #F59E0B;
+  --color-success: #A7F3D0; /* Menta Vanguard */
+  --color-warning: #FDBA74; /* Coral Vanguard */
   --color-error: #EF4444;
-  --color-tint: #2563EB;
+  --color-tint: #00C0D4;
+  
+  /* Vanguard accent colors */
+  --color-accent-mint: #A7F3D0;
+  --color-accent-coral: #FDBA74;
+  --color-accent-teal: #00C0D4;
+  --color-gradient-start: #00C0D4;
+  --color-gradient-end: #A7F3D0;
   
   /* Smooth theme transitions */
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -22,18 +29,26 @@
 
 /* Dark theme colors */
 :root[data-theme="dark"] {
-  --color-primary: #3B82F6;
+  --color-primary: #00C0D4;
   --color-background: #0A0A0A;
   --color-surface: #1F1F1F;
   --color-foreground: #FFFFFF;
   --color-muted: #9BA1A6;
   --color-border: #334155;
-  --color-success: #10B981;
-  --color-warning: #FBBF24;
+  --color-success: #A7F3D0;
+  --color-warning: #FDBA74;
   --color-error: #F87171;
-  --color-tint: #3B82F6;
+  --color-tint: #00C0D4;
 }
 
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Vanguard gradient text utility */
+.text-gradient-vanguard {
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

@@ -11,6 +11,8 @@ import "@/lib/_core/nativewind-pressable";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { I18nProvider } from "@/lib/i18n-context";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
+import * as Font from 'expo-font';
+import { getAvailableFonts } from '@/assets/fonts/fonts';
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
@@ -35,10 +37,28 @@ export default function RootLayout() {
 
   const [insets, setInsets] = useState<EdgeInsets>(initialInsets);
   const [frame, setFrame] = useState<Rect>(initialFrame);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
   // Initialize Manus runtime for cookie injection from parent container
   useEffect(() => {
     initManusRuntime();
+  }, []);
+
+  // Load custom fonts
+  useEffect(() => {
+    async function loadFonts() {
+      try {
+        const fonts = getAvailableFonts();
+        if (Object.keys(fonts).length > 0) {
+          await Font.loadAsync(fonts);
+        }
+        setFontsLoaded(true);
+      } catch (error) {
+        console.warn('Error loading fonts, using system fonts as fallback:', error);
+        setFontsLoaded(true);
+      }
+    }
+    loadFonts();
   }, []);
 
   // Handle notification taps for deep linking

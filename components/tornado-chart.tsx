@@ -41,11 +41,11 @@ export function TornadoChart({ project }: TornadoChartProps) {
   ];
 
   return (
-    <View className="bg-surface rounded-xl border border-border p-4">
-      <Text className="text-lg font-bold text-foreground mb-2">
+    <View className="bg-surface/80 glass dark:glass-dark rounded-xl border border-border p-4">
+      <Text className="text-lg font-bold text-foreground mb-2 font-heading-medium">
         {t('sensitivity.tornado_title')}
       </Text>
-      <Text className="text-xs text-muted mb-4">
+      <Text className="text-xs text-muted mb-4 font-body">
         {t('sensitivity.tornado_description')}
       </Text>
 
