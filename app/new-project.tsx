@@ -14,6 +14,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { ScreenContainer } from '@/components/screen-container';
 import { TemplateSelector } from '@/components/template-selector';
+import { MultiStepForm, type WizardStep } from '@/components/wizard/multi-step-form';
+import { WizardInput, type QuickSuggestion } from '@/components/wizard/wizard-input';
 import { useTranslation } from '@/lib/i18n-context';
 import { saveProject, saveDraft, loadDraft, clearDraft, hasDraft } from '@/lib/project-storage';
 import { calculateFinancialMetrics } from '@/lib/financial-calculator';
@@ -41,8 +43,12 @@ export default function NewProjectScreen() {
   const [maintenanceCosts, setMaintenanceCosts] = useState('');
   const [loading, setLoading] = useState(false);
   const [showTemplateSelector, setShowTemplateSelector] = useState(true);
+  const [useWizard] = useState(true);
   const [reminderFrequency, setReminderFrequency] = useState<ReminderFrequency>('monthly');
   const [notificationsAvailable, setNotificationsAvailable] = useState(false);
+
+  // Validation errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Check if notifications are available
   useEffect(() => {
@@ -102,6 +108,215 @@ export default function NewProjectScreen() {
     };
     loadDraftData();
   }, [t]);
+
+  // Wizard validation functions
+  const validateStep1 = () => {
+    if (!name.trim()) {
+      setErrors({ name: t('validations.project_name_required') });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep2 = () => {
+    const investment = parseFloat(initialInvestment);
+    if (isNaN(investment) || investment <= 0) {
+      setErrors({ investment: t('validations.invalid_investment') });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep3 = () => {
+    const revenue = parseFloat(yearlyRevenue);
+    if (isNaN(revenue) || revenue <= 0) {
+      setErrors({ revenue: t('validations.invalid_revenue') });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep4 = () => {
+    const costs = parseFloat(operatingCosts);
+    if (isNaN(costs) || costs < 0) {
+      setErrors({ costs: t('validations.invalid_costs') || 'Please enter a valid value' });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep5 = () => {
+    const duration = parseInt(projectDuration);
+    if (isNaN(duration) || duration <= 0) {
+      setErrors({ duration: t('validations.invalid_duration') || 'Please enter a valid duration' });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep6 = () => {
+    const growth = parseFloat(revenueGrowth);
+    if (isNaN(growth)) {
+      setErrors({ growth: t('validations.invalid_growth') || 'Please enter a valid value' });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  // Quick suggestion values
+  const investmentSuggestions: QuickSuggestion[] = [
+    { label: '$50,000', value: '50000' },
+    { label: '$100,000', value: '100000' },
+    { label: '$250,000', value: '250000' },
+    { label: '$500,000', value: '500000' },
+  ];
+
+  const revenueSuggestions: QuickSuggestion[] = [
+    { label: '$20,000', value: '20000' },
+    { label: '$50,000', value: '50000' },
+    { label: '$100,000', value: '100000' },
+  ];
+
+  const costsSuggestions: QuickSuggestion[] = [
+    { label: '$10,000', value: '10000' },
+    { label: '$20,000', value: '20000' },
+    { label: '$50,000', value: '50000' },
+  ];
+
+  const durationSuggestions: QuickSuggestion[] = [
+    { label: '12 meses', value: '12' },
+    { label: '24 meses', value: '24' },
+    { label: '36 meses', value: '36' },
+  ];
+
+  const growthSuggestions: QuickSuggestion[] = [
+    { label: '0%', value: '0' },
+    { label: '3%', value: '3' },
+    { label: '5%', value: '5' },
+    { label: '10%', value: '10' },
+  ];
+
+  // Wizard steps
+  const wizardSteps: WizardStep[] = [
+    {
+      id: 'name',
+      title: t('wizard.step1.question'),
+      subtitle: t('wizard.step1.subtitle'),
+      validation: validateStep1,
+      component: (
+        <WizardInput
+          question={t('wizard.step1.question')}
+          helper={t('wizard.step1.helper')}
+          helpText={t('wizard.step1.help')}
+          value={name}
+          onChangeText={setName}
+          placeholder={t('wizard.step1.placeholder')}
+          error={errors.name}
+        />
+      ),
+    },
+    {
+      id: 'investment',
+      title: t('wizard.step2.question'),
+      subtitle: t('wizard.step2.subtitle'),
+      validation: validateStep2,
+      component: (
+        <WizardInput
+          question={t('wizard.step2.question')}
+          helper={t('wizard.step2.helper')}
+          helpText={t('wizard.step2.help')}
+          value={initialInvestment}
+          onChangeText={setInitialInvestment}
+          placeholder={t('wizard.step2.placeholder')}
+          keyboardType="numeric"
+          suggestions={investmentSuggestions}
+          error={errors.investment}
+        />
+      ),
+    },
+    {
+      id: 'revenue',
+      title: t('wizard.step3.question'),
+      subtitle: t('wizard.step3.subtitle'),
+      validation: validateStep3,
+      component: (
+        <WizardInput
+          question={t('wizard.step3.question')}
+          helper={t('wizard.step3.helper')}
+          helpText={t('wizard.step3.help')}
+          value={yearlyRevenue}
+          onChangeText={setYearlyRevenue}
+          placeholder={t('wizard.step3.placeholder')}
+          keyboardType="numeric"
+          suggestions={revenueSuggestions}
+          error={errors.revenue}
+        />
+      ),
+    },
+    {
+      id: 'costs',
+      title: t('wizard.step4.question'),
+      subtitle: t('wizard.step4.subtitle'),
+      validation: validateStep4,
+      component: (
+        <WizardInput
+          question={t('wizard.step4.question')}
+          helper={t('wizard.step4.helper')}
+          helpText={t('wizard.step4.help')}
+          value={operatingCosts}
+          onChangeText={setOperatingCosts}
+          placeholder={t('wizard.step4.placeholder')}
+          keyboardType="numeric"
+          suggestions={costsSuggestions}
+          error={errors.costs}
+        />
+      ),
+    },
+    {
+      id: 'duration',
+      title: t('wizard.step5.question'),
+      subtitle: t('wizard.step5.subtitle'),
+      validation: validateStep5,
+      component: (
+        <WizardInput
+          question={t('wizard.step5.question')}
+          helper={t('wizard.step5.helper')}
+          helpText={t('wizard.step5.help')}
+          value={projectDuration}
+          onChangeText={setProjectDuration}
+          placeholder={t('wizard.step5.placeholder')}
+          keyboardType="numeric"
+          suggestions={durationSuggestions}
+          error={errors.duration}
+        />
+      ),
+    },
+    {
+      id: 'growth',
+      title: t('wizard.step6.question'),
+      subtitle: t('wizard.step6.subtitle'),
+      validation: validateStep6,
+      component: (
+        <WizardInput
+          question={t('wizard.step6.question')}
+          helper={t('wizard.step6.helper')}
+          helpText={t('wizard.step6.help')}
+          value={revenueGrowth}
+          onChangeText={setRevenueGrowth}
+          placeholder={t('wizard.step6.placeholder')}
+          keyboardType="numeric"
+          suggestions={growthSuggestions}
+          error={errors.growth}
+        />
+      ),
+    },
+  ];
 
   const handleSelectTemplate = (template: ProjectTemplate) => {
     if (Platform.OS !== 'web') {
@@ -247,7 +462,22 @@ export default function NewProjectScreen() {
 
   return (
     <ScreenContainer>
-      <ScrollView
+      {showTemplateSelector ? (
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+        >
+          <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+        </ScrollView>
+      ) : useWizard ? (
+        <MultiStepForm
+          steps={wizardSteps}
+          onComplete={handleSave}
+          onCancel={() => router.back()}
+          showProgress={true}
+        />
+      ) : (
+        <ScrollView
         className="flex-1"
         contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
       >
@@ -460,6 +690,7 @@ export default function NewProjectScreen() {
           </>
         )}
       </ScrollView>
+      )}
     </ScreenContainer>
   );
 }

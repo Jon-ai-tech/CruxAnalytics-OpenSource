@@ -120,12 +120,70 @@
     "maintenance_costs": "Maintenance Costs",
     "discount_rate": "Discount Rate"
   },
+  "wizard": {
+    "step1": {
+      "subtitle": "Step 1 of 6",
+      "question": "What's your project name?",
+      "helper": "Give your business or project a descriptive name",
+      "placeholder": "e.g., Downtown Cafe, Online Store",
+      "help": "Tip: Use a name that clearly describes your business"
+    },
+    "step2": {
+      "subtitle": "Step 2 of 6",
+      "question": "How much money do you need to invest?",
+      "helper": "Include equipment, inventory, permits, etc.",
+      "placeholder": "100000",
+      "help": "Tip: Add up everything you need to buy before opening"
+    },
+    "step3": {
+      "subtitle": "Step 3 of 6",
+      "question": "How much do you expect to sell per month?",
+      "helper": "A realistic estimate of your monthly sales",
+      "placeholder": "50000",
+      "help": "Tip: Research similar businesses in your area to estimate"
+    },
+    "step4": {
+      "subtitle": "Step 4 of 6",
+      "question": "How much do you spend per month?",
+      "helper": "Rent, salaries, utilities, raw materials",
+      "placeholder": "20000",
+      "help": "Tip: Don't forget to include both fixed and variable expenses"
+    },
+    "step5": {
+      "subtitle": "Step 5 of 6",
+      "question": "For how long should we analyze the project?",
+      "helper": "In months (typically 12 to 36 months)",
+      "placeholder": "24",
+      "help": "Tip: 24 months (2 years) is a common period for SMEs"
+    },
+    "step6": {
+      "subtitle": "Step 6 of 6",
+      "question": "Do you expect to grow over time?",
+      "helper": "Estimated monthly growth percentage",
+      "placeholder": "5",
+      "help": "Tip: 5% monthly is realistic for new businesses"
+    }
+  },
   "metrics": {
+    "roi": {
+      "label": "Profitability",
+      "description": "How much you earn for every dollar invested"
+    },
+    "npv": {
+      "label": "Project Value",
+      "description": "Total profit considering the time value of money"
+    },
+    "irr": {
+      "label": "Annual Return",
+      "description": "Annualized rate of return on your investment"
+    },
+    "payback": {
+      "label": "Payback",
+      "description": "When you recover your initial investment"
+    },
     "roi_description": "Return on investment",
     "npv_description": "Net present value",
-    "irr": "IRR",
     "irr_description": "Internal rate of return",
-    "payback": "Payback",
     "payback_description": "Payback period"
   },
   "results": {
@@ -523,6 +581,9 @@
     "invalid_investment": "Initial investment must be a positive number",
     "invalid_revenue": "Yearly revenue must be a positive number",
     "save_error": "Error saving project",
+    "invalid_costs": "Invalid costs. Must be a positive number.",
+    "invalid_duration": "Invalid duration. Must be a positive number.",
+    "invalid_growth": "Invalid growth. Must be a valid number.",
     "project_not_found": "Project not found",
     "export_error": "Error exporting PDF",
     "duplicate_error": "Error duplicating project",

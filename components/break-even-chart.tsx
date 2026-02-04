@@ -67,8 +67,8 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
     : -1;
 
   return (
-    <View className="bg-surface rounded-xl border border-border p-4">
-      <Text className="text-lg font-bold text-foreground mb-4">
+    <View className="bg-surface/80 glass dark:glass-dark rounded-xl border border-border p-4">
+      <Text className="text-lg font-bold text-foreground mb-4 font-heading-medium">
         {t('break_even.chart_title')}
       </Text>
 
@@ -214,17 +214,17 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
       <View className="flex-row justify-center gap-6 mt-4">
         <View className="flex-row items-center gap-2">
           <View className="w-6 h-1 bg-success" />
-          <Text className="text-xs text-foreground">{t('break_even.cumulative_revenue')}</Text>
+          <Text className="text-xs text-foreground font-body">{t('break_even.cumulative_revenue')}</Text>
         </View>
         <View className="flex-row items-center gap-2">
           <View className="w-6 h-1 bg-error" />
-          <Text className="text-xs text-foreground">{t('break_even.cumulative_costs')}</Text>
+          <Text className="text-xs text-foreground font-body">{t('break_even.cumulative_costs')}</Text>
         </View>
       </View>
 
       {/* Description */}
       <View className="bg-background rounded-lg p-3 mt-4">
-        <Text className="text-xs text-muted leading-relaxed">
+        <Text className="text-xs text-muted leading-relaxed font-body">
           {t('break_even.chart_description')}
         </Text>
       </View>

@@ -120,12 +120,70 @@
     "maintenance_costs": "Costos de Mantenimiento",
     "discount_rate": "Tasa de Descuento"
   },
+  "wizard": {
+    "step1": {
+      "subtitle": "Paso 1 de 6",
+      "question": "¿Cómo se llama tu proyecto?",
+      "helper": "Dale un nombre descriptivo a tu negocio o proyecto",
+      "placeholder": "Ej: Cafetería Centro, Tienda Online",
+      "help": "Consejo: Usa un nombre que describa claramente tu negocio"
+    },
+    "step2": {
+      "subtitle": "Paso 2 de 6",
+      "question": "¿Cuánto dinero necesitas invertir?",
+      "helper": "Incluye equipos, inventario, permisos, etc.",
+      "placeholder": "100000",
+      "help": "Consejo: Suma todo lo que necesitas comprar antes de abrir"
+    },
+    "step3": {
+      "subtitle": "Paso 3 de 6",
+      "question": "¿Cuánto esperas vender cada mes?",
+      "helper": "Una estimación realista de tus ventas mensuales",
+      "placeholder": "50000",
+      "help": "Consejo: Investiga negocios similares en tu zona para estimar"
+    },
+    "step4": {
+      "subtitle": "Paso 4 de 6",
+      "question": "¿Cuánto gastas al mes?",
+      "helper": "Renta, sueldos, servicios, materia prima",
+      "placeholder": "20000",
+      "help": "Consejo: No olvides incluir gastos fijos y variables"
+    },
+    "step5": {
+      "subtitle": "Paso 5 de 6",
+      "question": "¿Por cuánto tiempo analizamos el proyecto?",
+      "helper": "En meses (típicamente 12 a 36 meses)",
+      "placeholder": "24",
+      "help": "Consejo: 24 meses (2 años) es un periodo común para PyMEs"
+    },
+    "step6": {
+      "subtitle": "Paso 6 de 6",
+      "question": "¿Esperas crecer con el tiempo?",
+      "helper": "Porcentaje de crecimiento mensual estimado",
+      "placeholder": "5",
+      "help": "Consejo: Un 5% mensual es realista para negocios nuevos"
+    }
+  },
   "metrics": {
+    "roi": {
+      "label": "Rentabilidad",
+      "description": "Cuánto ganas por cada peso invertido"
+    },
+    "npv": {
+      "label": "Valor del Proyecto",
+      "description": "Ganancia total considerando el valor del dinero en el tiempo"
+    },
+    "irr": {
+      "label": "Rendimiento Anual",
+      "description": "Tasa de retorno anualizada de tu inversión"
+    },
+    "payback": {
+      "label": "Recuperación",
+      "description": "Cuándo recuperas tu inversión inicial"
+    },
     "roi_description": "Retorno de la inversión",
     "npv_description": "Valor presente neto",
-    "irr": "TIR",
     "irr_description": "Tasa interna de retorno",
-    "payback": "Payback",
     "payback_description": "Período de recuperación"
   },
   "results": {
@@ -510,6 +568,9 @@
     "project_name_required": "El nombre del proyecto es requerido",
     "invalid_investment": "La inversión inicial debe ser un número positivo",
     "invalid_revenue": "Los ingresos anuales deben ser un número positivo",
+    "invalid_costs": "Costos inválidos. Debe ser un número positivo.",
+    "invalid_duration": "Duración inválida. Debe ser un número positivo.",
+    "invalid_growth": "Crecimiento inválido. Debe ser un número válido.",
     "save_error": "Error al guardar el proyecto",
     "project_not_found": "Proyecto no encontrado",
     "export_error": "Error al exportar el PDF",
