@@ -142,7 +142,7 @@ export default function NewProjectScreen() {
   const validateStep4 = () => {
     const costs = parseFloat(operatingCosts);
     if (isNaN(costs) || costs < 0) {
-      setErrors({ costs: 'Por favor ingresa un valor válido' });
+      setErrors({ costs: t('validations.invalid_costs') || 'Please enter a valid value' });
       return false;
     }
     setErrors({});
@@ -152,7 +152,7 @@ export default function NewProjectScreen() {
   const validateStep5 = () => {
     const duration = parseInt(projectDuration);
     if (isNaN(duration) || duration <= 0) {
-      setErrors({ duration: 'Por favor ingresa una duración válida' });
+      setErrors({ duration: t('validations.invalid_duration') || 'Please enter a valid duration' });
       return false;
     }
     setErrors({});
@@ -162,7 +162,7 @@ export default function NewProjectScreen() {
   const validateStep6 = () => {
     const growth = parseFloat(revenueGrowth);
     if (isNaN(growth)) {
-      setErrors({ growth: 'Por favor ingresa un valor válido' });
+      setErrors({ growth: t('validations.invalid_growth') || 'Please enter a valid value' });
       return false;
     }
     setErrors({});

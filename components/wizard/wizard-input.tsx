@@ -76,7 +76,8 @@ export function WizardInput({
       {suggestions.length > 0 && (
         <View>
           <Text className="text-xs text-muted mb-2 font-body">
-            Valores comunes:
+            {/* TODO: Add translation key - temporary placeholder */}
+            Common values:
           </Text>
           <View className="flex-row flex-wrap gap-2">
             {suggestions.map((suggestion) => (

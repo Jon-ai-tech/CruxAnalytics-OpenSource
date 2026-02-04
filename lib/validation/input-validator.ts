@@ -137,11 +137,7 @@ export function sanitizeString(input: string, maxLength: number = 1000): string 
  * @returns Sanitized project name
  */
 export function sanitizeProjectName(name: string): string {
-  try {
-    return sanitizeProjectNameRaw(name);
-  } catch (error) {
-    throw error;
-  }
+  return sanitizeProjectNameRaw(name);
 }
 
 /**
@@ -159,11 +155,7 @@ export function sanitizeNumber(
     allowNegative?: boolean;
   }
 ): number {
-  try {
-    return sanitizeNumberRaw(input, options);
-  } catch (error) {
-    throw error;
-  }
+  return sanitizeNumberRaw(input, options);
 }
 
 /**
