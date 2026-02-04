@@ -4,6 +4,11 @@
  */
 
 import { z } from 'zod';
+import {
+  sanitizeString as sanitizeStringRaw,
+  sanitizeNumber as sanitizeNumberRaw,
+  sanitizeProjectName as sanitizeProjectNameRaw,
+} from './input-sanitizer';
 
 /**
  * Validates a number is within specified range
@@ -110,14 +115,55 @@ export type BusinessIntelligenceInput = z.infer<typeof businessIntelligenceInput
  * @param input - String to sanitize
  * @returns Sanitized string with HTML entities escaped
  */
-export function sanitizeString(input: string): string {
-  return input
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;');
+export function sanitizeString(input: string, maxLength: number = 1000): string {
+  try {
+    return sanitizeStringRaw(input, maxLength);
+  } catch {
+    // Fallback to basic sanitization if DOMPurify fails
+    return input
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;')
+      .substring(0, maxLength);
+  }
+}
+
+/**
+ * Sanitizes a project name
+ * @param name - Project name to sanitize
+ * @returns Sanitized project name
+ */
+export function sanitizeProjectName(name: string): string {
+  try {
+    return sanitizeProjectNameRaw(name);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Sanitizes a number input with validation
+ * @param input - Number input (string or number)
+ * @param options - Validation options
+ * @returns Sanitized and validated number
+ */
+export function sanitizeNumber(
+  input: string | number,
+  options?: {
+    min?: number;
+    max?: number;
+    decimals?: number;
+    allowNegative?: boolean;
+  }
+): number {
+  try {
+    return sanitizeNumberRaw(input, options);
+  } catch (error) {
+    throw error;
+  }
 }
 
 /**

@@ -1,8 +1,10 @@
 import type { FinancialCalculationInput, FinancialCalculationResult } from '@/types/project';
 import { StandardMetricsCalculator } from '@/lib/infrastructure/calculators/StandardMetricsCalculator';
+import { calculateWithWorker } from '@/lib/workers/worker-client';
 
 /**
  * Calculate financial metrics for a business case
+ * Automatically uses Web Workers for projects >= 24 months on web platform
  * 
  * @deprecated Use CalculationService.calculateStandard() or CalculateFinancialMetrics use case instead.
  * This function is kept for backward compatibility. 
@@ -34,6 +36,22 @@ export function calculateFinancialMetrics(
   // Use new modular calculator for actual calculation
   const calculator = new StandardMetricsCalculator();
   return calculator.calculate(input);
+}
+
+/**
+ * Async version that uses Web Workers for heavy calculations
+ * Automatically falls back to sync calculation on mobile or for short projects
+ * 
+ * @param input - Financial calculation input
+ * @returns Promise resolving to calculation result
+ */
+export async function calculateFinancialMetricsAsync(
+  input: FinancialCalculationInput
+): Promise<FinancialCalculationResult> {
+  const calculator = new StandardMetricsCalculator();
+  
+  // Use worker client with automatic fallback
+  return calculateWithWorker(input, (syncInput) => calculator.calculate(syncInput));
 }
 
 // Note: The internal calculation functions below are kept for reference but are no longer used.
