@@ -628,6 +628,56 @@
     "marketing_roi": {
       "title": "ROI de Marketing",
       "description": "Mide tu publicidad"
+    },
+    "calculator": {
+  "enter_data": "Ingresa tus datos",
+  "results": "Resultados",
+  "recommendations": "Recomendaciones",
+  "export_pdf": "Exportar a PDF",
+  "no_data": "Ingresa tus datos para ver el análisis",
+  
+  "break_even": {
+    "title": "Punto de Equilibrio",
+    "subtitle": "Descubre cuántas unidades necesitas vender para no perder dinero",
+    "fixed_costs": "Costos fijos mensuales",
+    "fixed_costs_hint": "Renta, salarios, servicios, etc.",
+    "unit_price": "Precio por unidad",
+    "unit_price_hint": "Lo que cobras por cada producto/servicio",
+    "variable_cost": "Costo variable por unidad",
+    "variable_cost_hint": "Materiales, comisiones, envío, etc.",
+    "current_sales": "Ventas actuales (opcional)",
+    "current_sales_hint": "Para calcular tu margen de seguridad",
+    "break_even_units": "Punto de Equilibrio (Unidades)",
+    "break_even_revenue": "Punto de Equilibrio (Ingresos)",
+    "contribution_margin": "Contribución por Unidad",
+    "above_break_even": "Por encima del equilibrio",
+    "below_break_even": "Por debajo del equilibrio",
+    "safety_margin": "Margen de seguridad",
+    "visualization": "Visualización"
+  },
+  
+  "cash_flow": {
+    "title": "Flujo de Caja",
+    "subtitle": "Proyecta tus ingresos y gastos para los próximos 12 meses",
+    "starting_cash": "Efectivo inicial",
+    "starting_cash_hint": "Dinero disponible ahora",
+    "monthly_revenue": "Ingresos mensuales",
+    "monthly_revenue_hint": "Promedio de ventas",
+    "monthly_expenses": "Gastos mensuales",
+    "monthly_expenses_hint": "Todos los gastos fijos y variables",
+    "expected_growth": "Crecimiento esperado",
+    "expected_growth_hint": "Porcentaje de crecimiento mensual",
+    "final_balance": "Balance Final",
+    "runway": "Runway",
+    "minimum_reserve": "Reserva Mínima",
+    "healthy_cash_flow": "Flujo de Caja Saludable",
+    "cash_flow_at_risk": "Flujo de Caja en Riesgo",
+    "sufficient_liquidity": "Tienes suficiente liquidez para los próximos 12 meses",
+    "run_out_warning": "Podrías quedarte sin efectivo en {{months}} meses",
+    "projection_12_months": "Proyección 12 Meses",
+    "no_critical_alerts": "Sin alertas críticas",
+    "cash_flow_healthy": "Tu flujo de caja se ve saludable",
+    "alerts": "Alertas"
     }
   }
 }
