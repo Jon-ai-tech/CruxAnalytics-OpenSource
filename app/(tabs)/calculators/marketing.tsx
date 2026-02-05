@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -13,6 +13,7 @@ import {
     Badge,
 } from '@/components/landing/shared-components';
 import { MarketingROICalculator } from '@/lib/infrastructure/calculators/MarketingROICalculator';
+import { useTranslation } from '@/lib/i18n-context';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -125,6 +126,7 @@ function FunnelVisual({ impressions, clicks, conversions }: { impressions?: numb
 }
 
 export default function MarketingPage() {
+    const { t } = useTranslation();
     const [totalSpend, setTotalSpend] = useState('5000');
     const [conversions, setConversions] = useState('100');
     const [revenuePerConversion, setRevenuePerConversion] = useState('150');
@@ -157,12 +159,45 @@ export default function MarketingPage() {
         }
     }, [totalSpend, conversions, revenuePerConversion, channel, impressions, clicks, calculator]);
 
-    const recommendations = result ? calculator.generateRecommendations(result, {
-        totalSpend: parseFloat(totalSpend),
-        conversions: parseInt(conversions),
-        revenuePerConversion: parseFloat(revenuePerConversion),
-        channel,
-    }) : [];
+    // ✅ Generate recommendations manually
+    const recommendations = useMemo(() => {
+        if (!result) return [];
+        
+        const recs: string[] = [];
+        
+        if (result.roiPercentage >= 200) {
+            recs.push('🎉 ROI excelente (>200%). Esta campaña es muy rentable, considera escalarla.');
+        } else if (result.roiPercentage >= 100) {
+            recs.push('✅ ROI positivo (100-200%). Campaña rentable, busca optimizaciones para mejorar.');
+        } else if (result.roiPercentage >= 0) {
+            recs.push('⚠️ ROI bajo (<100%). Apenas cubre costos, revisa targeting y creativos.');
+        } else {
+            recs.push('🚨 ROI negativo. Pausa esta campaña y analiza qué está fallando.');
+        }
+        
+        if (result.benchmarkComparison.cacVsBenchmark === 'worse') {
+            recs.push(`Tu CAC ($${result.costPerAcquisition}) es alto vs el promedio de industria. Optimiza tu targeting.`);
+        } else if (result.benchmarkComparison.cacVsBenchmark === 'better') {
+            recs.push(`Tu CAC ($${result.costPerAcquisition}) es bajo vs el promedio. Excelente eficiencia.`);
+        }
+        
+        if (result.conversionRate && result.conversionRate < 2) {
+            recs.push(`Conversion rate bajo (${result.conversionRate}%). Mejora tu landing page o proceso de compra.`);
+        }
+        
+        if (result.lifetimeValueToCAC && result.lifetimeValueToCAC < 3) {
+            recs.push('LTV/CAC < 3x. Considera aumentar el valor de vida del cliente o reducir CAC.');
+        }
+        
+        if (result.clickThroughRate && result.clickThroughRate < 1) {
+            recs.push(`CTR bajo (${result.clickThroughRate}%). Prueba nuevos creativos o mejora tu copy.`);
+        }
+        
+        recs.push('Prueba A/B testing en audiencias, creativos y copy para mejorar performance.');
+        recs.push('Monitorea métricas diariamente durante las primeras 2 semanas de la campaña.');
+        
+        return recs;
+    }, [result]);
 
     return (
         <ScrollView 
@@ -170,181 +205,187 @@ export default function MarketingPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-            <SectionHeading
-                title="📢 ROI de Marketing"
-                subtitle="¿Tu publicidad está funcionando? Mide el retorno por canal"
-            />
+                <SectionHeading
+                    title={`📢 ${t('calculator.marketing_roi.title')}`}
+                    subtitle={t('calculator.marketing_roi.subtitle')}
+                />
 
-            <View className="flex-row flex-wrap gap-6">
-                {/* Form */}
-                <View className="flex-1 min-w-[300px]">
-                    <GlassCard>
-                        <Text className="text-white font-semibold text-lg mb-6">Datos de la Campaña</Text>
-
-                        <ChannelSelector selected={channel} onSelect={setChannel} />
-
-                        <InputField
-                            label="Inversión total"
-                            value={totalSpend}
-                            onChange={setTotalSpend}
-                            prefix="$"
-                        />
-
-                        <InputField
-                            label="Conversiones (ventas)"
-                            value={conversions}
-                            onChange={setConversions}
-                        />
-
-                        <InputField
-                            label="Ingreso por conversión"
-                            value={revenuePerConversion}
-                            onChange={setRevenuePerConversion}
-                            prefix="$"
-                            hint="Ticket promedio"
-                        />
-
-                        <View className="h-px bg-white/10 my-4" />
-                        <Text className="text-gray-400 text-sm mb-4">Métricas opcionales (para análisis detallado)</Text>
-
-                        <InputField
-                            label="Impresiones"
-                            value={impressions}
-                            onChange={setImpressions}
-                        />
-
-                        <InputField
-                            label="Clicks"
-                            value={clicks}
-                            onChange={setClicks}
-                        />
-                    </GlassCard>
-                </View>
-
-                {/* Results */}
-                <View className="flex-1 min-w-[300px] gap-4">
-                    {result ? (
-                        <>
-                            {/* Main Metrics */}
-                            <View className="flex-row flex-wrap gap-4">
-                                <GlassCard gradient className="flex-1 min-w-[140px] items-center py-6">
-                                    <Text className="text-gray-400 text-sm">ROI</Text>
-                                    <Text className={`text-4xl font-bold ${result.roiPercentage >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                        {result.roiPercentage != null ? result.roiPercentage.toFixed(0) : '0'}%
-                                    </Text>
-                                </GlassCard>
-
-                                <GlassCard className="flex-1 min-w-[140px] items-center py-6">
-                                    <Text className="text-gray-400 text-sm">ROAS</Text>
-                                    <Text className="text-3xl font-bold text-indigo-400">
-                                        {result.roas != null ? result.roas.toFixed(1) : '0.0'}x
-                                    </Text>
-                                    <Text className="text-gray-500 text-xs">Return on Ad Spend</Text>
-                                </GlassCard>
-                            </View>
-
-                            {/* Profit/Loss */}
-                            <GlassCard className={`border-2 ${result.isProfitable ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
-                                <View className="flex-row items-center gap-3">
-                                    <Text className="text-4xl">{result.isProfitable ? '💰' : '📉'}</Text>
-                                    <View>
-                                        <Text className="text-white font-bold text-lg">
-                                            {result.isProfitable ? 'CAMPAÑA RENTABLE' : 'CAMPAÑA EN PÉRDIDA'}
-                                        </Text>
-                                        <Text className={result.isProfitable ? 'text-emerald-400' : 'text-rose-400'}>
-                                            {result.isProfitable
-                                                ? `Ganancia neta: $${result.netProfit.toLocaleString()}`
-                                                : `Pérdida: $${Math.abs(result.netProfit).toLocaleString()}`
-                                            }
-                                        </Text>
-                                    </View>
-                                </View>
-                            </GlassCard>
-
-                            {/* Detailed Metrics */}
-                            <View className="flex-row flex-wrap gap-4">
-                                <GlassCard className="flex-1 min-w-[100px]">
-                                    <Text className="text-gray-400 text-xs">CAC</Text>
-                                    <Text className="text-xl font-bold text-white">${result.costPerAcquisition}</Text>
-                                    <Badge variant={result.benchmarkComparison.cacVsBenchmark === 'better' ? 'success' : result.benchmarkComparison.cacVsBenchmark === 'worse' ? 'danger' : 'warning'}>
-                                        {result.benchmarkComparison.cacVsBenchmark === 'better' ? '↓ Bajo' : result.benchmarkComparison.cacVsBenchmark === 'worse' ? '↑ Alto' : '~ Normal'}
-                                    </Badge>
-                                </GlassCard>
-
-                                {result.clickThroughRate && (
-                                    <GlassCard className="flex-1 min-w-[100px]">
-                                        <Text className="text-gray-400 text-xs">CTR</Text>
-                                        <Text className="text-xl font-bold text-white">{result.clickThroughRate}%</Text>
-                                    </GlassCard>
-                                )}
-
-                                {result.conversionRate && (
-                                    <GlassCard className="flex-1 min-w-[100px]">
-                                        <Text className="text-gray-400 text-xs">Conv. Rate</Text>
-                                        <Text className="text-xl font-bold text-white">{result.conversionRate}%</Text>
-                                    </GlassCard>
-                                )}
-
-                                {result.costPerClick && (
-                                    <GlassCard className="flex-1 min-w-[100px]">
-                                        <Text className="text-gray-400 text-xs">CPC</Text>
-                                        <Text className="text-xl font-bold text-white">${result.costPerClick}</Text>
-                                    </GlassCard>
-                                )}
-                            </View>
-
-                            {/* Funnel */}
-                            {(impressions || clicks) && (
-                                <FunnelVisual
-                                    impressions={impressions ? parseInt(impressions) : undefined}
-                                    clicks={clicks ? parseInt(clicks) : undefined}
-                                    conversions={parseInt(conversions)}
-                                />
-                            )}
-
-                            {/* LTV/CAC */}
-                            {result.lifetimeValueToCAC && (
-                                <GlassCard>
-                                    <Text className="text-white font-semibold mb-2">📈 LTV/CAC Ratio</Text>
-                                    <View className="flex-row items-center gap-4">
-                                        <Text className={`text-3xl font-bold ${result.lifetimeValueToCAC >= 3 ? 'text-emerald-400' : result.lifetimeValueToCAC >= 1 ? 'text-amber-400' : 'text-rose-400'}`}>
-                                            {result.lifetimeValueToCAC != null ? result.lifetimeValueToCAC.toFixed(1) : '0.0'}x
-                                        </Text>
-                                        <Text className="text-gray-400 text-sm flex-1">
-                                            {result.lifetimeValueToCAC >= 3
-                                                ? 'Excelente! Puedes escalar con confianza'
-                                                : result.lifetimeValueToCAC >= 1
-                                                    ? 'Aceptable, pero hay espacio para mejorar'
-                                                    : 'Bajo. El CAC es muy alto vs el valor del cliente'
-                                            }
-                                        </Text>
-                                    </View>
-                                </GlassCard>
-                            )}
-
-                            {/* Recommendations */}
-                            <GlassCard>
-                                <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
-                                <View className="gap-2">
-                                    {recommendations.map((rec, i) => (
-                                        <Text key={i} className="text-gray-300">• {rec}</Text>
-                                    ))}
-                                </View>
-                            </GlassCard>
-
-                            <GradientButton size="lg">📄 Exportar a PDF</GradientButton>
-                        </>
-                    ) : (
-                        <GlassCard className="items-center py-12">
-                            <Ionicons name="megaphone" size={48} color="#6b7280" />
-                            <Text className="text-gray-400 mt-4 text-center">
-                                Ingresa los datos de tu campaña{'\n'}para ver el análisis de ROI
+                <View className="flex-row flex-wrap gap-6">
+                    {/* Form */}
+                    <View className="flex-1 min-w-[300px]">
+                        <GlassCard>
+                            <Text className="text-white font-semibold text-lg mb-6">
+                                {t('calculator.enter_data')}
                             </Text>
+
+                            <ChannelSelector selected={channel} onSelect={setChannel} />
+
+                            <InputField
+                                label={t('calculator.marketing_roi.campaign_cost')}
+                                value={totalSpend}
+                                onChange={setTotalSpend}
+                                prefix="$"
+                            />
+
+                            <InputField
+                                label={t('calculator.marketing_roi.leads_generated')}
+                                value={conversions}
+                                onChange={setConversions}
+                            />
+
+                            <InputField
+                                label={t('calculator.marketing_roi.average_sale')}
+                                value={revenuePerConversion}
+                                onChange={setRevenuePerConversion}
+                                prefix="$"
+                            />
+
+                            <View className="h-px bg-white/10 my-4" />
+                            <Text className="text-gray-400 text-sm mb-4">Métricas opcionales (para análisis detallado)</Text>
+
+                            <InputField
+                                label="Impresiones"
+                                value={impressions}
+                                onChange={setImpressions}
+                            />
+
+                            <InputField
+                                label="Clicks"
+                                value={clicks}
+                                onChange={setClicks}
+                            />
                         </GlassCard>
-                    )}
+                    </View>
+
+                    {/* Results */}
+                    <View className="flex-1 min-w-[300px] gap-4">
+                        {result ? (
+                            <>
+                                {/* Main Metrics */}
+                                <View className="flex-row flex-wrap gap-4">
+                                    <GlassCard gradient className="flex-1 min-w-[140px] items-center py-6">
+                                        <Text className="text-gray-400 text-sm">{t('calculator.marketing_roi.roi')}</Text>
+                                        <Text className={`text-4xl font-bold ${result.roiPercentage >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                            {result.roiPercentage != null ? result.roiPercentage.toFixed(0) : '0'}%
+                                        </Text>
+                                    </GlassCard>
+
+                                    <GlassCard className="flex-1 min-w-[140px] items-center py-6">
+                                        <Text className="text-gray-400 text-sm">ROAS</Text>
+                                        <Text className="text-3xl font-bold text-indigo-400">
+                                            {result.roas != null ? result.roas.toFixed(1) : '0.0'}x
+                                        </Text>
+                                        <Text className="text-gray-500 text-xs">Return on Ad Spend</Text>
+                                    </GlassCard>
+                                </View>
+
+                                {/* Profit/Loss */}
+                                <GlassCard className={`border-2 ${result.isProfitable ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
+                                    <View className="flex-row items-center gap-3">
+                                        <Text className="text-4xl">{result.isProfitable ? '💰' : '📉'}</Text>
+                                        <View>
+                                            <Text className="text-white font-bold text-lg">
+                                                {result.isProfitable 
+                                                    ? t('calculator.marketing_roi.excellent_campaign')
+                                                    : t('calculator.marketing_roi.losing_campaign')
+                                                }
+                                            </Text>
+                                            <Text className={result.isProfitable ? 'text-emerald-400' : 'text-rose-400'}>
+                                                {result.isProfitable
+                                                    ? `${t('calculator.marketing_roi.net_profit')}: $${result.netProfit.toLocaleString()}`
+                                                    : `Pérdida: $${Math.abs(result.netProfit).toLocaleString()}`
+                                                }
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </GlassCard>
+
+                                {/* Detailed Metrics */}
+                                <View className="flex-row flex-wrap gap-4">
+                                    <GlassCard className="flex-1 min-w-[100px]">
+                                        <Text className="text-gray-400 text-xs">{t('calculator.marketing_roi.cpa')}</Text>
+                                        <Text className="text-xl font-bold text-white">${result.costPerAcquisition}</Text>
+                                        <Badge variant={result.benchmarkComparison.cacVsBenchmark === 'better' ? 'success' : result.benchmarkComparison.cacVsBenchmark === 'worse' ? 'danger' : 'warning'}>
+                                            {result.benchmarkComparison.cacVsBenchmark === 'better' ? '↓ Bajo' : result.benchmarkComparison.cacVsBenchmark === 'worse' ? '↑ Alto' : '~ Normal'}
+                                        </Badge>
+                                    </GlassCard>
+
+                                    {result.clickThroughRate && (
+                                        <GlassCard className="flex-1 min-w-[100px]">
+                                            <Text className="text-gray-400 text-xs">CTR</Text>
+                                            <Text className="text-xl font-bold text-white">{result.clickThroughRate}%</Text>
+                                        </GlassCard>
+                                    )}
+
+                                    {result.conversionRate && (
+                                        <GlassCard className="flex-1 min-w-[100px]">
+                                            <Text className="text-gray-400 text-xs">{t('calculator.marketing_roi.conversion_rate')}</Text>
+                                            <Text className="text-xl font-bold text-white">{result.conversionRate}%</Text>
+                                        </GlassCard>
+                                    )}
+
+                                    {result.costPerClick && (
+                                        <GlassCard className="flex-1 min-w-[100px]">
+                                            <Text className="text-gray-400 text-xs">{t('calculator.marketing_roi.cpl')}</Text>
+                                            <Text className="text-xl font-bold text-white">${result.costPerClick}</Text>
+                                        </GlassCard>
+                                    )}
+                                </View>
+
+                                {/* Funnel */}
+                                {(impressions || clicks) && (
+                                    <FunnelVisual
+                                        impressions={impressions ? parseInt(impressions) : undefined}
+                                        clicks={clicks ? parseInt(clicks) : undefined}
+                                        conversions={parseInt(conversions)}
+                                    />
+                                )}
+
+                                {/* LTV/CAC */}
+                                {result.lifetimeValueToCAC && (
+                                    <GlassCard>
+                                        <Text className="text-white font-semibold mb-2">📈 LTV/CAC Ratio</Text>
+                                        <View className="flex-row items-center gap-4">
+                                            <Text className={`text-3xl font-bold ${result.lifetimeValueToCAC >= 3 ? 'text-emerald-400' : result.lifetimeValueToCAC >= 1 ? 'text-amber-400' : 'text-rose-400'}`}>
+                                                {result.lifetimeValueToCAC != null ? result.lifetimeValueToCAC.toFixed(1) : '0.0'}x
+                                            </Text>
+                                            <Text className="text-gray-400 text-sm flex-1">
+                                                {result.lifetimeValueToCAC >= 3
+                                                    ? t('calculator.marketing_roi.excellent_description')
+                                                    : result.lifetimeValueToCAC >= 1
+                                                        ? t('calculator.marketing_roi.good_description')
+                                                        : t('calculator.marketing_roi.losing_description')
+                                                }
+                                            </Text>
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                {/* Recommendations */}
+                                {recommendations.length > 0 && (
+                                    <GlassCard>
+                                        <Text className="text-white font-semibold mb-4">💡 {t('calculator.recommendations')}</Text>
+                                        <View className="gap-2">
+                                            {recommendations.map((rec, i) => (
+                                                <Text key={i} className="text-gray-300">• {rec}</Text>
+                                            ))}
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                <GradientButton size="lg">📄 {t('calculator.export_pdf')}</GradientButton>
+                            </>
+                        ) : (
+                            <GlassCard className="items-center py-12">
+                                <Ionicons name="megaphone" size={48} color="#6b7280" />
+                                <Text className="text-gray-400 mt-4 text-center">
+                                    {t('calculator.no_data')}
+                                </Text>
+                            </GlassCard>
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
-    </ScrollView>
-);
+        </ScrollView>
+    );
 }
