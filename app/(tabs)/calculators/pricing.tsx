@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -13,6 +13,7 @@ import {
     Badge,
 } from '@/components/landing/shared-components';
 import { PricingCalculator } from '@/lib/infrastructure/calculators/PricingCalculator';
+import { useTranslation } from '@/lib/i18n-context';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -44,10 +45,12 @@ function PriceStrategyCard({
 }: {
     strategy: string; price: number; benefits: string; recommended?: boolean;
 }) {
+    const { t } = useTranslation();
+    
     return (
         <GlassCard className={`flex-1 min-w-[150px] ${recommended ? 'border-2 border-[#14B8A6]' : ''}`}>
             {recommended && (
-                <Badge variant="success" className="mb-2">✨ Recomendado</Badge>
+                <Badge variant="success" className="mb-2">✨ {t('calculator.pricing.recommended')}</Badge>
             )}
             <Text className="text-gray-400 text-sm">{strategy}</Text>
             <Text className="text-2xl font-bold text-white">${price != null ? price.toFixed(2) : '0.00'}</Text>
@@ -57,6 +60,7 @@ function PriceStrategyCard({
 }
 
 export default function PricingPage() {
+    const { t } = useTranslation();
     const [costPerUnit, setCostPerUnit] = useState('15');
     const [desiredMargin, setDesiredMargin] = useState('40');
     const [competitorPrice, setCompetitorPrice] = useState('30');
@@ -81,11 +85,37 @@ export default function PricingPage() {
         }
     }, [costPerUnit, desiredMargin, competitorPrice, calculator]);
 
-    const recommendations = result ? calculator.generateRecommendations(result, {
-        costPerUnit: parseFloat(costPerUnit),
-        desiredMargin: parseFloat(desiredMargin),
-        competitorPrice: competitorPrice ? parseFloat(competitorPrice) : undefined,
-    }) : [];
+    // ✅ Generate recommendations manually
+    const recommendations = useMemo(() => {
+        if (!result) return [];
+        
+        const recs: string[] = [];
+        const cost = parseFloat(costPerUnit);
+        const margin = parseFloat(desiredMargin);
+        
+        if (result.competitorComparison) {
+            if (result.competitorComparison.position === 'above') {
+                recs.push(`Estás ${Math.abs(result.competitorComparison.percentageDiff).toFixed(1)}% por encima de la competencia. Asegúrate de ofrecer valor adicional.`);
+            } else {
+                recs.push(`Estás ${Math.abs(result.competitorComparison.percentageDiff).toFixed(1)}% por debajo de la competencia. Podrías aumentar precios sin perder clientes.`);
+            }
+        }
+        
+        if (margin < 30) {
+            recs.push('Tu margen es bajo (<30%). Considera reducir costos o aumentar precios.');
+        } else if (margin > 60) {
+            recs.push('Tu margen es alto (>60%). Podrías ser vulnerable a competidores con precios más bajos.');
+        }
+        
+        if (result.grossProfitPerUnit < 10) {
+            recs.push('La ganancia por unidad es baja. Considera aumentar precios o reducir costos.');
+        }
+        
+        recs.push('Prueba diferentes precios con muestras pequeñas antes de cambiar todo tu inventario.');
+        recs.push('Monitorea regularmente los precios de competencia para mantener tu posición.');
+        
+        return recs;
+    }, [result, costPerUnit, desiredMargin]);
 
     return (
         <ScrollView 
@@ -93,147 +123,153 @@ export default function PricingPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-            <SectionHeading
-                title="🏷️ Calculadora de Precios"
-                subtitle="Encuentra el precio óptimo para maximizar tus ganancias"
-            />
+                <SectionHeading
+                    title={`🏷️ ${t('calculator.pricing.title')}`}
+                    subtitle={t('calculator.pricing.subtitle')}
+                />
 
-            <View className="flex-row flex-wrap gap-6">
-                {/* Form */}
-                <View className="flex-1 min-w-[300px]">
-                    <GlassCard>
-                        <Text className="text-white font-semibold text-lg mb-6">Ingresa tus datos</Text>
+                <View className="flex-row flex-wrap gap-6">
+                    {/* Form */}
+                    <View className="flex-1 min-w-[300px]">
+                        <GlassCard>
+                            <Text className="text-white font-semibold text-lg mb-6">
+                                {t('calculator.enter_data')}
+                            </Text>
 
-                        <InputField
-                            label="Costo por unidad"
-                            value={costPerUnit}
-                            onChange={setCostPerUnit}
-                            prefix="$"
-                            hint="Cuánto te cuesta producir/adquirir"
-                        />
+                            <InputField
+                                label={t('calculator.pricing.cost_per_unit')}
+                                value={costPerUnit}
+                                onChange={setCostPerUnit}
+                                prefix="$"
+                                hint={t('calculator.pricing.cost_per_unit_hint')}
+                            />
 
-                        <InputField
-                            label="Margen deseado"
-                            value={desiredMargin}
-                            onChange={setDesiredMargin}
-                            suffix="%"
-                            hint="Porcentaje de ganancia objetivo"
-                        />
+                            <InputField
+                                label={t('calculator.pricing.desired_margin')}
+                                value={desiredMargin}
+                                onChange={setDesiredMargin}
+                                suffix="%"
+                                hint={t('calculator.pricing.desired_margin_hint')}
+                            />
 
-                        <InputField
-                            label="Precio de competencia (opcional)"
-                            value={competitorPrice}
-                            onChange={setCompetitorPrice}
-                            prefix="$"
-                            hint="Para comparar tu posición"
-                        />
-                    </GlassCard>
-                </View>
+                            <InputField
+                                label={t('calculator.pricing.competitor_price')}
+                                value={competitorPrice}
+                                onChange={setCompetitorPrice}
+                                prefix="$"
+                                hint={t('calculator.pricing.competitor_price_hint')}
+                            />
+                        </GlassCard>
+                    </View>
 
-                {/* Results */}
-                <View className="flex-1 min-w-[300px] gap-4">
-                    {result ? (
-                        <>
-                            {/* Main Price */}
-                            <GlassCard gradient className="items-center py-8">
-                                <Text className="text-gray-400">Precio Recomendado</Text>
-                                <Text className="text-5xl font-bold text-white mt-2">
-                                    ${result.recommendedPrice != null ? result.recommendedPrice.toFixed(2) : '0.00'}
-                                </Text>
-                                <View className="flex-row gap-4 mt-4">
-                                    <Badge variant="success">
-                                        ${result.grossProfitPerUnit != null ? result.grossProfitPerUnit.toFixed(2) : '0.00'} ganancia/unidad
-                                    </Badge>
-                                    <Badge>
-                                        {result.markupPercentage != null ? result.markupPercentage.toFixed(0) : '0'}% markup
-                                    </Badge>
-                                </View>
-                            </GlassCard>
-
-                            {/* Price Range */}
-                            <GlassCard>
-                                <Text className="text-white font-semibold mb-4">Rango de Precios Sugerido</Text>
-                                <View className="flex-row items-center gap-4">
-                                    <View className="items-center">
-                                        <Text className="text-gray-400 text-xs">Mínimo</Text>
-                                        <Text className="text-white text-xl font-bold">${result.recommendedPriceRange.low}</Text>
+                    {/* Results */}
+                    <View className="flex-1 min-w-[300px] gap-4">
+                        {result ? (
+                            <>
+                                {/* Main Price */}
+                                <GlassCard gradient className="items-center py-8">
+                                    <Text className="text-gray-400">{t('calculator.pricing.recommended_price')}</Text>
+                                    <Text className="text-5xl font-bold text-white mt-2">
+                                        ${result.recommendedPrice != null ? result.recommendedPrice.toFixed(2) : '0.00'}
+                                    </Text>
+                                    <View className="flex-row gap-4 mt-4">
+                                        <Badge variant="success">
+                                            ${result.grossProfitPerUnit != null ? result.grossProfitPerUnit.toFixed(2) : '0.00'} {t('calculator.pricing.profit_per_unit')}
+                                        </Badge>
+                                        <Badge>
+                                            {result.markupPercentage != null ? result.markupPercentage.toFixed(0) : '0'}% {t('calculator.pricing.markup')}
+                                        </Badge>
                                     </View>
-                                    <View className="flex-1 h-2 bg-slate-700 rounded-full">
-                                        <View className="h-full bg-gradient-to-r from-#14B8A6 to-#86EFAC rounded-full" style={{ width: '60%' }} />
-                                    </View>
-                                    <View className="items-center">
-                                        <Text className="text-gray-400 text-xs">Máximo</Text>
-                                        <Text className="text-white text-xl font-bold">${result.recommendedPriceRange.high}</Text>
-                                    </View>
-                                </View>
-                            </GlassCard>
+                                </GlassCard>
 
-                            {/* Strategies */}
-                            <Text className="text-white font-semibold">Estrategias de Precio</Text>
-                            <View className="flex-row flex-wrap gap-4">
-                                <PriceStrategyCard
-                                    strategy="Premium"
-                                    price={result.priceStrategies.premium}
-                                    benefits="Mayor margen, menor volumen"
-                                />
-                                <PriceStrategyCard
-                                    strategy="Competitivo"
-                                    price={result.priceStrategies.competitive}
-                                    benefits="Igual que la competencia"
-                                    recommended
-                                />
-                                <PriceStrategyCard
-                                    strategy="Penetración"
-                                    price={result.priceStrategies.penetration}
-                                    benefits="Mayor volumen, menor margen"
-                                />
-                            </View>
-
-                            {/* Competitor Comparison */}
-                            {result.competitorComparison && (
-                                <GlassCard className={`border ${result.competitorComparison.position === 'above' ? 'border-[#FB923C]/30' : 'border-[#86EFAC]/30'}`}>
-                                    <View className="flex-row items-center gap-3">
-                                        <Text className="text-2xl">
-                                            {result.competitorComparison.position === 'above' ? '⬆️' : '⬇️'}
-                                        </Text>
-                                        <View>
-                                            <Text className="text-white font-bold">
-                                                {result.competitorComparison.position === 'above'
-                                                    ? `${result.competitorComparison.percentageDiff != null ? Math.abs(result.competitorComparison.percentageDiff).toFixed(1) : '0'}% POR ENCIMA de competencia`
-                                                    : `${result.competitorComparison.percentageDiff != null ? Math.abs(result.competitorComparison.percentageDiff).toFixed(1) : '0'}% POR DEBAJO de competencia`
-                                                }
-                                            </Text>
-                                            <Text className="text-gray-400 text-sm">
-                                                Diferencia: ${result.competitorComparison.difference != null ? Math.abs(result.competitorComparison.difference).toFixed(2) : '0.00'}
-                                            </Text>
+                                {/* Price Range */}
+                                <GlassCard>
+                                    <Text className="text-white font-semibold mb-4">
+                                        {t('calculator.pricing.price_range')}
+                                    </Text>
+                                    <View className="flex-row items-center gap-4">
+                                        <View className="items-center">
+                                            <Text className="text-gray-400 text-xs">{t('calculator.pricing.minimum')}</Text>
+                                            <Text className="text-white text-xl font-bold">${result.recommendedPriceRange.low}</Text>
+                                        </View>
+                                        <View className="flex-1 h-2 bg-slate-700 rounded-full">
+                                            <View className="h-full bg-gradient-to-r from-[#14B8A6] to-[#86EFAC] rounded-full" style={{ width: '60%' }} />
+                                        </View>
+                                        <View className="items-center">
+                                            <Text className="text-gray-400 text-xs">{t('calculator.pricing.maximum')}</Text>
+                                            <Text className="text-white text-xl font-bold">${result.recommendedPriceRange.high}</Text>
                                         </View>
                                     </View>
                                 </GlassCard>
-                            )}
 
-                            {/* Recommendations */}
-                            <GlassCard>
-                                <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
-                                <View className="gap-2">
-                                    {recommendations.map((rec, i) => (
-                                        <Text key={i} className="text-gray-300">• {rec}</Text>
-                                    ))}
+                                {/* Strategies */}
+                                <Text className="text-white font-semibold">{t('calculator.pricing.pricing_strategies')}</Text>
+                                <View className="flex-row flex-wrap gap-4">
+                                    <PriceStrategyCard
+                                        strategy={t('calculator.pricing.premium')}
+                                        price={result.priceStrategies.premium}
+                                        benefits={t('calculator.pricing.premium_benefits')}
+                                    />
+                                    <PriceStrategyCard
+                                        strategy={t('calculator.pricing.competitive')}
+                                        price={result.priceStrategies.competitive}
+                                        benefits={t('calculator.pricing.competitive_benefits')}
+                                        recommended
+                                    />
+                                    <PriceStrategyCard
+                                        strategy={t('calculator.pricing.penetration')}
+                                        price={result.priceStrategies.penetration}
+                                        benefits={t('calculator.pricing.penetration_benefits')}
+                                    />
                                 </View>
-                            </GlassCard>
 
-                            <GradientButton size="lg">📄 Exportar a PDF</GradientButton>
-                        </>
-                    ) : (
-                        <GlassCard className="items-center py-12">
-                            <Ionicons name="pricetag" size={48} color="#6b7280" />
-                            <Text className="text-gray-400 mt-4 text-center">
-                                Ingresa tus datos para ver{'\n'}el análisis de precios
-                            </Text>
-                        </GlassCard>
-                    )}
+                                {/* Competitor Comparison */}
+                                {result.competitorComparison && (
+                                    <GlassCard className={`border ${result.competitorComparison.position === 'above' ? 'border-[#FB923C]/30' : 'border-[#86EFAC]/30'}`}>
+                                        <View className="flex-row items-center gap-3">
+                                            <Text className="text-2xl">
+                                                {result.competitorComparison.position === 'above' ? '⬆️' : '⬇️'}
+                                            </Text>
+                                            <View>
+                                                <Text className="text-white font-bold">
+                                                    {result.competitorComparison.position === 'above'
+                                                        ? `${result.competitorComparison.percentageDiff != null ? Math.abs(result.competitorComparison.percentageDiff).toFixed(1) : '0'}% ${t('calculator.pricing.above_competitor')}`
+                                                        : `${result.competitorComparison.percentageDiff != null ? Math.abs(result.competitorComparison.percentageDiff).toFixed(1) : '0'}% ${t('calculator.pricing.below_competitor')}`
+                                                    }
+                                                </Text>
+                                                <Text className="text-gray-400 text-sm">
+                                                    {t('calculator.pricing.difference')}: ${result.competitorComparison.difference != null ? Math.abs(result.competitorComparison.difference).toFixed(2) : '0.00'}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                {/* Recommendations */}
+                                {recommendations.length > 0 && (
+                                    <GlassCard>
+                                        <Text className="text-white font-semibold mb-4">💡 {t('calculator.recommendations')}</Text>
+                                        <View className="gap-2">
+                                            {recommendations.map((rec, i) => (
+                                                <Text key={i} className="text-gray-300">• {rec}</Text>
+                                            ))}
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                <GradientButton size="lg">📄 {t('calculator.export_pdf')}</GradientButton>
+                            </>
+                        ) : (
+                            <GlassCard className="items-center py-12">
+                                <Ionicons name="pricetag" size={48} color="#6b7280" />
+                                <Text className="text-gray-400 mt-4 text-center">
+                                    {t('calculator.no_data')}
+                                </Text>
+                            </GlassCard>
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
-    </ScrollView>
-);
+        </ScrollView>
+    );
 }
