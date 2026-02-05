@@ -244,6 +244,7 @@
   },
   "projects_list": {
     "title": "My Projects",
+    "coming_soon": "Projects list coming soon",
     "search_placeholder": "Search projects...",
     "filter_all": "All",
     "filter_viable": "Viable",
@@ -421,6 +422,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "quick_stats": "Quick Stats",
     "total_projects": "Total Projects",
     "average_roi": "Average ROI",
     "total_investment": "Total Investment",
