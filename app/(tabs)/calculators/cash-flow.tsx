@@ -140,7 +140,36 @@ export default function CashFlowPage() {
         }
     }, [startingCash, monthlyRevenue, monthlyExpenses, expectedGrowth, calculator]);
 
-    const recommendations = result ? calculator.generateRecommendations(result) : [];
+    // ✅ ARREGLO: Generar recomendaciones manualmente
+    const recommendations = useMemo(() => {
+        if (!result) return [];
+        
+        const recs: string[] = [];
+        
+        if (!result.isHealthy) {
+            recs.push('⚠️ Tu flujo de caja es negativo. Considera reducir gastos o aumentar ingresos.');
+        }
+        
+        if (result.monthsUntilDeficit && result.monthsUntilDeficit < 6) {
+            recs.push(`🚨 Te quedarás sin efectivo en ${result.monthsUntilDeficit} meses. Actúa ahora.`);
+        }
+        
+        if (result.endingCash < result.minimumCashReserve) {
+            recs.push('💰 Tu balance final está por debajo de la reserva recomendada.');
+        }
+        
+        const netMargin = ((parseFloat(monthlyRevenue) - parseFloat(monthlyExpenses)) / parseFloat(monthlyRevenue)) * 100;
+        if (netMargin < 20) {
+            recs.push('📊 Tu margen neto es bajo. Intenta reducir costos o aumentar precios.');
+        }
+        
+        if (result.isHealthy && recs.length === 0) {
+            recs.push('✅ Tu flujo de caja es saludable. Considera invertir el excedente.');
+            recs.push('📈 Con este crecimiento, podrías expandir tu negocio en 6-12 meses.');
+        }
+        
+        return recs;
+    }, [result, monthlyRevenue, monthlyExpenses]);
 
     return (
         <ScrollView 
@@ -148,129 +177,131 @@ export default function CashFlowPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-            <SectionHeading
-                title="💰 Flujo de Caja"
-                subtitle="Proyecta tus ingresos y gastos para los próximos 12 meses"
-            />
+                <SectionHeading
+                    title="💰 Flujo de Caja"
+                    subtitle="Proyecta tus ingresos y gastos para los próximos 12 meses"
+                />
 
-            <View className="flex-row flex-wrap gap-6">
-                {/* Input Form */}
-                <View className="flex-1 min-w-[300px]">
-                    <GlassCard>
-                        <Text className="text-white font-semibold text-lg mb-6">Ingresa tus datos</Text>
+                <View className="flex-row flex-wrap gap-6">
+                    {/* Input Form */}
+                    <View className="flex-1 min-w-[300px]">
+                        <GlassCard>
+                            <Text className="text-white font-semibold text-lg mb-6">Ingresa tus datos</Text>
 
-                        <InputField
-                            label="Efectivo inicial"
-                            value={startingCash}
-                            onChange={setStartingCash}
-                            prefix="$"
-                            hint="Dinero disponible ahora"
-                        />
+                            <InputField
+                                label="Efectivo inicial"
+                                value={startingCash}
+                                onChange={setStartingCash}
+                                prefix="$"
+                                hint="Dinero disponible ahora"
+                            />
 
-                        <InputField
-                            label="Ingresos mensuales"
-                            value={monthlyRevenue}
-                            onChange={setMonthlyRevenue}
-                            prefix="$"
-                            hint="Promedio de ventas"
-                        />
+                            <InputField
+                                label="Ingresos mensuales"
+                                value={monthlyRevenue}
+                                onChange={setMonthlyRevenue}
+                                prefix="$"
+                                hint="Promedio de ventas"
+                            />
 
-                        <InputField
-                            label="Gastos mensuales"
-                            value={monthlyExpenses}
-                            onChange={setMonthlyExpenses}
-                            prefix="$"
-                            hint="Todos los gastos fijos y variables"
-                        />
+                            <InputField
+                                label="Gastos mensuales"
+                                value={monthlyExpenses}
+                                onChange={setMonthlyExpenses}
+                                prefix="$"
+                                hint="Todos los gastos fijos y variables"
+                            />
 
-                        <InputField
-                            label="Crecimiento esperado"
-                            value={expectedGrowth}
-                            onChange={setExpectedGrowth}
-                            prefix="%"
-                            hint="Porcentaje de crecimiento mensual"
-                        />
-                    </GlassCard>
-                </View>
-
-                {/* Results */}
-                <View className="flex-1 min-w-[300px] gap-4">
-                    {result ? (
-                        <>
-                            {/* Summary Cards */}
-                            <View className="flex-row flex-wrap gap-4">
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Balance Final</Text>
-                                    <Text className={`text-2xl font-bold ${result.endingCash >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                        ${result.endingCash.toLocaleString()}
-                                    </Text>
-                                </GlassCard>
-
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Runway</Text>
-                                    <Text className="text-2xl font-bold text-white">
-                                        {result.monthsUntilDeficit ?? '∞'} meses
-                                    </Text>
-                                </GlassCard>
-
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Reserva Mínima</Text>
-                                    <Text className="text-2xl font-bold text-amber-400">
-                                        ${result.minimumCashReserve.toLocaleString()}
-                                    </Text>
-                                </GlassCard>
-                            </View>
-
-                            {/* Health Status */}
-                            <GlassCard className={`border-2 ${result.isHealthy ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
-                                <View className="flex-row items-center gap-3">
-                                    <Text className="text-3xl">{result.isHealthy ? '🟢' : '🔴'}</Text>
-                                    <View>
-                                        <Text className="text-white font-bold text-lg">
-                                            {result.isHealthy ? 'Flujo de Caja Saludable' : 'Flujo de Caja en Riesgo'}
-                                        </Text>
-                                        <Text className={result.isHealthy ? 'text-emerald-400' : 'text-rose-400'}>
-                                            {result.isHealthy
-                                                ? 'Tienes suficiente liquidez para los próximos 12 meses'
-                                                : `Podrías quedarte sin efectivo en ${result.monthsUntilDeficit} meses`
-                                            }
-                                        </Text>
-                                    </View>
-                                </View>
-                            </GlassCard>
-
-                            {/* Timeline Chart */}
-                            <CashFlowTimeline forecasts={result.monthlyForecasts} />
-
-                            {/* Alerts */}
-                            <AlertsPanel alerts={result.alerts} />
-
-                            {/* Recommendations */}
-                            <GlassCard>
-                                <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
-                                <View className="gap-2">
-                                    {recommendations.map((rec, i) => (
-                                        <View key={i} className="flex-row gap-2">
-                                            <Text className="text-indigo-400">{i + 1}.</Text>
-                                            <Text className="text-gray-300 flex-1">{rec}</Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </GlassCard>
-
-                            <GradientButton size="lg">📄 Exportar a PDF</GradientButton>
-                        </>
-                    ) : (
-                        <GlassCard className="items-center py-12">
-                            <Ionicons name="wallet" size={48} color="#6b7280" />
-                            <Text className="text-gray-400 mt-4 text-center">
-                                Ingresa tus datos para ver{'\n'}la proyección de flujo de caja
-                            </Text>
+                            <InputField
+                                label="Crecimiento esperado"
+                                value={expectedGrowth}
+                                onChange={setExpectedGrowth}
+                                prefix="%"
+                                hint="Porcentaje de crecimiento mensual"
+                            />
                         </GlassCard>
-                    )}
+                    </View>
+
+                    {/* Results */}
+                    <View className="flex-1 min-w-[300px] gap-4">
+                        {result ? (
+                            <>
+                                {/* Summary Cards */}
+                                <View className="flex-row flex-wrap gap-4">
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">Balance Final</Text>
+                                        <Text className={`text-2xl font-bold ${result.endingCash >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                            ${result.endingCash.toLocaleString()}
+                                        </Text>
+                                    </GlassCard>
+
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">Runway</Text>
+                                        <Text className="text-2xl font-bold text-white">
+                                            {result.monthsUntilDeficit ?? '∞'} meses
+                                        </Text>
+                                    </GlassCard>
+
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">Reserva Mínima</Text>
+                                        <Text className="text-2xl font-bold text-amber-400">
+                                            ${result.minimumCashReserve.toLocaleString()}
+                                        </Text>
+                                    </GlassCard>
+                                </View>
+
+                                {/* Health Status */}
+                                <GlassCard className={`border-2 ${result.isHealthy ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
+                                    <View className="flex-row items-center gap-3">
+                                        <Text className="text-3xl">{result.isHealthy ? '🟢' : '🔴'}</Text>
+                                        <View>
+                                            <Text className="text-white font-bold text-lg">
+                                                {result.isHealthy ? 'Flujo de Caja Saludable' : 'Flujo de Caja en Riesgo'}
+                                            </Text>
+                                            <Text className={result.isHealthy ? 'text-emerald-400' : 'text-rose-400'}>
+                                                {result.isHealthy
+                                                    ? 'Tienes suficiente liquidez para los próximos 12 meses'
+                                                    : `Podrías quedarte sin efectivo en ${result.monthsUntilDeficit} meses`
+                                                }
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </GlassCard>
+
+                                {/* Timeline Chart */}
+                                <CashFlowTimeline forecasts={result.monthlyForecasts} />
+
+                                {/* Alerts */}
+                                <AlertsPanel alerts={result.alerts} />
+
+                                {/* Recommendations */}
+                                {recommendations.length > 0 && (
+                                    <GlassCard>
+                                        <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
+                                        <View className="gap-2">
+                                            {recommendations.map((rec, i) => (
+                                                <View key={i} className="flex-row gap-2">
+                                                    <Text className="text-[#14B8A6]">{i + 1}.</Text>
+                                                    <Text className="text-gray-300 flex-1">{rec}</Text>
+                                                </View>
+                                            ))}
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                <GradientButton size="lg">📄 Exportar a PDF</GradientButton>
+                            </>
+                        ) : (
+                            <GlassCard className="items-center py-12">
+                                <Ionicons name="wallet" size={48} color="#6b7280" />
+                                <Text className="text-gray-400 mt-4 text-center">
+                                    Ingresa tus datos para ver{'\n'}la proyección de flujo de caja
+                                </Text>
+                            </GlassCard>
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
-    </ScrollView>
-);
+        </ScrollView>
+    );
 }
