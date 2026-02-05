@@ -17,7 +17,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.tint,
+        tabBarActiveTintColor: colors.primary, // Changed to use primary (Teal)
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarStyle: {
@@ -56,6 +56,50 @@ export default function TabLayout() {
         options={{
           title: t('tabs.settings'),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="gear" color={color} />,
+        }}
+      />
+      
+      {/* Calculator routes - hidden from tab bar but accessible via navigation */}
+      <Tabs.Screen
+        name="calculators/break-even"
+        options={{
+          href: null, // Hide from tab bar
+          title: 'Break-Even',
+        }}
+      />
+      <Tabs.Screen
+        name="calculators/cash-flow"
+        options={{
+          href: null,
+          title: 'Cash Flow',
+        }}
+      />
+      <Tabs.Screen
+        name="calculators/pricing"
+        options={{
+          href: null,
+          title: 'Pricing',
+        }}
+      />
+      <Tabs.Screen
+        name="calculators/loan"
+        options={{
+          href: null,
+          title: 'Loan',
+        }}
+      />
+      <Tabs.Screen
+        name="calculators/employee-roi"
+        options={{
+          href: null,
+          title: 'Employee ROI',
+        }}
+      />
+      <Tabs.Screen
+        name="calculators/marketing"
+        options={{
+          href: null,
+          title: 'Marketing ROI',
         }}
       />
     </Tabs>
