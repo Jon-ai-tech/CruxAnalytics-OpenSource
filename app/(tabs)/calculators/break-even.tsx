@@ -226,7 +226,49 @@ export default function BreakEvenPage() {
         }
     }, [fixedCosts, pricePerUnit, variableCost, currentSales, calculator]);
 
-    const recommendations = result ? calculator.generateRecommendations(result) : [];
+    const recommendations = useMemo(() => {
+        if (!result) return [];
+        
+        const recs: string[] = [];
+
+        if (result.marginOfSafety !== null) {
+            if (result.isAboveBreakEven) {
+                recs.push(t('calculator.break_even.recommendations.above_break_even', { 
+                    percent: Math.abs(result.marginOfSafety).toFixed(1) 
+                }));
+            } else {
+                recs.push(t('calculator.break_even.recommendations.below_break_even', { 
+                    units: Math.abs(result.marginOfSafetyUnits || 0).toString() 
+                }));
+            }
+        }
+
+        // Suggest price increase if margin is low
+        if (result.contributionMarginRatio < 40) {
+            const suggestedIncrease = 10;
+            recs.push(t('calculator.break_even.recommendations.increase_price', { 
+                percent: suggestedIncrease.toString() 
+            }));
+        }
+
+        // Suggest cost reduction
+        const currentFixed = parseFloat(fixedCosts) || 0;
+        const reduction = Math.round(currentFixed * 0.1);
+        if (reduction > 0) {
+            recs.push(t('calculator.break_even.recommendations.reduce_costs', { 
+                amount: reduction.toString() 
+            }));
+        }
+
+        // General recommendations
+        if (result.contributionMarginRatio > 50) {
+            recs.push(t('calculator.break_even.recommendations.increase_volume'));
+        }
+        
+        recs.push(t('calculator.break_even.recommendations.monitor_costs'));
+
+        return recs;
+    }, [result, fixedCosts, t]);
 
     return (
         <ScrollView 

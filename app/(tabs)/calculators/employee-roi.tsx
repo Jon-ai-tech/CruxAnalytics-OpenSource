@@ -132,42 +132,30 @@ export default function EmployeeROIPage() {
         }
     }, [annualSalary, annualBenefits, onboardingCosts, revenueGenerated, hoursPerWeek, roleType, calculator]);
 
-    // ✅ Generate recommendations manually
+    // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
         
         const recs: string[] = [];
         
-        if (result.roiPercentage >= 100) {
-            recs.push('✅ Excelente ROI. Esta contratación es altamente rentable.');
-        } else if (result.roiPercentage >= 50) {
-            recs.push('⚠️ ROI positivo pero moderado. Considera optimizar productividad.');
-        } else if (result.roiPercentage >= 0) {
-            recs.push('⚠️ ROI bajo. Revisa si el rol está bien definido o si hay oportunidades de mejora.');
+        if (result.roiPercentage >= 50) {
+            recs.push(t('calculator.employee_roi.recommendations.positive_hire'));
+        } else if (result.roiPercentage < 0) {
+            recs.push(t('calculator.employee_roi.recommendations.negative_roi'));
         } else {
-            recs.push('🚨 ROI negativo. Esta contratación no es rentable en este momento.');
+            recs.push(t('calculator.employee_roi.recommendations.adjust_expectations'));
         }
         
-        if (result.productivityRatio < 2) {
-            recs.push('La productividad es baja (<2x). Considera automatizar tareas o redefinir responsabilidades.');
+        if (result.paybackMonths && result.paybackMonths <= 6) {
+            recs.push(t('calculator.employee_roi.recommendations.fast_payback', { 
+                months: result.paybackMonths.toString() 
+            }));
         }
         
-        if (result.paybackMonths && result.paybackMonths > 12) {
-            recs.push(`El tiempo de recuperación es largo (${result.paybackMonths} meses). Asegúrate de tener flujo de caja suficiente.`);
-        } else if (result.paybackMonths && result.paybackMonths <= 6) {
-            recs.push(`Recuperación rápida (${result.paybackMonths} meses). Excelente decisión de contratación.`);
-        }
-        
-        if (result.benchmarkComparison.productivityLevel === 'low') {
-            recs.push('Productividad por debajo del promedio de industria. Considera training o soporte adicional.');
-        } else if (result.benchmarkComparison.productivityLevel === 'high') {
-            recs.push('Productividad superior al promedio. ¡Este empleado es un activo valioso!');
-        }
-        
-        recs.push('Revisa métricas trimestralmente para ajustar expectativas y optimizar desempeño.');
+        recs.push(t('calculator.employee_roi.recommendations.optimize_role'));
         
         return recs;
-    }, [result]);
+    }, [result, t]);
 
     return (
         <ScrollView 

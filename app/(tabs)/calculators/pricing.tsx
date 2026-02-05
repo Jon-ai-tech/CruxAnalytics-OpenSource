@@ -85,7 +85,7 @@ export default function PricingPage() {
         }
     }, [costPerUnit, desiredMargin, competitorPrice, calculator]);
 
-    // ✅ Generate recommendations manually
+    // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
         
@@ -94,28 +94,23 @@ export default function PricingPage() {
         const margin = parseFloat(desiredMargin);
         
         if (result.competitorComparison) {
+            const percentDiff = Math.abs(result.competitorComparison.percentageDiff).toFixed(1);
             if (result.competitorComparison.position === 'above') {
-                recs.push(`Estás ${Math.abs(result.competitorComparison.percentageDiff).toFixed(1)}% por encima de la competencia. Asegúrate de ofrecer valor adicional.`);
+                recs.push(t('calculator.pricing.recommendations.high_vs_competition', { percent: percentDiff }));
             } else {
-                recs.push(`Estás ${Math.abs(result.competitorComparison.percentageDiff).toFixed(1)}% por debajo de la competencia. Podrías aumentar precios sin perder clientes.`);
+                recs.push(t('calculator.pricing.recommendations.low_vs_competition', { percent: percentDiff }));
             }
         }
         
-        if (margin < 30) {
-            recs.push('Tu margen es bajo (<30%). Considera reducir costos o aumentar precios.');
-        } else if (margin > 60) {
-            recs.push('Tu margen es alto (>60%). Podrías ser vulnerable a competidores con precios más bajos.');
+        if (margin > 50) {
+            recs.push(t('calculator.pricing.recommendations.high_margin'));
         }
         
-        if (result.grossProfitPerUnit < 10) {
-            recs.push('La ganancia por unidad es baja. Considera aumentar precios o reducir costos.');
-        }
-        
-        recs.push('Prueba diferentes precios con muestras pequeñas antes de cambiar todo tu inventario.');
-        recs.push('Monitorea regularmente los precios de competencia para mantener tu posición.');
+        recs.push(t('calculator.pricing.recommendations.test_prices'));
+        recs.push(t('calculator.pricing.recommendations.monitor_prices'));
         
         return recs;
-    }, [result, costPerUnit, desiredMargin]);
+    }, [result, costPerUnit, desiredMargin, t]);
 
     return (
         <ScrollView 
