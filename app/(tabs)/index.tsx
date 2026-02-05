@@ -241,6 +241,9 @@ export default function HomeScreen() {
           className="bg-primary rounded-full w-16 h-16 items-center justify-center shadow-2xl"
           style={{
             shadowColor: colors.primary,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 8,
             elevation: 8,
           }}
         >
