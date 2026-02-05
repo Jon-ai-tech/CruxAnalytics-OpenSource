@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from '@/lib/i18n-context';
 import { useColors } from '@/hooks/use-colors';
 
@@ -240,13 +241,22 @@ export function OnboardingTutorial({
                 <View
                   key={index}
                   style={{
-                    width: index === currentStep ? 24 : 8,
-                    height: 8,
-                    borderRadius: 4,
-                    backgroundColor:
-                      index === currentStep ? colors.primary : colors.border,
+                    height: 4,
+                    flex: 1,
+                    borderRadius: 2,
+                    overflow: 'hidden',
+                    backgroundColor: colors.border,
                   }}
-                />
+                >
+                  {index <= currentStep && (
+                    <LinearGradient
+                      colors={['#14B8A6', '#86EFAC']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      style={{ height: '100%' }}
+                    />
+                  )}
+                </View>
               ))}
             </View>
 

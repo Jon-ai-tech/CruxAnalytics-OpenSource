@@ -32,7 +32,7 @@ export function GlassCard({
             {gradient && (
                 <View className="absolute inset-0 rounded-2xl overflow-hidden opacity-20">
                     <LinearGradient
-                        colors={['#00C0D4', '#A7F3D0', '#FDBA74']}
+                        colors={['#14B8A6', '#86EFAC', '#FB923C']}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                         style={{ flex: 1 }}
@@ -74,7 +74,7 @@ export function GradientButton({
       `}
         >
             <LinearGradient
-                colors={['#00C0D4', '#A7F3D0']}
+                colors={['#14B8A6', '#86EFAC']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 className={`${sizeClasses[size]} items-center justify-center`}
@@ -132,9 +132,9 @@ export function MetricCard({
     color?: 'indigo' | 'emerald' | 'amber' | 'rose';
 }) {
     const colorClasses = {
-        indigo: 'from-[#00C0D4] to-[#A7F3D0]',
-        emerald: 'from-emerald-500 to-teal-500',
-        amber: 'from-[#FDBA74] to-orange-500',
+        indigo: 'from-[#14B8A6] to-[#86EFAC]',
+        emerald: 'from-[#86EFAC] to-teal-500',
+        amber: 'from-[#FB923C] to-orange-500',
         rose: 'from-rose-500 to-pink-500',
     };
 
@@ -205,9 +205,9 @@ export function Badge({
     variant?: 'default' | 'success' | 'warning' | 'danger';
 }) {
     const variantClasses = {
-        default: 'bg-[#00C0D4]/20 text-[#00C0D4] border-[#00C0D4]/30',
-        success: 'bg-[#A7F3D0]/20 text-[#A7F3D0] border-[#A7F3D0]/30',
-        warning: 'bg-[#FDBA74]/20 text-[#FDBA74] border-[#FDBA74]/30',
+        default: 'bg-[#14B8A6]/20 text-[#14B8A6] border-[#14B8A6]/30',
+        success: 'bg-[#86EFAC]/20 text-[#86EFAC] border-[#86EFAC]/30',
+        warning: 'bg-[#FB923C]/20 text-[#FB923C] border-[#FB923C]/30',
         danger: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
     };
 
@@ -239,7 +239,7 @@ export function FeatureCard({
             gradient={highlight}
             className={`flex-1 min-w-[280px] ${highlight ? 'border-indigo-500/50' : ''}`}
         >
-            <View className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00C0D4] to-[#A7F3D0] items-center justify-center mb-4">
+            <View className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#14B8A6] to-[#86EFAC] items-center justify-center mb-4">
                 {icon}
             </View>
             <Text className="text-white text-xl font-bold mb-2">{title}</Text>
@@ -288,7 +288,7 @@ export function TestimonialCard({
         <GlassCard className="max-w-md">
             <Text className="text-gray-300 text-lg italic mb-4">"{quote}"</Text>
             <View className="flex-row items-center gap-3">
-                <View className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00C0D4] to-[#A7F3D0]" />
+                <View className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#86EFAC]" />
                 <View>
                     <Text className="text-white font-semibold">{author}</Text>
                     <Text className="text-gray-500 text-sm">{role}</Text>

@@ -9,6 +9,7 @@ import { View, Text, ScrollView, Pressable, Image, Platform } from 'react-native
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useColors } from '@/hooks/use-colors';
 import {
     GlassCard,
     GradientButton,
@@ -25,22 +26,26 @@ import {
 // ============================================
 function HeroSection() {
     const router = useRouter();
+    const colors = useColors();
 
     return (
         <View className="min-h-screen justify-center items-center px-6 py-20 relative overflow-hidden">
             {/* Background gradient orbs */}
-            <View className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#00C0D4]/20 blur-[120px]" />
-            <View className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#A7F3D0]/20 blur-[120px]" />
+            <View className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#14B8A6]/20 blur-[120px]" />
+            <View className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#86EFAC]/20 blur-[120px]" />
 
             {/* Content */}
             <View className="max-w-4xl items-center z-10">
                 <Badge variant="success">
-                    <Text>✨ 100% Gratis • Sin registro</Text>
+                    <View className="flex-row items-center gap-1.5">
+                        <Ionicons name="sparkles" size={14} color={colors.success} />
+                        <Text className="text-success text-xs font-medium">100% Gratis • Sin registro</Text>
+                    </View>
                 </Badge>
 
                 <Text className="text-4xl md:text-6xl lg:text-7xl font-bold text-white text-center mt-6 leading-tight">
                     Descubre si tu negocio{'\n'}
-                    <Text className="bg-gradient-to-r from-[#00C0D4] to-[#A7F3D0] bg-clip-text text-transparent">
+                    <Text className="bg-gradient-to-r from-[#14B8A6] to-[#86EFAC] bg-clip-text text-transparent">
                         está en riesgo
                     </Text>
                 </Text>
@@ -53,20 +58,30 @@ function HeroSection() {
                 <View className="flex-row gap-4 mt-10">
                     <GradientButton
                         size="lg"
-                        onPress={() => router.push('/crux')}
+                        className="rounded-xl"
+                        onPress={() => router.push('/')}
                     >
                         Analizar mi negocio →
                     </GradientButton>
-                    <OutlineButton onPress={() => { }}>
+                    <OutlineButton className="rounded-xl" onPress={() => { }}>
                         Ver demo
                     </OutlineButton>
                 </View>
 
                 {/* Trust indicators */}
                 <View className="flex-row gap-8 mt-12 opacity-60">
-                    <Text className="text-gray-400 text-sm">🔒 Datos 100% privados</Text>
-                    <Text className="text-gray-400 text-sm">⚡ Resultados en 2 min</Text>
-                    <Text className="text-gray-400 text-sm">💡 Con IA explicativa</Text>
+                    <View className="flex-row items-center gap-2">
+                        <Ionicons name="lock-closed" size={16} color="#9ca3af" />
+                        <Text className="text-gray-400 text-sm">Datos 100% privados</Text>
+                    </View>
+                    <View className="flex-row items-center gap-2">
+                        <Ionicons name="flash" size={16} color={colors.primary} />
+                        <Text className="text-gray-400 text-sm">Resultados en 2 min</Text>
+                    </View>
+                    <View className="flex-row items-center gap-2">
+                        <Ionicons name="bulb" size={16} color={colors.warning} />
+                        <Text className="text-gray-400 text-sm">Con IA explicativa</Text>
+                    </View>
                 </View>
             </View>
         </View>
@@ -96,7 +111,9 @@ function ProblemSection() {
                 {/* Pain points */}
                 <View className="flex-row flex-wrap gap-6 mt-16 justify-center">
                     <GlassCard className="max-w-xs">
-                        <Text className="text-3xl mb-4">😰</Text>
+                        <View className="w-16 h-16 rounded-full bg-warning/10 items-center justify-center mb-4">
+                            <Ionicons name="alert-circle" size={32} color="#FB923C" />
+                        </View>
                         <Text className="text-white font-bold text-lg mb-2">
                             "No sé cuánto debo vender"
                         </Text>
@@ -106,7 +123,9 @@ function ProblemSection() {
                     </GlassCard>
 
                     <GlassCard className="max-w-xs">
-                        <Text className="text-3xl mb-4">💸</Text>
+                        <View className="w-16 h-16 rounded-full bg-error/10 items-center justify-center mb-4">
+                            <Ionicons name="cash" size={32} color="#FB923C" />
+                        </View>
                         <Text className="text-white font-bold text-lg mb-2">
                             "Se me acaba el dinero"
                         </Text>
@@ -116,7 +135,9 @@ function ProblemSection() {
                     </GlassCard>
 
                     <GlassCard className="max-w-xs">
-                        <Text className="text-3xl mb-4">❓</Text>
+                        <View className="w-16 h-16 rounded-full bg-primary/10 items-center justify-center mb-4">
+                            <Ionicons name="help-circle" size={32} color="#14B8A6" />
+                        </View>
                         <Text className="text-white font-bold text-lg mb-2">
                             "¿Me conviene ese préstamo?"
                         </Text>
@@ -143,7 +164,7 @@ function SolutionSection() {
                         <Badge>La solución</Badge>
                         <Text className="text-3xl md:text-4xl font-bold text-white mt-4">
                             Tu analista financiero personal.{'\n'}
-                            <Text className="text-[#00C0D4]">Gratis y en 2 minutos.</Text>
+                            <Text className="text-[#14B8A6]">Gratis y en 2 minutos.</Text>
                         </Text>
                         <Text className="text-gray-400 text-lg mt-6 leading-relaxed">
                             CruxAnalytics analiza tu negocio y te da:
@@ -181,7 +202,10 @@ function SolutionSection() {
                     <View className="flex-1 min-w-[300px]">
                         <GlassCard gradient className="p-8">
                             <View className="bg-slate-900 rounded-xl p-6">
-                                <Text className="text-emerald-400 text-sm font-bold mb-2">✅ TU NEGOCIO</Text>
+                                <View className="flex-row items-center gap-2 mb-2">
+                                    <Ionicons name="checkmark-circle" size={20} color="#86EFAC" />
+                                    <Text className="text-success text-sm font-bold mb-2">TU NEGOCIO</Text>
+                                </View>
                                 <Text className="text-white text-2xl font-bold">ESTÁ SALUDABLE</Text>
 
                                 <View className="flex-row gap-4 mt-6">
@@ -321,8 +345,8 @@ function CTASection() {
 
                     <GradientButton
                         size="lg"
-                        className="mt-8"
-                        onPress={() => router.push('/crux')}
+                        className="mt-8 rounded-xl"
+                        onPress={() => router.push('/')}
                     >
                         Comenzar análisis gratis →
                     </GradientButton>
@@ -345,7 +369,7 @@ function Footer() {
             <View className="max-w-6xl mx-auto flex-row flex-wrap justify-between items-center gap-6">
                 <View>
                     <Text className="text-2xl font-bold text-white">
-                        Crux<Text className="text-[#00C0D4]">Analytics</Text>
+                        Crux<Text className="text-[#14B8A6]">Analytics</Text>
                     </Text>
                     <Text className="text-gray-500 text-sm mt-1">
                         Análisis financiero para emprendedores
@@ -378,11 +402,11 @@ export default function LandingPage() {
             {/* Navigation */}
             <View className="absolute top-0 left-0 right-0 z-50 flex-row justify-between items-center px-6 py-4">
                 <Text className="text-xl font-bold text-white">
-                    Crux<Text className="text-[#00C0D4]">Analytics</Text>
+                    Crux<Text className="text-[#14B8A6]">Analytics</Text>
                 </Text>
                 <View className="flex-row gap-4">
-                    <Link href="/crux" asChild>
-                        <Pressable className="px-4 py-2">
+                    <Link href="/" asChild>
+                        <Pressable className="px-4 py-2 rounded-xl">
                             <Text className="text-white font-medium">Iniciar</Text>
                         </Pressable>
                     </Link>
