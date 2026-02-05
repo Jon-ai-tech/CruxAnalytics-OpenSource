@@ -641,6 +641,56 @@
     "marketing_roi": {
       "title": "Marketing ROI",
       "description": "Measure your advertising"
+    },
+    "calculator": {
+  "enter_data": "Enter your data",
+  "results": "Results",
+  "recommendations": "Recommendations",
+  "export_pdf": "Export to PDF",
+  "no_data": "Enter your data to see the analysis",
+  
+  "break_even": {
+    "title": "Break-Even Point",
+    "subtitle": "Discover how many units you need to sell to avoid losses",
+    "fixed_costs": "Monthly fixed costs",
+    "fixed_costs_hint": "Rent, salaries, utilities, etc.",
+    "unit_price": "Price per unit",
+    "unit_price_hint": "What you charge for each product/service",
+    "variable_cost": "Variable cost per unit",
+    "variable_cost_hint": "Materials, commissions, shipping, etc.",
+    "current_sales": "Current sales (optional)",
+    "current_sales_hint": "To calculate your safety margin",
+    "break_even_units": "Break-Even Point (Units)",
+    "break_even_revenue": "Break-Even Point (Revenue)",
+    "contribution_margin": "Contribution per Unit",
+    "above_break_even": "Above break-even",
+    "below_break_even": "Below break-even",
+    "safety_margin": "Safety margin",
+    "visualization": "Visualization"
+  },
+  
+  "cash_flow": {
+    "title": "Cash Flow",
+    "subtitle": "Project your income and expenses for the next 12 months",
+    "starting_cash": "Starting cash",
+    "starting_cash_hint": "Money available now",
+    "monthly_revenue": "Monthly revenue",
+    "monthly_revenue_hint": "Average sales",
+    "monthly_expenses": "Monthly expenses",
+    "monthly_expenses_hint": "All fixed and variable expenses",
+    "expected_growth": "Expected growth",
+    "expected_growth_hint": "Monthly growth percentage",
+    "final_balance": "Final Balance",
+    "runway": "Runway",
+    "minimum_reserve": "Minimum Reserve",
+    "healthy_cash_flow": "Healthy Cash Flow",
+    "cash_flow_at_risk": "Cash Flow at Risk",
+    "sufficient_liquidity": "You have sufficient liquidity for the next 12 months",
+    "run_out_warning": "You might run out of cash in {{months}} months",
+    "projection_12_months": "12-Month Projection",
+    "no_critical_alerts": "No critical alerts",
+    "cash_flow_healthy": "Your cash flow looks healthy",
+    "alerts": "Alerts"
     }
   }
 }
