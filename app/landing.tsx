@@ -29,8 +29,8 @@ function HeroSection() {
     return (
         <View className="min-h-screen justify-center items-center px-6 py-20 relative overflow-hidden">
             {/* Background gradient orbs */}
-            <View className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-600/20 blur-[120px]" />
-            <View className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600/20 blur-[120px]" />
+            <View className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#00C0D4]/20 blur-[120px]" />
+            <View className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#A7F3D0]/20 blur-[120px]" />
 
             {/* Content */}
             <View className="max-w-4xl items-center z-10">
@@ -40,7 +40,7 @@ function HeroSection() {
 
                 <Text className="text-4xl md:text-6xl lg:text-7xl font-bold text-white text-center mt-6 leading-tight">
                     Descubre si tu negocio{'\n'}
-                    <Text className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+                    <Text className="bg-gradient-to-r from-[#00C0D4] to-[#A7F3D0] bg-clip-text text-transparent">
                         está en riesgo
                     </Text>
                 </Text>
@@ -143,7 +143,7 @@ function SolutionSection() {
                         <Badge>La solución</Badge>
                         <Text className="text-3xl md:text-4xl font-bold text-white mt-4">
                             Tu analista financiero personal.{'\n'}
-                            <Text className="text-indigo-400">Gratis y en 2 minutos.</Text>
+                            <Text className="text-[#00C0D4]">Gratis y en 2 minutos.</Text>
                         </Text>
                         <Text className="text-gray-400 text-lg mt-6 leading-relaxed">
                             CruxAnalytics analiza tu negocio y te da:
@@ -345,7 +345,7 @@ function Footer() {
             <View className="max-w-6xl mx-auto flex-row flex-wrap justify-between items-center gap-6">
                 <View>
                     <Text className="text-2xl font-bold text-white">
-                        Crux<Text className="text-indigo-400">Analytics</Text>
+                        Crux<Text className="text-[#00C0D4]">Analytics</Text>
                     </Text>
                     <Text className="text-gray-500 text-sm mt-1">
                         Análisis financiero para emprendedores
@@ -378,7 +378,7 @@ export default function LandingPage() {
             {/* Navigation */}
             <View className="absolute top-0 left-0 right-0 z-50 flex-row justify-between items-center px-6 py-4">
                 <Text className="text-xl font-bold text-white">
-                    Crux<Text className="text-indigo-400">Analytics</Text>
+                    Crux<Text className="text-[#00C0D4]">Analytics</Text>
                 </Text>
                 <View className="flex-row gap-4">
                     <Link href="/crux" asChild>

@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from '@/lib/i18n-context';
 import { useColors } from '@/hooks/use-colors';
 
@@ -16,7 +17,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export interface TutorialStep {
   id: string;
-  icon: string;
+  icon: keyof typeof Ionicons.glyphMap;
   title: string;
   description: string;
 }
@@ -41,31 +42,31 @@ export function OnboardingTutorial({
   const steps: TutorialStep[] = [
     {
       id: 'welcome',
-      icon: '👋',
+      icon: 'hand-right-outline',
       title: t('onboarding.welcome_title'),
       description: t('onboarding.welcome_description'),
     },
     {
       id: 'create',
-      icon: '📝',
+      icon: 'create-outline',
       title: t('onboarding.create_title'),
       description: t('onboarding.create_description'),
     },
     {
       id: 'compare',
-      icon: '⚖️',
+      icon: 'git-compare-outline',
       title: t('onboarding.compare_title'),
       description: t('onboarding.compare_description'),
     },
     {
       id: 'snapshots',
-      icon: '📸',
+      icon: 'camera-outline',
       title: t('onboarding.snapshots_title'),
       description: t('onboarding.snapshots_description'),
     },
     {
       id: 'export',
-      icon: '📄',
+      icon: 'document-text-outline',
       title: t('onboarding.export_title'),
       description: t('onboarding.export_description'),
     },
@@ -189,9 +190,17 @@ export function OnboardingTutorial({
             }}
           >
             {/* Icon */}
-            <Text style={{ fontSize: 80, marginBottom: 24 }}>
-              {currentStepData.icon}
-            </Text>
+            <View style={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              backgroundColor: colors.primary + '20',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 24,
+            }}>
+              <Ionicons name={currentStepData.icon} size={40} color={colors.primary} />
+            </View>
 
             {/* Title */}
             <Text

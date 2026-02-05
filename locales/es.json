@@ -565,6 +565,25 @@
     "not_found": "Escenarios no encontrados",
     "comparison_info": "Esta comparación muestra las diferencias entre dos escenarios guardados. Los valores positivos en el Escenario B indican mejoras respecto al Escenario A, mientras que los valores negativos indican deterioro."
   },
+  "mentor": {
+    "welcome": "¡Hola! Soy tu mentor financiero. Te ayudaré a entender tus números y tomar mejores decisiones de negocio.",
+    "break_even_intro": "Calculemos tu punto de equilibrio. Este es el mínimo que necesitas vender para cubrir todos tus costos.",
+    "break_even_success": "¡Excelente! Tu punto de equilibrio es {{amount}}. Esto significa que necesitas vender al menos esto para no perder dinero.",
+    "cash_flow_intro": "Ahora proyectemos tu flujo de caja. Esto te muestra cuándo entra y sale dinero de tu negocio.",
+    "cash_flow_warning": "Noto que podrías quedarte con poco efectivo en el mes {{month}}. Planifiquemos con anticipación para evitar problemas.",
+    "loan_intro": "¿Pensando en un préstamo? Déjame ayudarte a comparar tus opciones y encontrar las mejores condiciones.",
+    "loan_advice": "Según los números, la opción {{option}} te da el mejor valor con menor interés total.",
+    "pricing_intro": "Encontremos el precio correcto para tu producto. Necesitamos equilibrar margen de ganancia y volumen de ventas.",
+    "pricing_suggestion": "Recomiendo un precio de {{price}}. Esto te da un margen saludable de {{margin}}% manteniéndote competitivo.",
+    "employee_roi_intro": "¿Considerando contratar? Calculemos si el nuevo empleado generará suficiente valor.",
+    "employee_roi_positive": "¡Buenas noticias! Esta contratación debería pagarse sola en {{months}} meses según la productividad esperada.",
+    "employee_roi_negative": "Los números muestran que esta contratación podría no ser rentable aún. Considera esperar o ajustar el rol.",
+    "marketing_intro": "Analicemos tus canales de marketing para ver cuáles dan el mejor retorno de inversión.",
+    "marketing_winner": "{{channel}} es tu mejor canal con {{roi}}% ROI. Considera invertir más aquí.",
+    "general_tip": "Recuerda: conocer tus números es el primer paso hacia el éxito empresarial. ¡Sigue monitoreando y ajustando!",
+    "encouragement": "¡Lo estás haciendo genial! Cada análisis te acerca más a la claridad financiera.",
+    "next_step": "¿Qué te gustaría explorar a continuación?"
+  },
   "validations": {
     "error": "Error",
     "project_name_required": "El nombre del proyecto es requerido",

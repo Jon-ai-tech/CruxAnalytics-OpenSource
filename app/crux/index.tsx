@@ -129,7 +129,7 @@ function MetricSummaryCard({
     return (
         <GlassCard className="flex-1 min-w-[200px]">
             <View className="flex-row items-center gap-2 mb-3">
-                <Ionicons name={icon} size={18} color="#6366f1" />
+                <Ionicons name={icon} size={18} color="#00C0D4" />
                 <Text className="text-gray-400 text-sm">{label}</Text>
             </View>
             <Text className="text-white text-2xl font-bold">{value}</Text>

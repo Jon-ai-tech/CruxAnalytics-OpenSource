@@ -577,6 +577,25 @@
     "not_found": "Scenarios not found",
     "comparison_info": "This comparison shows the differences between two saved scenarios. Positive values in Scenario B indicate improvements over Scenario A, while negative values indicate deterioration."
   },
+  "mentor": {
+    "welcome": "Hi! I'm your financial mentor. I'll help you understand your numbers and make better business decisions.",
+    "break_even_intro": "Let's calculate your break-even point. This is the minimum you need to sell to cover all your costs.",
+    "break_even_success": "Great! Your break-even point is {{amount}}. This means you need to sell at least this much to avoid losing money.",
+    "cash_flow_intro": "Now let's project your cash flow. This shows you when money comes in and goes out of your business.",
+    "cash_flow_warning": "I notice you might run low on cash in month {{month}}. Let's plan ahead to avoid problems.",
+    "loan_intro": "Thinking about a loan? Let me help you compare your options and find the best terms.",
+    "loan_advice": "Based on the numbers, option {{option}} gives you the best value with lower total interest.",
+    "pricing_intro": "Let's find the right price for your product. We need to balance profit margin and sales volume.",
+    "pricing_suggestion": "I recommend pricing at {{price}}. This gives you a healthy {{margin}}% margin while staying competitive.",
+    "employee_roi_intro": "Considering hiring? Let's calculate if the new employee will generate enough value.",
+    "employee_roi_positive": "Good news! This hire should pay for itself in {{months}} months based on expected productivity.",
+    "employee_roi_negative": "The numbers show this hire might not be profitable yet. Consider waiting or adjusting the role.",
+    "marketing_intro": "Let's analyze your marketing channels to see which ones give the best return on investment.",
+    "marketing_winner": "{{channel}} is your best performer with {{roi}}% ROI. Consider investing more here.",
+    "general_tip": "Remember: knowing your numbers is the first step to business success. Keep tracking and adjusting!",
+    "encouragement": "You're doing great! Every analysis brings you closer to financial clarity.",
+    "next_step": "What would you like to explore next?"
+  },
   "validations": {
     "error": "Error",
     "project_name_required": "Project name is required",
