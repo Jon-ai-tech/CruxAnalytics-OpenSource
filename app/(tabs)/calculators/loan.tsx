@@ -118,7 +118,11 @@ export default function LoanPage() {
     }) : [];
 
     return (
-        <View className="max-w-5xl mx-auto">
+        <ScrollView 
+            className="flex-1 bg-[#020617]"
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+        >
+            <View className="max-w-5xl mx-auto">
             <SectionHeading
                 title="💳 Evaluador de Préstamos"
                 subtitle="Analiza si el financiamiento es conveniente para tu negocio"
@@ -201,14 +205,14 @@ export default function LoanPage() {
                                 <GlassCard className="flex-1 min-w-[140px]">
                                     <Text className="text-gray-400 text-sm">Tasa Efectiva</Text>
                                     <Text className="text-2xl font-bold text-amber-400">
-                                        {result.effectiveAnnualRate.toFixed(1)}%
+                                        {result.effectiveAnnualRate != null ? result.effectiveAnnualRate.toFixed(1) : '0'}%
                                     </Text>
                                 </GlassCard>
                             </View>
 
                             {/* Affordability */}
                             {result.affordability.isAffordable !== null && (
-                                <GlassCard className={`border-2 ${result.affordability.isAffordable ? 'border-#86EFAC/50' : 'border-#FB923C/50'}`}>
+                                <GlassCard className={`border-2 ${result.affordability.isAffordable ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
                                     <View className="flex-row items-center gap-3">
                                         <Text className="text-3xl">
                                             {result.affordability.isAffordable ? '✅' : '⚠️'}
@@ -221,7 +225,7 @@ export default function LoanPage() {
                                                 }
                                             </Text>
                                             <Text className="text-gray-400 text-sm">
-                                                Ratio de servicio de deuda: {result.affordability.debtServiceRatio?.toFixed(1)}%
+                                                Ratio de servicio de deuda: {result.affordability.debtServiceRatio != null ? result.affordability.debtServiceRatio.toFixed(1) : '0'}%
                                                 {result.affordability.isAffordable ? ' (< 40% es saludable)' : ' (> 40% es riesgoso)'}
                                             </Text>
                                         </View>
@@ -266,5 +270,6 @@ export default function LoanPage() {
                 </View>
             </View>
         </View>
-    );
+    </ScrollView>
+);
 }

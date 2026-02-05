@@ -63,7 +63,7 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
                                 {/* Bar */}
                                 <View className="h-32 w-8 justify-end bg-slate-800 rounded-lg overflow-hidden">
                                     <View
-                                        className={`w-full rounded-t-lg ${isPositive ? 'bg-#86EFAC' : 'bg-#FB923C'}`}
+                                        className={`w-full rounded-t-lg ${isPositive ? 'bg-[#86EFAC]' : 'bg-[#FB923C]'}`}
                                         style={{ height: `${Math.max(height, 10)}%` }}
                                     />
                                 </View>
@@ -71,7 +71,7 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
                                 <Text className="text-gray-400 text-xs mt-2">Mes {forecast.month}</Text>
                                 {/* Value */}
                                 <Text className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                    ${(forecast.balance / 1000).toFixed(0)}k
+                                    ${forecast.balance != null ? (forecast.balance / 1000).toFixed(0) : '0'}k
                                 </Text>
                             </View>
                         );
@@ -85,7 +85,7 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
 function AlertsPanel({ alerts }: { alerts: string[] }) {
     if (alerts.length === 0) {
         return (
-            <GlassCard className="border border-#86EFAC/30">
+            <GlassCard className="border border-[#86EFAC]/30">
                 <View className="flex-row items-center gap-3">
                     <Text className="text-2xl">✅</Text>
                     <View>
@@ -98,7 +98,7 @@ function AlertsPanel({ alerts }: { alerts: string[] }) {
     }
 
     return (
-        <GlassCard className="border border-#FB923C/30">
+        <GlassCard className="border border-[#FB923C]/30">
             <Text className="text-white font-semibold mb-4">⚠️ Alertas</Text>
             <View className="gap-2">
                 {alerts.map((alert, index) => (
@@ -143,7 +143,11 @@ export default function CashFlowPage() {
     const recommendations = result ? calculator.generateRecommendations(result) : [];
 
     return (
-        <View className="max-w-5xl mx-auto">
+        <ScrollView 
+            className="flex-1 bg-[#020617]"
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+        >
+            <View className="max-w-5xl mx-auto">
             <SectionHeading
                 title="💰 Flujo de Caja"
                 subtitle="Proyecta tus ingresos y gastos para los próximos 12 meses"
@@ -218,7 +222,7 @@ export default function CashFlowPage() {
                             </View>
 
                             {/* Health Status */}
-                            <GlassCard className={`border-2 ${result.isHealthy ? 'border-#86EFAC/50' : 'border-#FB923C/50'}`}>
+                            <GlassCard className={`border-2 ${result.isHealthy ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
                                 <View className="flex-row items-center gap-3">
                                     <Text className="text-3xl">{result.isHealthy ? '🟢' : '🔴'}</Text>
                                     <View>
@@ -267,5 +271,6 @@ export default function CashFlowPage() {
                 </View>
             </View>
         </View>
-    );
+    </ScrollView>
+);
 }

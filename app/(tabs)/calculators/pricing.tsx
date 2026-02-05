@@ -45,12 +45,12 @@ function PriceStrategyCard({
     strategy: string; price: number; benefits: string; recommended?: boolean;
 }) {
     return (
-        <GlassCard className={`flex-1 min-w-[150px] ${recommended ? 'border-2 border-#14B8A6' : ''}`}>
+        <GlassCard className={`flex-1 min-w-[150px] ${recommended ? 'border-2 border-[#14B8A6]' : ''}`}>
             {recommended && (
                 <Badge variant="success" className="mb-2">✨ Recomendado</Badge>
             )}
             <Text className="text-gray-400 text-sm">{strategy}</Text>
-            <Text className="text-2xl font-bold text-white">${price.toFixed(2)}</Text>
+            <Text className="text-2xl font-bold text-white">${price != null ? price.toFixed(2) : '0.00'}</Text>
             <Text className="text-gray-500 text-xs mt-2">{benefits}</Text>
         </GlassCard>
     );
@@ -88,7 +88,11 @@ export default function PricingPage() {
     }) : [];
 
     return (
-        <View className="max-w-5xl mx-auto">
+        <ScrollView 
+            className="flex-1 bg-[#020617]"
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+        >
+            <View className="max-w-5xl mx-auto">
             <SectionHeading
                 title="🏷️ Calculadora de Precios"
                 subtitle="Encuentra el precio óptimo para maximizar tus ganancias"
@@ -134,14 +138,14 @@ export default function PricingPage() {
                             <GlassCard gradient className="items-center py-8">
                                 <Text className="text-gray-400">Precio Recomendado</Text>
                                 <Text className="text-5xl font-bold text-white mt-2">
-                                    ${result.recommendedPrice.toFixed(2)}
+                                    ${result.recommendedPrice != null ? result.recommendedPrice.toFixed(2) : '0.00'}
                                 </Text>
                                 <View className="flex-row gap-4 mt-4">
                                     <Badge variant="success">
-                                        ${result.grossProfitPerUnit.toFixed(2)} ganancia/unidad
+                                        ${result.grossProfitPerUnit != null ? result.grossProfitPerUnit.toFixed(2) : '0.00'} ganancia/unidad
                                     </Badge>
                                     <Badge>
-                                        {result.markupPercentage.toFixed(0)}% markup
+                                        {result.markupPercentage != null ? result.markupPercentage.toFixed(0) : '0'}% markup
                                     </Badge>
                                 </View>
                             </GlassCard>
@@ -187,7 +191,7 @@ export default function PricingPage() {
 
                             {/* Competitor Comparison */}
                             {result.competitorComparison && (
-                                <GlassCard className={`border ${result.competitorComparison.position === 'above' ? 'border-#FB923C/30' : 'border-#86EFAC/30'}`}>
+                                <GlassCard className={`border ${result.competitorComparison.position === 'above' ? 'border-[#FB923C]/30' : 'border-[#86EFAC]/30'}`}>
                                     <View className="flex-row items-center gap-3">
                                         <Text className="text-2xl">
                                             {result.competitorComparison.position === 'above' ? '⬆️' : '⬇️'}
@@ -195,12 +199,12 @@ export default function PricingPage() {
                                         <View>
                                             <Text className="text-white font-bold">
                                                 {result.competitorComparison.position === 'above'
-                                                    ? `${Math.abs(result.competitorComparison.percentageDiff).toFixed(1)}% POR ENCIMA de competencia`
-                                                    : `${Math.abs(result.competitorComparison.percentageDiff).toFixed(1)}% POR DEBAJO de competencia`
+                                                    ? `${result.competitorComparison.percentageDiff != null ? Math.abs(result.competitorComparison.percentageDiff).toFixed(1) : '0'}% POR ENCIMA de competencia`
+                                                    : `${result.competitorComparison.percentageDiff != null ? Math.abs(result.competitorComparison.percentageDiff).toFixed(1) : '0'}% POR DEBAJO de competencia`
                                                 }
                                             </Text>
                                             <Text className="text-gray-400 text-sm">
-                                                Diferencia: ${Math.abs(result.competitorComparison.difference).toFixed(2)}
+                                                Diferencia: ${result.competitorComparison.difference != null ? Math.abs(result.competitorComparison.difference).toFixed(2) : '0.00'}
                                             </Text>
                                         </View>
                                     </View>
@@ -230,5 +234,6 @@ export default function PricingPage() {
                 </View>
             </View>
         </View>
-    );
+    </ScrollView>
+);
 }

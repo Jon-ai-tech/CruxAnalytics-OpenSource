@@ -131,10 +131,24 @@ function ToolCard({ icon, title, description, href, color, colors }: any) {
     router.push(href as any);
   };
 
+  // Color mapping for the icon background
+  const getBgColor = () => {
+    const colorValue = colors[color];
+    // Convert hex to rgba with 10% opacity
+    const hex = colorValue.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, 0.1)`;
+  };
+
   return (
     <Pressable onPress={handlePress} className="min-w-[280px] max-w-[350px] flex-1 mb-4">
       <View className="bg-surface border border-border rounded-2xl p-6">
-        <View className={`w-12 h-12 rounded-xl bg-${color}/10 items-center justify-center mb-4`}>
+        <View 
+          className="w-12 h-12 rounded-xl items-center justify-center mb-4"
+          style={{ backgroundColor: getBgColor() }}
+        >
           <IconSymbol size={24} name={icon} color={colors[color]} />
         </View>
         <Text className="text-lg font-heading-medium text-foreground mb-2">{title}</Text>

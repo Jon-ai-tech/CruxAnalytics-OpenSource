@@ -44,8 +44,8 @@ function ChannelSelector({ selected, onSelect }: { selected: string; onSelect: (
         { id: 'facebook', label: 'Facebook', icon: '📘', color: 'bg-blue-500/20 border-blue-500' },
         { id: 'google', label: 'Google', icon: '🔍', color: 'bg-green-500/20 border-green-500' },
         { id: 'instagram', label: 'Instagram', icon: '📸', color: 'bg-pink-500/20 border-pink-500' },
-        { id: 'email', label: 'Email', icon: '✉️', color: 'bg-#FB923C/20 border-#FB923C' },
-        { id: 'referral', label: 'Referidos', icon: '🤝', color: 'bg-#86EFAC/20 border-#86EFAC' },
+        { id: 'email', label: 'Email', icon: '✉️', color: 'bg-[#FB923C]/20 border-[#FB923C]' },
+        { id: 'referral', label: 'Referidos', icon: '🤝', color: 'bg-[#86EFAC]/20 border-[#86EFAC]' },
         { id: 'other', label: 'Otro', icon: '📊', color: 'bg-gray-500/20 border-gray-500' },
     ];
 
@@ -100,7 +100,7 @@ function FunnelVisual({ impressions, clicks, conversions }: { impressions?: numb
                         </View>
                         <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
                             <View
-                                className="h-full bg-#14B8A6 rounded-full"
+                                className="h-full bg-[#14B8A6] rounded-full"
                                 style={{ width: `${clicksWidth}%` }}
                             />
                         </View>
@@ -114,7 +114,7 @@ function FunnelVisual({ impressions, clicks, conversions }: { impressions?: numb
                     </View>
                     <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
                         <View
-                            className="h-full bg-#86EFAC rounded-full"
+                            className="h-full bg-[#86EFAC] rounded-full"
                             style={{ width: `${Math.max(conversionsWidth, 5)}%` }}
                         />
                     </View>
@@ -165,7 +165,11 @@ export default function MarketingPage() {
     }) : [];
 
     return (
-        <View className="max-w-5xl mx-auto">
+        <ScrollView 
+            className="flex-1 bg-[#020617]"
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+        >
+            <View className="max-w-5xl mx-auto">
             <SectionHeading
                 title="📢 ROI de Marketing"
                 subtitle="¿Tu publicidad está funcionando? Mide el retorno por canal"
@@ -226,21 +230,21 @@ export default function MarketingPage() {
                                 <GlassCard gradient className="flex-1 min-w-[140px] items-center py-6">
                                     <Text className="text-gray-400 text-sm">ROI</Text>
                                     <Text className={`text-4xl font-bold ${result.roiPercentage >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                        {result.roiPercentage.toFixed(0)}%
+                                        {result.roiPercentage != null ? result.roiPercentage.toFixed(0) : '0'}%
                                     </Text>
                                 </GlassCard>
 
                                 <GlassCard className="flex-1 min-w-[140px] items-center py-6">
                                     <Text className="text-gray-400 text-sm">ROAS</Text>
                                     <Text className="text-3xl font-bold text-indigo-400">
-                                        {result.roas.toFixed(1)}x
+                                        {result.roas != null ? result.roas.toFixed(1) : '0.0'}x
                                     </Text>
                                     <Text className="text-gray-500 text-xs">Return on Ad Spend</Text>
                                 </GlassCard>
                             </View>
 
                             {/* Profit/Loss */}
-                            <GlassCard className={`border-2 ${result.isProfitable ? 'border-#86EFAC/50' : 'border-#FB923C/50'}`}>
+                            <GlassCard className={`border-2 ${result.isProfitable ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
                                 <View className="flex-row items-center gap-3">
                                     <Text className="text-4xl">{result.isProfitable ? '💰' : '📉'}</Text>
                                     <View>
@@ -304,7 +308,7 @@ export default function MarketingPage() {
                                     <Text className="text-white font-semibold mb-2">📈 LTV/CAC Ratio</Text>
                                     <View className="flex-row items-center gap-4">
                                         <Text className={`text-3xl font-bold ${result.lifetimeValueToCAC >= 3 ? 'text-emerald-400' : result.lifetimeValueToCAC >= 1 ? 'text-amber-400' : 'text-rose-400'}`}>
-                                            {result.lifetimeValueToCAC.toFixed(1)}x
+                                            {result.lifetimeValueToCAC != null ? result.lifetimeValueToCAC.toFixed(1) : '0.0'}x
                                         </Text>
                                         <Text className="text-gray-400 text-sm flex-1">
                                             {result.lifetimeValueToCAC >= 3
@@ -341,5 +345,6 @@ export default function MarketingPage() {
                 </View>
             </View>
         </View>
-    );
+    </ScrollView>
+);
 }

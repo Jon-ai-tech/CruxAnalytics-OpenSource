@@ -76,10 +76,10 @@ function ResultCard({
     large?: boolean;
 }) {
     const colorMap = {
-        indigo: 'from-#14B8A6 to-#86EFAC',
-        emerald: 'from-#86EFAC to-teal-500',
-        amber: 'from-#FB923C to-orange-500',
-        rose: 'from-#FB923C to-pink-500',
+        indigo: 'from-[#14B8A6] to-[#86EFAC]',
+        emerald: 'from-[#86EFAC] to-[#14B8A6]',
+        amber: 'from-[#FB923C] to-orange-500',
+        rose: 'from-[#FB923C] to-pink-500',
     };
 
     return (
@@ -125,12 +125,12 @@ function BreakEvenChart({
             <View className="h-8 bg-slate-800 rounded-full overflow-hidden relative">
                 {/* Loss zone */}
                 <View
-                    className="absolute left-0 top-0 bottom-0 bg-#FB923C/30"
+                    className="absolute left-0 top-0 bottom-0 bg-[#FB923C]/30"
                     style={{ width: `${breakEvenPercent}%` }}
                 />
                 {/* Profit zone */}
                 <View
-                    className="absolute right-0 top-0 bottom-0 bg-#86EFAC/30"
+                    className="absolute right-0 top-0 bottom-0 bg-[#86EFAC]/30"
                     style={{ width: `${100 - breakEvenPercent}%` }}
                 />
 
@@ -143,7 +143,7 @@ function BreakEvenChart({
                 {/* Current position */}
                 {currentPercent !== null && (
                     <View
-                        className="absolute top-0 bottom-0 w-3 h-3 rounded-full bg-#14B8A6 border-2 border-white self-center"
+                        className="absolute top-0 bottom-0 w-3 h-3 rounded-full bg-[#14B8A6] border-2 border-white self-center"
                         style={{ left: `${currentPercent}%`, marginTop: 10 }}
                     />
                 )}
@@ -178,7 +178,7 @@ function Recommendations({ items }: { items: string[] }) {
             <View className="gap-3">
                 {items.map((item, index) => (
                     <View key={index} className="flex-row gap-3">
-                        <View className="w-6 h-6 rounded-full bg-#14B8A6/20 items-center justify-center">
+                        <View className="w-6 h-6 rounded-full bg-[#14B8A6]/20 items-center justify-center">
                             <Text className="text-indigo-400 text-xs font-bold">{index + 1}</Text>
                         </View>
                         <Text className="text-gray-300 flex-1">{item}</Text>
@@ -225,7 +225,11 @@ export default function BreakEvenPage() {
     const recommendations = result ? calculator.generateRecommendations(result) : [];
 
     return (
-        <View className="max-w-5xl mx-auto">
+        <ScrollView 
+            className="flex-1 bg-[#020617]"
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+        >
+            <View className="max-w-5xl mx-auto">
             <SectionHeading
                 title="📈 Punto de Equilibrio"
                 subtitle="Descubre cuántas unidades necesitas vender para no perder dinero"
@@ -296,7 +300,7 @@ export default function BreakEvenPage() {
 
                                 <ResultCard
                                     label="Contribución por Unidad"
-                                    value={`$${result.contributionMarginPerUnit.toFixed(2)}`}
+                                    value={result.contributionMarginPerUnit != null ? `$${result.contributionMarginPerUnit.toFixed(2)}` : '$0.00'}
                                     icon="📊"
                                     color="amber"
                                 />
@@ -304,7 +308,7 @@ export default function BreakEvenPage() {
 
                             {/* Margin of Safety */}
                             {result.marginOfSafety !== undefined && (
-                                <GlassCard className={`border-2 ${result.isAboveBreakEven ? 'border-#86EFAC/50' : 'border-#FB923C/50'}`}>
+                                <GlassCard className={`border-2 ${result.isAboveBreakEven ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
                                     <View className="flex-row items-center gap-3">
                                         <Text className="text-3xl">{result.isAboveBreakEven ? '✅' : '⚠️'}</Text>
                                         <View>
@@ -312,7 +316,7 @@ export default function BreakEvenPage() {
                                                 {result.isAboveBreakEven ? 'Por encima del equilibrio' : 'Por debajo del equilibrio'}
                                             </Text>
                                             <Text className={result.isAboveBreakEven ? 'text-emerald-400' : 'text-rose-400'}>
-                                                Margen de seguridad: {result.marginOfSafety.toFixed(1)}%
+                                                Margen de seguridad: {result.marginOfSafety != null ? result.marginOfSafety.toFixed(1) : '0'}%
                                             </Text>
                                         </View>
                                     </View>
@@ -347,5 +351,6 @@ export default function BreakEvenPage() {
                 </View>
             </View>
         </View>
-    );
+    </ScrollView>
+);
 }

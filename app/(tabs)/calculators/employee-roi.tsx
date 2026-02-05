@@ -56,7 +56,7 @@ function RoleSelector({ selected, onSelect }: { selected: string; onSelect: (rol
                         key={role.id}
                         onPress={() => onSelect(role.id)}
                         className={`px-4 py-2 rounded-xl border ${selected === role.id
-                                ? 'bg-#14B8A6/20 border-#14B8A6'
+                                ? 'bg-[#14B8A6]/20 border-[#14B8A6]'
                                 : 'bg-slate-800 border-white/10'
                             }`}
                     >
@@ -70,10 +70,10 @@ function RoleSelector({ selected, onSelect }: { selected: string; onSelect: (rol
 
 function ROIGauge({ roi }: { roi: number }) {
     const getColor = () => {
-        if (roi >= 100) return { bg: 'bg-#86EFAC', text: 'text-emerald-400' };
-        if (roi >= 50) return { bg: 'bg-#FB923C', text: 'text-amber-400' };
+        if (roi >= 100) return { bg: 'bg-[#86EFAC]', text: 'text-emerald-400' };
+        if (roi >= 50) return { bg: 'bg-[#FB923C]', text: 'text-amber-400' };
         if (roi >= 0) return { bg: 'bg-orange-500', text: 'text-orange-400' };
-        return { bg: 'bg-#FB923C', text: 'text-rose-400' };
+        return { bg: 'bg-[#FB923C]', text: 'text-rose-400' };
     };
 
     const colors = getColor();
@@ -89,7 +89,7 @@ function ROIGauge({ roi }: { roi: number }) {
                     }}
                 />
                 <View className="items-center">
-                    <Text className={`text-5xl font-bold ${colors.text}`}>{roi.toFixed(0)}%</Text>
+                    <Text className={`text-5xl font-bold ${colors.text}`}>{roi != null ? roi.toFixed(0) : '0'}%</Text>
                     <Text className="text-gray-400 text-sm">ROI</Text>
                 </View>
             </View>
@@ -133,7 +133,11 @@ export default function EmployeeROIPage() {
     const recommendations = result ? calculator.generateRecommendations(result) : [];
 
     return (
-        <View className="max-w-5xl mx-auto">
+        <ScrollView 
+            className="flex-1 bg-[#020617]"
+            contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+        >
+            <View className="max-w-5xl mx-auto">
             <SectionHeading
                 title="👥 ROI de Empleados"
                 subtitle="¿Vale la pena contratar? Analiza el retorno de inversión"
@@ -222,7 +226,7 @@ export default function EmployeeROIPage() {
                                 <GlassCard className="flex-1 min-w-[140px]">
                                     <Text className="text-gray-400 text-sm">Por cada $1 invertido</Text>
                                     <Text className="text-2xl font-bold text-indigo-400">
-                                        ${result.revenuePerDollarSpent.toFixed(2)}
+                                        ${result.revenuePerDollarSpent != null ? result.revenuePerDollarSpent.toFixed(2) : '0.00'}
                                     </Text>
                                     <Text className="text-gray-500 text-xs">Retorno</Text>
                                 </GlassCard>
@@ -294,5 +298,6 @@ export default function EmployeeROIPage() {
                 </View>
             </View>
         </View>
-    );
+    </ScrollView>
+);
 }
