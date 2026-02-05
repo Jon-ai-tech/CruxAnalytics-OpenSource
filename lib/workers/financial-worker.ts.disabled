@@ -5,6 +5,8 @@
  * Note: This worker is only used for projects with duration >= 24 months
  */
 
+/// <reference lib="webworker" />
+
 import type { FinancialCalculationInput, FinancialCalculationResult } from '@/types/project';
 
 // Worker message types
@@ -169,12 +171,14 @@ function calculateFinancialMetrics(
 /**
  * Worker message handler
  */
-self.addEventListener('message', (event: MessageEvent<CalculationMessage>) => {
+const ctx: Worker = self as any;
+
+ctx.addEventListener('message', (event: MessageEvent<CalculationMessage>) => {
   const { type, payload } = event.data;
   
   if (type === 'CALCULATE_PROJECTIONS') {
     try {
-      const { inputs, months } = payload;
+      const { inputs } = payload;
       const result = calculateFinancialMetrics(inputs);
       
       const response: ResultMessage = {
@@ -182,17 +186,14 @@ self.addEventListener('message', (event: MessageEvent<CalculationMessage>) => {
         payload: result,
       };
       
-      self.postMessage(response);
+      ctx.postMessage(response);
     } catch (error) {
       const errorResponse: ErrorMessage = {
         type: 'CALCULATION_ERROR',
         error: error instanceof Error ? error.message : 'Unknown error',
       };
       
-      self.postMessage(errorResponse);
+      ctx.postMessage(errorResponse);
     }
   }
 });
-
-// Export for TypeScript (won't execute in worker context)
-export {};
