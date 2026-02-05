@@ -33,6 +33,7 @@
     "calculate_save": "Calculate & Save",
     "exporting": "Exporting...",
     "export_pdf": "Export PDF",
+    "export_failed": "Failed to export PDF",
     "delete_project": "Delete Project",
     "project_duplicated": "Project duplicated successfully",
     "view": "View",
@@ -667,7 +668,15 @@
       "above_break_even": "Above break-even",
       "below_break_even": "Below break-even",
       "safety_margin": "Safety margin",
-      "visualization": "Visualization"
+      "visualization": "Visualization",
+      "recommendations": {
+        "above_break_even": "✅ You are above break-even with {{percent}}% safety margin.",
+        "below_break_even": "⚠️ You need to sell {{units}} more units to reach break-even.",
+        "increase_price": "Consider increasing price by {{percent}}% to improve your margin.",
+        "reduce_costs": "Reduce fixed costs by ${{amount}} to lower your break-even point.",
+        "increase_volume": "Increase sales volume to take advantage of economies of scale.",
+        "monitor_costs": "Monitor variable costs monthly to avoid surprises."
+      }
     },
     
     "cash_flow": {
@@ -693,7 +702,15 @@
       "month": "Month",
       "no_critical_alerts": "No critical alerts",
       "cash_flow_healthy_desc": "Your cash flow looks healthy",
-      "alerts": "Alerts"
+      "alerts": "Alerts",
+      "recommendations": {
+        "negative_flow": "⚠️ Your cash flow is negative. Consider reducing expenses or increasing income.",
+        "deficit_warning": "🚨 You'll run out of cash in {{months}} months. Act now.",
+        "below_reserve": "💰 Your final balance is below the recommended reserve.",
+        "low_margin": "📊 Your net margin is low. Try reducing costs or increasing prices.",
+        "healthy_invest": "✅ Your cash flow is healthy. Consider investing the surplus.",
+        "growth_opportunity": "📈 With this growth, you could expand your business in 6-12 months."
+      }
     },
     
     "pricing": {
@@ -721,7 +738,14 @@
       "recommended": "Recommended",
       "above_competitor": "ABOVE competition",
       "below_competitor": "BELOW competition",
-      "difference": "Difference"
+      "difference": "Difference",
+      "recommendations": {
+        "high_vs_competition": "You are {{percent}}% above competition. You could increase prices without losing customers.",
+        "low_vs_competition": "You are {{percent}}% below competition. You have room to raise prices.",
+        "test_prices": "Test different prices with small samples before changing all inventory.",
+        "monitor_prices": "Monitor competitor prices regularly to maintain your position.",
+        "high_margin": "You have a healthy margin. Consider investing in marketing to increase volume."
+      }
     },
     
     "loan": {
@@ -740,7 +764,14 @@
       "effective_rate": "Effective Rate",
       "affordable": "AFFORDABLE",
       "debt_service_ratio": "Debt service ratio: {{ratio}}% (< 40% is healthy)",
-      "remaining_after_payment": "After payment you have: {{amount}}/month left"
+      "remaining_after_payment": "After payment you have: {{amount}}/month left",
+      "recommendations": {
+        "affordable": "✅ The loan is manageable based on your current income (≤40% of income).",
+        "unaffordable": "⚠️ The loan represents more than 40% of your income. Look for better terms.",
+        "remaining_low": "After monthly payment you have ${{amount}} left. Consider creating an emergency fund.",
+        "compare_options": "Compare at least 3 loan options before deciding.",
+        "negotiate_terms": "Read the terms and conditions; negotiate fees for opening, prepayment, etc."
+      }
     },
     
     "employee_roi": {
@@ -759,7 +790,14 @@
       "positive_hire": "POSITIVE Hire",
       "positive_description": "This hire will generate more value than it costs",
       "negative_hire": "Hire AT RISK",
-      "negative_description": "Costs exceed generated value. Consider adjusting expectations"
+      "negative_description": "Costs exceed generated value. Consider adjusting expectations",
+      "recommendations": {
+        "positive_hire": "✅ Positive but moderate ROI. Consider optimizing productivity.",
+        "fast_payback": "🚀 Fast payback ({{months}} months). Excellent hiring decision.",
+        "optimize_role": "Review metrics 18 months later to adjust expectations and optimize performance.",
+        "negative_roi": "⚠️ The numbers show this hire might not be profitable yet. Consider waiting.",
+        "adjust_expectations": "Consider adjusting the role or value generation expectations."
+      }
     },
     
     "marketing_roi": {
@@ -781,7 +819,42 @@
       "break_even_campaign": "BREAK-EVEN Campaign",
       "break_even_description": "ROI ~100% - Barely covers costs, optimize or pause",
       "losing_campaign": "LOSING Campaign",
-      "losing_description": "ROI < 100% - Losing money, review strategy"
+      "losing_description": "ROI < 100% - Losing money, review strategy",
+      "recommendations": {
+        "excellent_roi": "🎯 Excellent ROI (>200%). This campaign is very profitable, consider scaling it.",
+        "good_roi": "✅ Positive ROI (100-200%). Solid results, try increasing budget.",
+        "test_audience": "Test A/B testing on audiences, creatives and copy to improve performance.",
+        "optimize_campaign": "Monitor metrics during the first 2 weeks of the campaign.",
+        "losing_campaign": "❌ This campaign is losing money (ROI <100%). Review strategy or pause.",
+        "cac_high": "Your CAC is high vs. industry. Optimize targeting and creatives."
+      }
+    }
+  },
+  
+  "calculators": {
+    "break_even": {
+      "title": "Break-Even Point",
+      "description": "How much do you need to sell to not lose money?"
+    },
+    "cash_flow": {
+      "title": "Cash Flow",
+      "description": "12-month revenue and expense projection"
+    },
+    "pricing": {
+      "title": "Pricing Calculator",
+      "description": "Calculate the optimal price"
+    },
+    "loan": {
+      "title": "Loan Evaluator",
+      "description": "Compare financing options"
+    },
+    "employee_roi": {
+      "title": "Employee ROI",
+      "description": "Is it worth hiring?"
+    },
+    "marketing_roi": {
+      "title": "Marketing ROI",
+      "description": "Measure your advertising"
     }
   }
 }

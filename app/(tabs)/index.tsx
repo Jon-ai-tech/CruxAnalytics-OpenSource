@@ -80,50 +80,52 @@ function HealthScoreGauge({ score, colors }: { score: number | null; colors: any
 // ============================================
 // TOOL CARDS DATA & COMPONENT
 // ============================================
-const TOOL_CARDS = [
-  { 
-    icon: 'chart.line.uptrend.xyaxis', 
-    title: 'Punto de Equilibrio', 
-    description: '¿Cuánto debes vender para no perder?',
-    href: '/(tabs)/calculators/break-even' as const,
-    color: 'primary' as const
-  },
-  { 
-    icon: 'dollarsign.circle', 
-    title: 'Flujo de Caja', 
-    description: 'Proyección de ingresos y gastos 12 meses',
-    href: '/(tabs)/calculators/cash-flow' as const,
-    color: 'success' as const
-  },
-  { 
-    icon: 'tag', 
-    title: 'Calculadora de Precios', 
-    description: 'Calcula el precio óptimo',
-    href: '/(tabs)/calculators/pricing' as const,
-    color: 'warning' as const
-  },
-  { 
-    icon: 'creditcard', 
-    title: 'Evaluador de Préstamos', 
-    description: 'Compara opciones de financiamiento',
-    href: '/(tabs)/calculators/loan' as const,
-    color: 'primary' as const
-  },
-  { 
-    icon: 'person.2', 
-    title: 'ROI de Empleados', 
-    description: '¿Vale la pena contratar?',
-    href: '/(tabs)/calculators/employee-roi' as const,
-    color: 'success' as const
-  },
-  { 
-    icon: 'megaphone', 
-    title: 'ROI de Marketing', 
-    description: 'Mide tu publicidad',
-    href: '/(tabs)/calculators/marketing' as const,
-    color: 'warning' as const
-  },
-];
+function getToolCards(t: (key: string) => string) {
+  return [
+    { 
+      icon: 'chart.line.uptrend.xyaxis', 
+      title: t('calculators.break_even.title'), 
+      description: t('calculators.break_even.description'),
+      href: '/(tabs)/calculators/break-even' as const,
+      color: 'primary' as const
+    },
+    { 
+      icon: 'dollarsign.circle', 
+      title: t('calculators.cash_flow.title'), 
+      description: t('calculators.cash_flow.description'),
+      href: '/(tabs)/calculators/cash-flow' as const,
+      color: 'success' as const
+    },
+    { 
+      icon: 'tag', 
+      title: t('calculators.pricing.title'), 
+      description: t('calculators.pricing.description'),
+      href: '/(tabs)/calculators/pricing' as const,
+      color: 'warning' as const
+    },
+    { 
+      icon: 'creditcard', 
+      title: t('calculators.loan.title'), 
+      description: t('calculators.loan.description'),
+      href: '/(tabs)/calculators/loan' as const,
+      color: 'primary' as const
+    },
+    { 
+      icon: 'person.2', 
+      title: t('calculators.employee_roi.title'), 
+      description: t('calculators.employee_roi.description'),
+      href: '/(tabs)/calculators/employee-roi' as const,
+      color: 'success' as const
+    },
+    { 
+      icon: 'megaphone', 
+      title: t('calculators.marketing_roi.title'), 
+      description: t('calculators.marketing_roi.description'),
+      href: '/(tabs)/calculators/marketing' as const,
+      color: 'warning' as const
+    },
+  ];
+}
 
 function ToolCard({ icon, title, description, href, color, colors }: any) {
   const handlePress = () => {

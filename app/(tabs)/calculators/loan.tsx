@@ -14,6 +14,7 @@ import {
 } from '@/components/landing/shared-components';
 import { LoanCalculator } from '@/lib/infrastructure/calculators/LoanCalculator';
 import { useTranslation } from '@/lib/i18n-context';
+import { LanguageSelector } from '@/components/language-selector';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -113,42 +114,29 @@ export default function LoanPage() {
         }
     }, [principal, interestRate, termMonths, monthlyRevenue, monthlyExpenses, calculator]);
 
-    // ✅ Generate recommendations manually
+    // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
         
         const recs: string[] = [];
-        const totalInterestPercent = (result.totalInterest / parseFloat(principal)) * 100;
         
         if (result.affordability.isAffordable === false) {
-            recs.push('🚨 Este préstamo supera tu capacidad de pago (>40% de ingresos). Busca un monto menor o plazo más largo.');
+            recs.push(t('calculator.loan.recommendations.unaffordable'));
         } else if (result.affordability.isAffordable === true) {
-            recs.push('✅ El préstamo es manejable según tus ingresos actuales (<40% de ingresos).');
-        }
-        
-        if (totalInterestPercent > 50) {
-            recs.push(`⚠️ Pagarás ${totalInterestPercent.toFixed(0)}% de interés sobre el capital. Considera negociar una tasa menor.`);
-        }
-        
-        if (parseInt(termMonths) > 60) {
-            recs.push('Plazo largo (>5 años). Considera pagos anticipados para reducir intereses totales.');
-        }
-        
-        if (parseFloat(interestRate) > 15) {
-            recs.push('Tasa de interés alta (>15%). Compara con otras instituciones financieras.');
-        } else if (parseFloat(interestRate) < 8) {
-            recs.push('Tasa de interés competitiva (<8%). Esta es una buena oferta.');
+            recs.push(t('calculator.loan.recommendations.affordable'));
         }
         
         if (result.affordability.cushionAfterPayment !== null && result.affordability.cushionAfterPayment > 0) {
-            recs.push(`Después del pago mensual te quedan $${result.affordability.cushionAfterPayment.toLocaleString()}. Considera crear un fondo de emergencia.`);
+            recs.push(t('calculator.loan.recommendations.remaining_low', { 
+                amount: result.affordability.cushionAfterPayment.toLocaleString() 
+            }));
         }
         
-        recs.push('Compara al menos 3 opciones de préstamo antes de decidir.');
-        recs.push('Lee los términos y condiciones: comisiones por apertura, prepago, etc.');
+        recs.push(t('calculator.loan.recommendations.compare_options'));
+        recs.push(t('calculator.loan.recommendations.negotiate_terms'));
         
         return recs;
-    }, [result, principal, termMonths, interestRate]);
+    }, [result, t]);
 
     return (
         <ScrollView 
@@ -156,10 +144,16 @@ export default function LoanPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                <SectionHeading
-                    title={`💳 ${t('calculator.loan.title')}`}
-                    subtitle={t('calculator.loan.subtitle')}
-                />
+                {/* Header with Language Selector */}
+                <View className="flex-row items-start justify-between mb-6">
+                    <View className="flex-1">
+                        <SectionHeading
+                            title={`💳 ${t('calculator.loan.title')}`}
+                            subtitle={t('calculator.loan.subtitle')}
+                        />
+                    </View>
+                    <LanguageSelector />
+                </View>
 
                 <View className="flex-row flex-wrap gap-6">
                     {/* Form */}

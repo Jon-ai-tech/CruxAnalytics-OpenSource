@@ -15,6 +15,7 @@ import {
 } from '@/components/landing/shared-components';
 import { BreakEvenCalculator } from '@/lib/infrastructure/calculators/BreakEvenCalculator';
 import { useTranslation } from '@/lib/i18n-context';
+import { LanguageSelector } from '@/components/language-selector';
 
 // ============================================
 // INPUT FIELD COMPONENT
@@ -226,7 +227,49 @@ export default function BreakEvenPage() {
         }
     }, [fixedCosts, pricePerUnit, variableCost, currentSales, calculator]);
 
-    const recommendations = result ? calculator.generateRecommendations(result) : [];
+    const recommendations = useMemo(() => {
+        if (!result) return [];
+        
+        const recs: string[] = [];
+
+        if (result.marginOfSafety !== null) {
+            if (result.isAboveBreakEven) {
+                recs.push(t('calculator.break_even.recommendations.above_break_even', { 
+                    percent: Math.abs(result.marginOfSafety).toFixed(1) 
+                }));
+            } else {
+                recs.push(t('calculator.break_even.recommendations.below_break_even', { 
+                    units: Math.abs(result.marginOfSafetyUnits || 0).toString() 
+                }));
+            }
+        }
+
+        // Suggest price increase if margin is low
+        if (result.contributionMarginRatio < 40) {
+            const suggestedIncrease = 10;
+            recs.push(t('calculator.break_even.recommendations.increase_price', { 
+                percent: suggestedIncrease.toString() 
+            }));
+        }
+
+        // Suggest cost reduction
+        const currentFixed = parseFloat(fixedCosts) || 0;
+        const reduction = Math.round(currentFixed * 0.1);
+        if (reduction > 0) {
+            recs.push(t('calculator.break_even.recommendations.reduce_costs', { 
+                amount: reduction.toString() 
+            }));
+        }
+
+        // General recommendations
+        if (result.contributionMarginRatio > 50) {
+            recs.push(t('calculator.break_even.recommendations.increase_volume'));
+        }
+        
+        recs.push(t('calculator.break_even.recommendations.monitor_costs'));
+
+        return recs;
+    }, [result, fixedCosts, t]);
 
     return (
         <ScrollView 
@@ -234,10 +277,16 @@ export default function BreakEvenPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-            <SectionHeading
-                title={t('calculator.break_even.title')}
-                subtitle={t('calculator.break_even.subtitle')}
-            />
+            {/* Header with Language Selector */}
+            <View className="flex-row items-start justify-between mb-6">
+                <View className="flex-1">
+                    <SectionHeading
+                        title={t('calculator.break_even.title')}
+                        subtitle={t('calculator.break_even.subtitle')}
+                    />
+                </View>
+                <LanguageSelector />
+            </View>
 
             <View className="flex-row flex-wrap gap-6">
                 {/* Input Form */}

@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useColors } from '@/hooks/use-colors';
+import { LanguageSelector } from '@/components/language-selector';
 import {
     GlassCard,
     GradientButton,
@@ -401,13 +402,7 @@ export default function LandingPage() {
                 <Text className="text-xl font-bold text-white">
                     Crux<Text className="text-[#14B8A6]">Analytics</Text>
                 </Text>
-                <View className="flex-row gap-4">
-                    <Link href="/" asChild>
-                        <Pressable className="px-4 py-2 rounded-xl">
-                            <Text className="text-white font-medium">Iniciar</Text>
-                        </Pressable>
-                    </Link>
-                </View>
+                <LanguageSelector />
             </View>
 
             <HeroSection />

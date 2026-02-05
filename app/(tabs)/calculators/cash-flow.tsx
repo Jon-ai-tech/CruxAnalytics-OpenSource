@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -14,6 +14,8 @@ import {
 } from '@/components/landing/shared-components';
 import { CashFlowForecastCalculator } from '@/lib/infrastructure/calculators/CashFlowForecastCalculator';
 import { useTranslation } from '@/lib/i18n-context';
+import { LanguageSelector } from '@/components/language-selector';
+import { generateCashFlowPDF, printPDF } from '@/lib/export/pdf-generator';
 
 function InputField({
     label,
@@ -117,6 +119,7 @@ function AlertsPanel({ alerts }: { alerts: string[] }) {
 
 export default function CashFlowPage() {
     const { t } = useTranslation();
+    const [exporting, setExporting] = useState(false);
     const [startingCash, setStartingCash] = useState('50000');
     const [monthlyRevenue, setMonthlyRevenue] = useState('30000');
     const [monthlyExpenses, setMonthlyExpenses] = useState('25000');
@@ -144,36 +147,64 @@ export default function CashFlowPage() {
         }
     }, [startingCash, monthlyRevenue, monthlyExpenses, expectedGrowth, calculator]);
 
-    // ✅ ARREGLO: Generar recomendaciones manualmente
+    // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
         
         const recs: string[] = [];
         
         if (!result.isHealthy) {
-            recs.push('⚠️ Tu flujo de caja es negativo. Considera reducir gastos o aumentar ingresos.');
+            recs.push(t('calculator.cash_flow.recommendations.negative_flow'));
         }
         
         if (result.monthsUntilDeficit && result.monthsUntilDeficit < 6) {
-            recs.push(`🚨 Te quedarás sin efectivo en ${result.monthsUntilDeficit} meses. Actúa ahora.`);
+            recs.push(t('calculator.cash_flow.recommendations.deficit_warning', { months: result.monthsUntilDeficit.toString() }));
         }
         
         if (result.endingCash < result.minimumCashReserve) {
-            recs.push('💰 Tu balance final está por debajo de la reserva recomendada.');
+            recs.push(t('calculator.cash_flow.recommendations.below_reserve'));
         }
         
         const netMargin = ((parseFloat(monthlyRevenue) - parseFloat(monthlyExpenses)) / parseFloat(monthlyRevenue)) * 100;
         if (netMargin < 20) {
-            recs.push('📊 Tu margen neto es bajo. Intenta reducir costos o aumentar precios.');
+            recs.push(t('calculator.cash_flow.recommendations.low_margin'));
         }
         
         if (result.isHealthy && recs.length === 0) {
-            recs.push('✅ Tu flujo de caja es saludable. Considera invertir el excedente.');
-            recs.push('📈 Con este crecimiento, podrías expandir tu negocio en 6-12 meses.');
+            recs.push(t('calculator.cash_flow.recommendations.healthy_invest'));
+            recs.push(t('calculator.cash_flow.recommendations.growth_opportunity'));
         }
         
         return recs;
-    }, [result, monthlyRevenue, monthlyExpenses]);
+    }, [result, monthlyRevenue, monthlyExpenses, t]);
+
+    const handleExportPDF = async () => {
+        if (!result) return;
+        
+        setExporting(true);
+        try {
+            const html = generateCashFlowPDF({
+                inputs: {
+                    startingCash: parseFloat(startingCash) || 0,
+                    monthlyRevenue: parseFloat(monthlyRevenue) || 0,
+                    monthlyExpenses: parseFloat(monthlyExpenses) || 0,
+                    expectedGrowthRate: parseFloat(expectedGrowth) || 0,
+                },
+                results: {
+                    endingCash: result.endingCash,
+                    monthsUntilDeficit: result.monthsUntilDeficit,
+                    isHealthy: result.isHealthy,
+                    minimumCashReserve: result.minimumCashReserve,
+                },
+                recommendations,
+            });
+            await printPDF(html);
+        } catch (error) {
+            Alert.alert(t('common.error'), t('common.export_failed') || 'No se pudo exportar el PDF');
+        } finally {
+            setExporting(false);
+        }
+    };
 
     return (
         <ScrollView 
@@ -181,10 +212,16 @@ export default function CashFlowPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                <SectionHeading
-                    title={t('calculator.cash_flow.title')}
-                    subtitle={t('calculator.cash_flow.subtitle')}
-                />
+                {/* Header with Language Selector */}
+                <View className="flex-row items-start justify-between mb-6">
+                    <View className="flex-1">
+                        <SectionHeading
+                            title={t('calculator.cash_flow.title')}
+                            subtitle={t('calculator.cash_flow.subtitle')}
+                        />
+                    </View>
+                    <LanguageSelector />
+                </View>
 
                 <View className="flex-row flex-wrap gap-6">
                     {/* Input Form */}
@@ -279,7 +316,7 @@ export default function CashFlowPage() {
                                 <AlertsPanel alerts={result.alerts} />
 
                                 {/* Recommendations */}
-                                {recommendations.length > 0 && (
+                                {recommendations && recommendations.length > 0 && (
                                     <GlassCard>
                                         <Text className="text-white font-semibold mb-4">{t('calculator.recommendations')}</Text>
                                         <View className="gap-2">
@@ -293,7 +330,13 @@ export default function CashFlowPage() {
                                     </GlassCard>
                                 )}
 
-                                <GradientButton size="lg">{t('calculator.export_pdf')}</GradientButton>
+                                <GradientButton 
+                                    size="lg" 
+                                    onPress={handleExportPDF}
+                                    disabled={exporting}
+                                >
+                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">

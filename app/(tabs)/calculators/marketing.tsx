@@ -14,6 +14,7 @@ import {
 } from '@/components/landing/shared-components';
 import { MarketingROICalculator } from '@/lib/infrastructure/calculators/MarketingROICalculator';
 import { useTranslation } from '@/lib/i18n-context';
+import { LanguageSelector } from '@/components/language-selector';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -159,45 +160,29 @@ export default function MarketingPage() {
         }
     }, [totalSpend, conversions, revenuePerConversion, channel, impressions, clicks, calculator]);
 
-    // ✅ Generate recommendations manually
+    // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
         
         const recs: string[] = [];
         
         if (result.roiPercentage >= 200) {
-            recs.push('🎉 ROI excelente (>200%). Esta campaña es muy rentable, considera escalarla.');
+            recs.push(t('calculator.marketing_roi.recommendations.excellent_roi'));
         } else if (result.roiPercentage >= 100) {
-            recs.push('✅ ROI positivo (100-200%). Campaña rentable, busca optimizaciones para mejorar.');
-        } else if (result.roiPercentage >= 0) {
-            recs.push('⚠️ ROI bajo (<100%). Apenas cubre costos, revisa targeting y creativos.');
+            recs.push(t('calculator.marketing_roi.recommendations.good_roi'));
         } else {
-            recs.push('🚨 ROI negativo. Pausa esta campaña y analiza qué está fallando.');
+            recs.push(t('calculator.marketing_roi.recommendations.losing_campaign'));
         }
         
         if (result.benchmarkComparison.cacVsBenchmark === 'worse') {
-            recs.push(`Tu CAC ($${result.costPerAcquisition}) es alto vs el promedio de industria. Optimiza tu targeting.`);
-        } else if (result.benchmarkComparison.cacVsBenchmark === 'better') {
-            recs.push(`Tu CAC ($${result.costPerAcquisition}) es bajo vs el promedio. Excelente eficiencia.`);
+            recs.push(t('calculator.marketing_roi.recommendations.cac_high'));
         }
         
-        if (result.conversionRate && result.conversionRate < 2) {
-            recs.push(`Conversion rate bajo (${result.conversionRate}%). Mejora tu landing page o proceso de compra.`);
-        }
-        
-        if (result.lifetimeValueToCAC && result.lifetimeValueToCAC < 3) {
-            recs.push('LTV/CAC < 3x. Considera aumentar el valor de vida del cliente o reducir CAC.');
-        }
-        
-        if (result.clickThroughRate && result.clickThroughRate < 1) {
-            recs.push(`CTR bajo (${result.clickThroughRate}%). Prueba nuevos creativos o mejora tu copy.`);
-        }
-        
-        recs.push('Prueba A/B testing en audiencias, creativos y copy para mejorar performance.');
-        recs.push('Monitorea métricas diariamente durante las primeras 2 semanas de la campaña.');
+        recs.push(t('calculator.marketing_roi.recommendations.test_audience'));
+        recs.push(t('calculator.marketing_roi.recommendations.optimize_campaign'));
         
         return recs;
-    }, [result]);
+    }, [result, t]);
 
     return (
         <ScrollView 
@@ -205,10 +190,16 @@ export default function MarketingPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                <SectionHeading
-                    title={`📢 ${t('calculator.marketing_roi.title')}`}
-                    subtitle={t('calculator.marketing_roi.subtitle')}
-                />
+                {/* Header with Language Selector */}
+                <View className="flex-row items-start justify-between mb-6">
+                    <View className="flex-1">
+                        <SectionHeading
+                            title={`📢 ${t('calculator.marketing_roi.title')}`}
+                            subtitle={t('calculator.marketing_roi.subtitle')}
+                        />
+                    </View>
+                    <LanguageSelector />
+                </View>
 
                 <View className="flex-row flex-wrap gap-6">
                     {/* Form */}
