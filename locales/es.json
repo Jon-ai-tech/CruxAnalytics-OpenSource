@@ -654,7 +654,15 @@
       "above_break_even": "Por encima del equilibrio",
       "below_break_even": "Por debajo del equilibrio",
       "safety_margin": "Margen de seguridad",
-      "visualization": "Visualización"
+      "visualization": "Visualización",
+      "recommendations": {
+        "above_break_even": "✅ Estás por encima del punto de equilibrio con {{percent}}% de margen de seguridad.",
+        "below_break_even": "⚠️ Necesitas vender {{units}} unidades más para alcanzar el punto de equilibrio.",
+        "increase_price": "Considera aumentar el precio en {{percent}}% para mejorar tu margen.",
+        "reduce_costs": "Reduce costos fijos en ${{amount}} para bajar tu punto de equilibrio.",
+        "increase_volume": "Aumenta volumen de ventas para aprovechar economías de escala.",
+        "monitor_costs": "Monitorea costos variables mensualmente para evitar sorpresas."
+      }
     },
     
     "cash_flow": {
@@ -680,7 +688,15 @@
       "month": "Mes",
       "no_critical_alerts": "Sin alertas críticas",
       "cash_flow_healthy_desc": "Tu flujo de caja se ve saludable",
-      "alerts": "Alertas"
+      "alerts": "Alertas",
+      "recommendations": {
+        "negative_flow": "⚠️ Tu flujo de caja es negativo. Considera reducir gastos o aumentar ingresos.",
+        "deficit_warning": "🚨 Te quedarás sin efectivo en {{months}} meses. Actúa ahora.",
+        "below_reserve": "💰 Tu balance final está por debajo de la reserva recomendada.",
+        "low_margin": "📊 Tu margen neto es bajo. Intenta reducir costos o aumentar precios.",
+        "healthy_invest": "✅ Tu flujo de caja es saludable. Considera invertir el excedente.",
+        "growth_opportunity": "📈 Con este crecimiento, podrías expandir tu negocio en 6-12 meses."
+      }
     },
     
     "pricing": {
@@ -708,7 +724,14 @@
       "recommended": "Recomendado",
       "above_competitor": "POR ENCIMA de competencia",
       "below_competitor": "POR DEBAJO de competencia",
-      "difference": "Diferencia"
+      "difference": "Diferencia",
+      "recommendations": {
+        "high_vs_competition": "Estás {{percent}}% por encima de la competencia. Podrías aumentar precios sin perder clientes.",
+        "low_vs_competition": "Estás {{percent}}% por debajo de la competencia. Tienes margen para subir precios.",
+        "test_prices": "Prueba diferentes precios con muestras pequeñas antes de cambiar todo el inventario.",
+        "monitor_prices": "Monitorea regularmente los precios de competencia para mantener tu posición.",
+        "high_margin": "Tienes un margen saludable. Considera invertir en marketing para aumentar volumen."
+      }
     },
     
     "loan": {
@@ -727,7 +750,14 @@
       "effective_rate": "Tasa Efectiva",
       "affordable": "AFFORDABLE",
       "debt_service_ratio": "Ratio de servicio de deuda: {{ratio}}% (< 40% es saludable)",
-      "remaining_after_payment": "Después del pago te quedan: {{amount}}/mes"
+      "remaining_after_payment": "Después del pago te quedan: {{amount}}/mes",
+      "recommendations": {
+        "affordable": "✅ El préstamo es manejable según tus ingresos actuales (≤40% de ingresos).",
+        "unaffordable": "⚠️ El préstamo representa más del 40% de tus ingresos. Busca mejores condiciones.",
+        "remaining_low": "Después del pago mensual te quedan ${{amount}}. Considera crear un fondo de emergencia.",
+        "compare_options": "Compara al menos 3 opciones de préstamo antes de decidir.",
+        "negotiate_terms": "Lee los términos y condiciones; negocia comisiones por apertura, prepago, etc."
+      }
     },
     
     "employee_roi": {
@@ -746,7 +776,14 @@
       "positive_hire": "Contratación POSITIVA",
       "positive_description": "Esta contratación generará más valor del que cuesta",
       "negative_hire": "Contratación EN RIESGO",
-      "negative_description": "Los costos superan el valor generado. Considera ajustar expectativas"
+      "negative_description": "Los costos superan el valor generado. Considera ajustar expectativas",
+      "recommendations": {
+        "positive_hire": "✅ ROI positivo pero moderado. Considera optimizar productividad.",
+        "fast_payback": "🚀 Recuperación rápida ({{months}} meses). Excelente decisión de contratación.",
+        "optimize_role": "Revisa métricas 18 meses después para ajustar expectativas y optimizar desempeño.",
+        "negative_roi": "⚠️ Los números muestran que esta contratación podría no ser rentable aún. Considera esperar.",
+        "adjust_expectations": "Considera ajustar el rol o las expectativas de valor generado."
+      }
     },
     
     "marketing_roi": {
@@ -768,7 +805,42 @@
       "break_even_campaign": "Campaña en EQUILIBRIO",
       "break_even_description": "ROI ~100% - Apenas cubre costos, optimiza o pausa",
       "losing_campaign": "Campaña PERDIENDO",
-      "losing_description": "ROI < 100% - Pierde dinero, revisa estrategia"
+      "losing_description": "ROI < 100% - Pierde dinero, revisa estrategia",
+      "recommendations": {
+        "excellent_roi": "🎯 ROI excelente (>200%). Esta campaña es muy rentable, considera escalarla.",
+        "good_roi": "✅ ROI positivo (100-200%). Resultados sólidos, prueba aumentar presupuesto.",
+        "test_audience": "Prueba A/B testing en audiencias, creativos y copy para mejorar performance.",
+        "optimize_campaign": "Monitorea métricas durante las primeras 2 semanas de la campaña.",
+        "losing_campaign": "❌ Esta campaña pierde dinero (ROI <100%). Revisa estrategia o pausa.",
+        "cac_high": "Tu CAC está alto vs. industria. Optimiza segmentación y creativos."
+      }
+    }
+  },
+  
+  "calculators": {
+    "break_even": {
+      "title": "Punto de Equilibrio",
+      "description": "¿Cuánto debes vender para no perder?"
+    },
+    "cash_flow": {
+      "title": "Flujo de Caja",
+      "description": "Proyección de ingresos y gastos 12 meses"
+    },
+    "pricing": {
+      "title": "Calculadora de Precios",
+      "description": "Calcula el precio óptimo"
+    },
+    "loan": {
+      "title": "Evaluador de Préstamos",
+      "description": "Compara opciones de financiamiento"
+    },
+    "employee_roi": {
+      "title": "ROI de Empleados",
+      "description": "¿Vale la pena contratar?"
+    },
+    "marketing_roi": {
+      "title": "ROI de Marketing",
+      "description": "Mide tu publicidad"
     }
   }
 }
