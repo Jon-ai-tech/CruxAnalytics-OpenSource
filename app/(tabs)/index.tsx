@@ -49,7 +49,7 @@ function getScoreLabel(score: number): string {
 // ============================================
 function HealthScoreGauge({ score, colors }: { score: number | null; colors: any }) {
   return (
-    <View className="bg-surface/50 backdrop-blur-xl rounded-3xl p-8 border border-border/50">
+    <View className="bg-surface border border-border rounded-3xl p-8">
       <Text className="text-muted text-sm mb-4 uppercase tracking-wider font-body-medium">HEALTH SCORE</Text>
       {score !== null ? (
         <>
@@ -132,8 +132,8 @@ function ToolCard({ icon, title, description, href, color, colors }: any) {
   };
 
   return (
-    <Pressable onPress={handlePress} className="flex-1 min-w-[160px] max-w-[48%] mb-4">
-      <View className="bg-surface/50 backdrop-blur-xl rounded-2xl p-6 border border-border/50">
+    <Pressable onPress={handlePress} className="min-w-[280px] max-w-[350px] flex-1 mb-4">
+      <View className="bg-surface border border-border rounded-2xl p-6">
         <View className={`w-12 h-12 rounded-xl bg-${color}/10 items-center justify-center mb-4`}>
           <IconSymbol size={24} name={icon} color={colors[color]} />
         </View>
@@ -272,7 +272,7 @@ export default function HomeScreen() {
           {projects.length > 0 && (
             <View className="flex-row gap-6">
               <HealthScoreGauge score={calculateHealthScore(projects)} colors={colors} />
-              <View className="flex-1 bg-surface/80 backdrop-blur-xl rounded-3xl p-8 border border-border/50">
+              <View className="flex-1 bg-surface border border-border rounded-3xl p-8">
                 <Text className="text-xl font-heading-medium text-foreground mb-6">
                   {t('dashboard.quick_stats')}
                 </Text>
@@ -345,7 +345,7 @@ export default function HomeScreen() {
             {loading ? (
               <SkeletonProjectList count={3} />
             ) : projects.length === 0 ? (
-              <View className="bg-surface rounded-3xl p-12 border border-border items-center gap-4">
+              <View className="bg-surface border border-border rounded-3xl p-12 items-center gap-4">
                 <View className="w-20 h-20 rounded-full bg-primary/10 items-center justify-center mb-2">
                   <IconSymbol size={40} name="folder.badge.plus" color={colors.primary} />
                 </View>
@@ -357,7 +357,7 @@ export default function HomeScreen() {
                 </Text>
               </View>
             ) : filteredProjects.length === 0 ? (
-              <View className="bg-surface rounded-2xl p-8 border border-border items-center gap-4">
+              <View className="bg-surface border border-border rounded-2xl p-8 items-center gap-4">
                 <IconSymbol size={48} name="magnifyingglass" color={colors.muted} />
                 <Text className="text-base font-body text-muted text-center mb-2">
                   {t('projects_list.no_results')}

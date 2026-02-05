@@ -58,14 +58,11 @@ function HeroSection() {
                 <View className="flex-row gap-4 mt-10">
                     <GradientButton
                         size="lg"
-                        className="rounded-xl"
+                        className="rounded-2xl"
                         onPress={() => router.push('/')}
                     >
                         Analizar mi negocio →
                     </GradientButton>
-                    <OutlineButton className="rounded-xl" onPress={() => { }}>
-                        Ver demo
-                    </OutlineButton>
                 </View>
 
                 {/* Trust indicators */}
@@ -345,7 +342,7 @@ function CTASection() {
 
                     <GradientButton
                         size="lg"
-                        className="mt-8 rounded-xl"
+                        className="mt-8 rounded-2xl"
                         onPress={() => router.push('/')}
                     >
                         Comenzar análisis gratis →

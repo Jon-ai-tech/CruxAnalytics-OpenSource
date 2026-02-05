@@ -68,7 +68,7 @@ export function GradientButton({
         <Pressable
             onPress={onPress}
             className={`
-        rounded-xl overflow-hidden
+        rounded-2xl overflow-hidden
         active:scale-95 transition-transform
         ${className}
       `}
