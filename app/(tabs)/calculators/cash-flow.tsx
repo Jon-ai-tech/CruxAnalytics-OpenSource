@@ -200,7 +200,7 @@ export default function CashFlowPage() {
             });
             await printPDF(html);
         } catch (error) {
-            Alert.alert(t('common.error'), 'No se pudo exportar el PDF');
+            Alert.alert(t('common.error'), t('common.export_failed') || 'No se pudo exportar el PDF');
         } finally {
             setExporting(false);
         }

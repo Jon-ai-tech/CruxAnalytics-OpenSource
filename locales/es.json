@@ -33,6 +33,7 @@
     "calculate_save": "Calcular y Guardar",
     "exporting": "Exportando...",
     "export_pdf": "Exportar PDF",
+    "export_failed": "No se pudo exportar el PDF",
     "delete_project": "Eliminar Proyecto",
     "project_duplicated": "Proyecto duplicado exitosamente",
     "view": "Ver",
