@@ -85,50 +85,50 @@ const TOOL_CARDS = [
     icon: 'chart.line.uptrend.xyaxis', 
     title: 'Punto de Equilibrio', 
     description: '¿Cuánto debes vender para no perder?',
-    href: '/calculators/break-even',
-    color: 'primary'
+    href: '/(tabs)/calculators/break-even' as const,
+    color: 'primary' as const
   },
   { 
     icon: 'dollarsign.circle', 
     title: 'Flujo de Caja', 
     description: 'Proyección de ingresos y gastos 12 meses',
-    href: '/calculators/cash-flow',
-    color: 'success'
+    href: '/(tabs)/calculators/cash-flow' as const,
+    color: 'success' as const
   },
   { 
     icon: 'tag', 
     title: 'Calculadora de Precios', 
     description: 'Calcula el precio óptimo',
-    href: '/calculators/pricing',
-    color: 'warning'
+    href: '/(tabs)/calculators/pricing' as const,
+    color: 'warning' as const
   },
   { 
     icon: 'creditcard', 
     title: 'Evaluador de Préstamos', 
     description: 'Compara opciones de financiamiento',
-    href: '/calculators/loan',
-    color: 'primary'
+    href: '/(tabs)/calculators/loan' as const,
+    color: 'primary' as const
   },
   { 
     icon: 'person.2', 
     title: 'ROI de Empleados', 
     description: '¿Vale la pena contratar?',
-    href: '/calculators/employee-roi',
-    color: 'success'
+    href: '/(tabs)/calculators/employee-roi' as const,
+    color: 'success' as const
   },
   { 
     icon: 'megaphone', 
     title: 'ROI de Marketing', 
     description: 'Mide tu publicidad',
-    href: '/calculators/marketing',
-    color: 'warning'
+    href: '/(tabs)/calculators/marketing' as const,
+    color: 'warning' as const
   },
 ];
 
 function ToolCard({ icon, title, description, href, color, colors }: any) {
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push(href as any);
+    router.push(href);
   };
 
   // Color mapping for the icon background
@@ -143,8 +143,12 @@ function ToolCard({ icon, title, description, href, color, colors }: any) {
   };
 
   return (
-    <Pressable onPress={handlePress} className="min-w-[280px] max-w-[350px] flex-1 mb-4">
-      <View className="bg-surface border border-border rounded-2xl p-6">
+    <Pressable 
+      onPress={handlePress} 
+      className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] mb-4"
+      style={{ minWidth: 280 }}
+    >
+      <View className="bg-surface border border-border rounded-2xl p-6 h-full">
         <View 
           className="w-12 h-12 rounded-xl items-center justify-center mb-4"
           style={{ backgroundColor: getBgColor() }}
@@ -319,7 +323,7 @@ export default function HomeScreen() {
             <Text className="text-2xl font-heading-medium text-foreground mb-4">
               Herramientas de Análisis
             </Text>
-            <View className="flex-row flex-wrap gap-4">
+            <View className="flex-row flex-wrap justify-between gap-4">
               {TOOL_CARDS.map(tool => (
                 <ToolCard key={tool.href} {...tool} colors={colors} />
               ))}
