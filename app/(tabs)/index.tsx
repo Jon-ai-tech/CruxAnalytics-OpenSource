@@ -132,7 +132,7 @@ function ToolCard({ icon, title, description, href, color, colors }: any) {
   };
 
   return (
-    <Pressable onPress={handlePress} className="flex-1 min-w-[280px] max-w-[350px] mb-4">
+    <Pressable onPress={handlePress} className="min-w-[280px] max-w-[350px] flex-1 mb-4">
       <View className="bg-[#0F172A] border border-white/10 rounded-2xl p-6 hover:bg-surface/80">
         <View className={`w-12 h-12 rounded-xl bg-${color}/10 items-center justify-center mb-4`}>
           <IconSymbol size={24} name={icon} color={colors[color]} />
@@ -305,7 +305,7 @@ export default function HomeScreen() {
             <Text className="text-2xl font-heading-medium text-foreground mb-4">
               Herramientas de Análisis
             </Text>
-            <View className="flex-row flex-wrap gap-4 justify-between">
+            <View className="flex-row flex-wrap gap-4">
               {TOOL_CARDS.map(tool => (
                 <ToolCard key={tool.href} {...tool} colors={colors} />
               ))}
