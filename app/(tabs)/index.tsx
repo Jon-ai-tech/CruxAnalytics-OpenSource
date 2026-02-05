@@ -127,12 +127,12 @@ export default function HomeScreen() {
       >
         <View className="p-6 gap-6">
           {/* Header with Language Selector */}
-          <View className="flex-row items-start justify-between">
+          <View className="flex-row items-start justify-between glass rounded-2xl p-6 bg-gradient-to-r from-primary to-success">
             <View className="flex-1 gap-2">
-              <Text className="text-4xl font-bold text-foreground">
+              <Text className="text-4xl font-heading text-foreground">
                 {t('home.welcome')}
               </Text>
-              <Text className="text-base text-muted">
+              <Text className="text-base font-body text-muted">
                 {t('home.subtitle')}
               </Text>
             </View>
@@ -164,7 +164,7 @@ export default function HomeScreen() {
           {/* Projects List */}
           <View className="gap-4">
             <View className="flex-row items-center justify-between">
-              <Text className="text-xl font-semibold text-foreground">
+              <Text className="text-xl font-heading-medium text-foreground">
                 {filteredProjects.length > 0 ? `${filteredProjects.length} ${t('common.all')}` : t('home.recent_projects')}
               </Text>
             </View>
@@ -172,17 +172,19 @@ export default function HomeScreen() {
             {loading ? (
               <SkeletonProjectList count={3} />
             ) : projects.length === 0 ? (
-              <View className="bg-surface rounded-2xl p-8 border border-border items-center">
-                <Text className="text-base text-muted text-center mb-2">
+              <View className="bg-surface rounded-2xl p-8 border border-border items-center gap-4">
+                <IconSymbol size={48} name="folder.badge.plus" color={colors.primary} />
+                <Text className="text-base font-body text-muted text-center mb-2">
                   {t('home.no_projects')}
                 </Text>
-                <Text className="text-sm text-muted text-center">
+                <Text className="text-sm font-body text-muted text-center">
                   {t('home.create_first')}
                 </Text>
               </View>
             ) : filteredProjects.length === 0 ? (
-              <View className="bg-surface rounded-2xl p-8 border border-border items-center">
-                <Text className="text-base text-muted text-center mb-2">
+              <View className="bg-surface rounded-2xl p-8 border border-border items-center gap-4">
+                <IconSymbol size={48} name="magnifyingglass" color={colors.muted} />
+                <Text className="text-base font-body text-muted text-center mb-2">
                   {t('projects_list.no_results')}
                 </Text>
               </View>
@@ -201,22 +203,24 @@ export default function HomeScreen() {
 
           {/* Quick Stats Card (if we have projects) */}
           {projects.length > 0 && (
-            <View className="bg-surface rounded-2xl p-6 border border-border">
-              <Text className="text-lg font-semibold text-foreground mb-4">
-                Quick Stats
+            <View className="glass rounded-2xl p-6 border border-border">
+              <Text className="text-lg font-heading-medium text-foreground mb-4">
+                {t('dashboard.quick_stats')}
               </Text>
               <View className="flex-row gap-4">
-                <View className="flex-1">
-                  <Text className="text-2xl font-bold text-primary">
+                <View className="flex-1 items-center">
+                  <IconSymbol size={32} name="folder.fill" color={colors.primary} />
+                  <Text className="text-2xl font-heading text-primary mt-2">
                     {projects.length}
                   </Text>
-                  <Text className="text-sm text-muted">Total Projects</Text>
+                  <Text className="text-sm font-body text-muted">{t('dashboard.total_projects')}</Text>
                 </View>
-                <View className="flex-1">
-                  <Text className="text-2xl font-bold text-success">
+                <View className="flex-1 items-center">
+                  <IconSymbol size={32} name="checkmark.circle.fill" color={colors.success} />
+                  <Text className="text-2xl font-heading text-success mt-2">
                     {projects.filter(p => p.results && p.results.roi > 0).length}
                   </Text>
-                  <Text className="text-sm text-muted">Viable</Text>
+                  <Text className="text-sm font-body text-muted">{t('status.viable')}</Text>
                 </View>
               </View>
             </View>
@@ -229,9 +233,15 @@ export default function HomeScreen() {
         <TouchableOpacity
           onPress={handleNewProject}
           className="bg-primary rounded-full w-16 h-16 items-center justify-center shadow-lg"
-
+          style={{
+            shadowColor: colors.primary,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 8,
+            elevation: 8,
+          }}
         >
-          <Text className="text-3xl text-background font-light">+</Text>
+          <IconSymbol size={28} name="plus" color={colors.background} />
         </TouchableOpacity>
       </View>
 
