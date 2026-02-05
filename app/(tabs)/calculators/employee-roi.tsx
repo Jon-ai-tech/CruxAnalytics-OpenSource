@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -13,6 +13,7 @@ import {
     Badge,
 } from '@/components/landing/shared-components';
 import { EmployeeROICalculator } from '@/lib/infrastructure/calculators/EmployeeROICalculator';
+import { useTranslation } from '@/lib/i18n-context';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -98,6 +99,7 @@ function ROIGauge({ roi }: { roi: number }) {
 }
 
 export default function EmployeeROIPage() {
+    const { t } = useTranslation();
     const [annualSalary, setAnnualSalary] = useState('60000');
     const [annualBenefits, setAnnualBenefits] = useState('12000');
     const [onboardingCosts, setOnboardingCosts] = useState('5000');
@@ -130,7 +132,42 @@ export default function EmployeeROIPage() {
         }
     }, [annualSalary, annualBenefits, onboardingCosts, revenueGenerated, hoursPerWeek, roleType, calculator]);
 
-    const recommendations = result ? calculator.generateRecommendations(result) : [];
+    // ✅ Generate recommendations manually
+    const recommendations = useMemo(() => {
+        if (!result) return [];
+        
+        const recs: string[] = [];
+        
+        if (result.roiPercentage >= 100) {
+            recs.push('✅ Excelente ROI. Esta contratación es altamente rentable.');
+        } else if (result.roiPercentage >= 50) {
+            recs.push('⚠️ ROI positivo pero moderado. Considera optimizar productividad.');
+        } else if (result.roiPercentage >= 0) {
+            recs.push('⚠️ ROI bajo. Revisa si el rol está bien definido o si hay oportunidades de mejora.');
+        } else {
+            recs.push('🚨 ROI negativo. Esta contratación no es rentable en este momento.');
+        }
+        
+        if (result.productivityRatio < 2) {
+            recs.push('La productividad es baja (<2x). Considera automatizar tareas o redefinir responsabilidades.');
+        }
+        
+        if (result.paybackMonths && result.paybackMonths > 12) {
+            recs.push(`El tiempo de recuperación es largo (${result.paybackMonths} meses). Asegúrate de tener flujo de caja suficiente.`);
+        } else if (result.paybackMonths && result.paybackMonths <= 6) {
+            recs.push(`Recuperación rápida (${result.paybackMonths} meses). Excelente decisión de contratación.`);
+        }
+        
+        if (result.benchmarkComparison.productivityLevel === 'low') {
+            recs.push('Productividad por debajo del promedio de industria. Considera training o soporte adicional.');
+        } else if (result.benchmarkComparison.productivityLevel === 'high') {
+            recs.push('Productividad superior al promedio. ¡Este empleado es un activo valioso!');
+        }
+        
+        recs.push('Revisa métricas trimestralmente para ajustar expectativas y optimizar desempeño.');
+        
+        return recs;
+    }, [result]);
 
     return (
         <ScrollView 
@@ -138,166 +175,168 @@ export default function EmployeeROIPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-            <SectionHeading
-                title="👥 ROI de Empleados"
-                subtitle="¿Vale la pena contratar? Analiza el retorno de inversión"
-            />
+                <SectionHeading
+                    title={`👥 ${t('calculator.employee_roi.title')}`}
+                    subtitle={t('calculator.employee_roi.subtitle')}
+                />
 
-            <View className="flex-row flex-wrap gap-6">
-                {/* Form */}
-                <View className="flex-1 min-w-[300px]">
-                    <GlassCard>
-                        <Text className="text-white font-semibold text-lg mb-6">Datos del Empleado</Text>
+                <View className="flex-row flex-wrap gap-6">
+                    {/* Form */}
+                    <View className="flex-1 min-w-[300px]">
+                        <GlassCard>
+                            <Text className="text-white font-semibold text-lg mb-6">
+                                {t('calculator.enter_data')}
+                            </Text>
 
-                        <RoleSelector selected={roleType} onSelect={setRoleType} />
+                            <RoleSelector selected={roleType} onSelect={setRoleType} />
 
-                        <InputField
-                            label="Salario anual"
-                            value={annualSalary}
-                            onChange={setAnnualSalary}
-                            prefix="$"
-                        />
+                            <InputField
+                                label={t('calculator.employee_roi.annual_salary')}
+                                value={annualSalary}
+                                onChange={setAnnualSalary}
+                                prefix="$"
+                            />
 
-                        <InputField
-                            label="Beneficios anuales"
-                            value={annualBenefits}
-                            onChange={setAnnualBenefits}
-                            prefix="$"
-                            hint="Seguro, vacaciones, bonos, etc."
-                        />
+                            <InputField
+                                label={t('calculator.employee_roi.additional_costs')}
+                                value={annualBenefits}
+                                onChange={setAnnualBenefits}
+                                prefix="$"
+                            />
 
-                        <InputField
-                            label="Costos de onboarding"
-                            value={onboardingCosts}
-                            onChange={setOnboardingCosts}
-                            prefix="$"
-                            hint="Training, equipo, reclutamiento"
-                        />
+                            <InputField
+                                label="Costos de onboarding"
+                                value={onboardingCosts}
+                                onChange={setOnboardingCosts}
+                                prefix="$"
+                                hint="Training, equipo, reclutamiento"
+                            />
 
-                        <InputField
-                            label="Ingresos que genera"
-                            value={revenueGenerated}
-                            onChange={setRevenueGenerated}
-                            prefix="$"
-                            hint="Revenue anual atribuible a este rol"
-                        />
+                            <InputField
+                                label={t('calculator.employee_roi.expected_revenue')}
+                                value={revenueGenerated}
+                                onChange={setRevenueGenerated}
+                                prefix="$"
+                            />
 
-                        <InputField
-                            label="Horas por semana"
-                            value={hoursPerWeek}
-                            onChange={setHoursPerWeek}
-                            suffix="hrs"
-                        />
-                    </GlassCard>
-                </View>
+                            <InputField
+                                label="Horas por semana"
+                                value={hoursPerWeek}
+                                onChange={setHoursPerWeek}
+                                suffix="hrs"
+                            />
+                        </GlassCard>
+                    </View>
 
-                {/* Results */}
-                <View className="flex-1 min-w-[300px] gap-4">
-                    {result ? (
-                        <>
-                            {/* Main Result */}
-                            <GlassCard gradient className="items-center py-8">
-                                <ROIGauge roi={result.roiPercentage} />
-                                <View className="flex-row gap-4 mt-6">
-                                    <Badge variant={result.isWorthHiring ? 'success' : 'danger'}>
-                                        {result.isWorthHiring ? '✅ VALE LA PENA' : '⚠️ NO RECOMENDADO'}
-                                    </Badge>
-                                </View>
-                            </GlassCard>
-
-                            {/* Metrics */}
-                            <View className="flex-row flex-wrap gap-4">
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Costo Total</Text>
-                                    <Text className="text-2xl font-bold text-white">
-                                        ${result.totalCost.toLocaleString()}
-                                    </Text>
-                                    <Text className="text-gray-500 text-xs">Primer año</Text>
-                                </GlassCard>
-
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Contribución Neta</Text>
-                                    <Text className={`text-2xl font-bold ${result.netContribution >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                        ${result.netContribution.toLocaleString()}
-                                    </Text>
-                                    <Text className="text-gray-500 text-xs">Revenue - Costo</Text>
-                                </GlassCard>
-
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Por cada $1 invertido</Text>
-                                    <Text className="text-2xl font-bold text-indigo-400">
-                                        ${result.revenuePerDollarSpent != null ? result.revenuePerDollarSpent.toFixed(2) : '0.00'}
-                                    </Text>
-                                    <Text className="text-gray-500 text-xs">Retorno</Text>
-                                </GlassCard>
-                            </View>
-
-                            {/* Productivity */}
-                            <GlassCard>
-                                <Text className="text-white font-semibold mb-4">📊 Productividad</Text>
-                                <View className="flex-row justify-between">
-                                    <View className="items-center flex-1">
-                                        <Text className="text-gray-400 text-xs">Costo/hora</Text>
-                                        <Text className="text-white text-xl font-bold">${result.costPerHour}</Text>
-                                    </View>
-                                    <View className="items-center flex-1">
-                                        <Text className="text-gray-400 text-xs">Revenue/hora</Text>
-                                        <Text className="text-emerald-400 text-xl font-bold">${result.revenuePerHour}</Text>
-                                    </View>
-                                    <View className="items-center flex-1">
-                                        <Text className="text-gray-400 text-xs">Ratio</Text>
-                                        <Text className="text-indigo-400 text-xl font-bold">{result.productivityRatio}x</Text>
-                                    </View>
-                                </View>
-
-                                <View className="mt-4 pt-4 border-t border-white/10">
-                                    <View className="flex-row items-center gap-2">
-                                        <Badge variant={result.benchmarkComparison.productivityLevel === 'high' ? 'success' : result.benchmarkComparison.productivityLevel === 'low' ? 'danger' : 'warning'}>
-                                            Productividad: {result.benchmarkComparison.productivityLevel.toUpperCase()}
+                    {/* Results */}
+                    <View className="flex-1 min-w-[300px] gap-4">
+                        {result ? (
+                            <>
+                                {/* Main Result */}
+                                <GlassCard gradient className="items-center py-8">
+                                    <ROIGauge roi={result.roiPercentage} />
+                                    <View className="flex-row gap-4 mt-6">
+                                        <Badge variant={result.isWorthHiring ? 'success' : 'danger'}>
+                                            {result.isWorthHiring ? `✅ ${t('calculator.employee_roi.positive_hire')}` : `⚠️ ${t('calculator.employee_roi.negative_hire')}`}
                                         </Badge>
-                                        <Text className="text-gray-500 text-xs">vs promedio de industria</Text>
                                     </View>
-                                </View>
-                            </GlassCard>
+                                </GlassCard>
 
-                            {/* Payback */}
-                            {result.paybackMonths && (
+                                {/* Metrics */}
+                                <View className="flex-row flex-wrap gap-4">
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">{t('calculator.employee_roi.total_cost')}</Text>
+                                        <Text className="text-2xl font-bold text-white">
+                                            ${result.totalCost.toLocaleString()}
+                                        </Text>
+                                        <Text className="text-gray-500 text-xs">Primer año</Text>
+                                    </GlassCard>
+
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">{t('calculator.employee_roi.net_benefit')}</Text>
+                                        <Text className={`text-2xl font-bold ${result.netContribution >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                            ${result.netContribution.toLocaleString()}
+                                        </Text>
+                                        <Text className="text-gray-500 text-xs">Revenue - Costo</Text>
+                                    </GlassCard>
+
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">Por cada $1 invertido</Text>
+                                        <Text className="text-2xl font-bold text-indigo-400">
+                                            ${result.revenuePerDollarSpent != null ? result.revenuePerDollarSpent.toFixed(2) : '0.00'}
+                                        </Text>
+                                        <Text className="text-gray-500 text-xs">Retorno</Text>
+                                    </GlassCard>
+                                </View>
+
+                                {/* Productivity */}
                                 <GlassCard>
-                                    <View className="flex-row items-center gap-3">
-                                        <Text className="text-3xl">⏱️</Text>
-                                        <View>
-                                            <Text className="text-white font-bold">Tiempo de recuperación</Text>
-                                            <Text className="text-indigo-400">
-                                                {result.paybackMonths} meses para recuperar costos de onboarding
-                                            </Text>
+                                    <Text className="text-white font-semibold mb-4">📊 Productividad</Text>
+                                    <View className="flex-row justify-between">
+                                        <View className="items-center flex-1">
+                                            <Text className="text-gray-400 text-xs">Costo/hora</Text>
+                                            <Text className="text-white text-xl font-bold">${result.costPerHour}</Text>
+                                        </View>
+                                        <View className="items-center flex-1">
+                                            <Text className="text-gray-400 text-xs">Revenue/hora</Text>
+                                            <Text className="text-emerald-400 text-xl font-bold">${result.revenuePerHour}</Text>
+                                        </View>
+                                        <View className="items-center flex-1">
+                                            <Text className="text-gray-400 text-xs">Ratio</Text>
+                                            <Text className="text-indigo-400 text-xl font-bold">{result.productivityRatio}x</Text>
+                                        </View>
+                                    </View>
+
+                                    <View className="mt-4 pt-4 border-t border-white/10">
+                                        <View className="flex-row items-center gap-2">
+                                            <Badge variant={result.benchmarkComparison.productivityLevel === 'high' ? 'success' : result.benchmarkComparison.productivityLevel === 'low' ? 'danger' : 'warning'}>
+                                                Productividad: {result.benchmarkComparison.productivityLevel.toUpperCase()}
+                                            </Badge>
+                                            <Text className="text-gray-500 text-xs">vs promedio de industria</Text>
                                         </View>
                                     </View>
                                 </GlassCard>
-                            )}
 
-                            {/* Recommendations */}
-                            <GlassCard>
-                                <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
-                                <View className="gap-2">
-                                    {recommendations.map((rec, i) => (
-                                        <Text key={i} className="text-gray-300">• {rec}</Text>
-                                    ))}
-                                </View>
+                                {/* Payback */}
+                                {result.paybackMonths && (
+                                    <GlassCard>
+                                        <View className="flex-row items-center gap-3">
+                                            <Text className="text-3xl">⏱️</Text>
+                                            <View>
+                                                <Text className="text-white font-bold">{t('calculator.employee_roi.payback')}</Text>
+                                                <Text className="text-indigo-400">
+                                                    {result.paybackMonths} {t('calculator.employee_roi.months')} para recuperar costos de onboarding
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                {/* Recommendations */}
+                                {recommendations.length > 0 && (
+                                    <GlassCard>
+                                        <Text className="text-white font-semibold mb-4">💡 {t('calculator.recommendations')}</Text>
+                                        <View className="gap-2">
+                                            {recommendations.map((rec, i) => (
+                                                <Text key={i} className="text-gray-300">• {rec}</Text>
+                                            ))}
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                <GradientButton size="lg">📄 {t('calculator.export_pdf')}</GradientButton>
+                            </>
+                        ) : (
+                            <GlassCard className="items-center py-12">
+                                <Ionicons name="people" size={48} color="#6b7280" />
+                                <Text className="text-gray-400 mt-4 text-center">
+                                    {t('calculator.no_data')}
+                                </Text>
                             </GlassCard>
-
-                            <GradientButton size="lg">📄 Exportar a PDF</GradientButton>
-                        </>
-                    ) : (
-                        <GlassCard className="items-center py-12">
-                            <Ionicons name="people" size={48} color="#6b7280" />
-                            <Text className="text-gray-400 mt-4 text-center">
-                                Ingresa los datos del empleado{'\n'}para ver el análisis de ROI
-                            </Text>
-                        </GlassCard>
-                    )}
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
-    </ScrollView>
-);
+        </ScrollView>
+    );
 }
