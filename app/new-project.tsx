@@ -450,7 +450,7 @@ export default function NewProjectScreen() {
         await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
-      // Navigate to project details
+      // Navigate to project details to show full analysis with charts and metrics
       router.replace(`/project/${project.id}`);
     } catch (error) {
       console.error('Error saving project:', error);
