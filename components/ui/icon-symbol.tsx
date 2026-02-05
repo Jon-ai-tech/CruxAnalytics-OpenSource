@@ -20,6 +20,11 @@ const MAPPING = {
   "chevron.right": "chevron-right",
   "gear": "settings",
   "chart.bar.fill": "bar-chart",
+  "folder.badge.plus": "create-new-folder",
+  "folder.fill": "folder",
+  "checkmark.circle.fill": "check-circle",
+  "magnifyingglass": "search",
+  "plus": "add",
 } as IconMapping;
 
 /**

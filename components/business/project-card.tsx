@@ -54,7 +54,7 @@ export const ProjectCard = React.memo(function ProjectCard({ project, onPress, c
       ]}
       className={cn('mb-3', className)}
     >
-      <View className="bg-surface rounded-2xl p-4 border border-border">
+      <View className="bg-surface rounded-2xl p-6 border border-border/50 shadow-md">
         {/* Header with status badge */}
         <View className="flex-row items-start justify-between mb-3">
           <View className="flex-1 mr-3">

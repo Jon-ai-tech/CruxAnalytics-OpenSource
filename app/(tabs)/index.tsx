@@ -127,12 +127,12 @@ export default function HomeScreen() {
       >
         <View className="p-6 gap-6">
           {/* Header with Language Selector */}
-          <View className="flex-row items-start justify-between bg-surface rounded-2xl p-6 border border-primary/20">
-            <View className="flex-1 gap-2">
-              <Text className="text-4xl font-heading text-foreground">
+          <View className="flex-row items-start justify-between mb-8">
+            <View className="flex-1 gap-3">
+              <Text className="text-5xl font-heading text-foreground tracking-tight">
                 {t('home.welcome')}
               </Text>
-              <Text className="text-base font-body text-muted">
+              <Text className="text-lg font-body text-muted leading-relaxed">
                 {t('home.subtitle')}
               </Text>
             </View>
@@ -172,12 +172,14 @@ export default function HomeScreen() {
             {loading ? (
               <SkeletonProjectList count={3} />
             ) : projects.length === 0 ? (
-              <View className="bg-surface rounded-2xl p-8 border border-border items-center gap-4">
-                <IconSymbol size={48} name="folder.badge.plus" color={colors.primary} />
-                <Text className="text-base font-body text-muted text-center mb-2">
+              <View className="bg-surface rounded-3xl p-12 border border-border items-center gap-4">
+                <View className="w-20 h-20 rounded-full bg-primary/10 items-center justify-center mb-2">
+                  <IconSymbol size={40} name="folder.badge.plus" color={colors.primary} />
+                </View>
+                <Text className="text-xl font-heading-medium text-foreground text-center">
                   {t('home.no_projects')}
                 </Text>
-                <Text className="text-sm font-body text-muted text-center">
+                <Text className="text-base font-body text-muted text-center max-w-sm">
                   {t('home.create_first')}
                 </Text>
               </View>
@@ -203,23 +205,27 @@ export default function HomeScreen() {
 
           {/* Quick Stats Card (if we have projects) */}
           {projects.length > 0 && (
-            <View className="bg-surface rounded-2xl p-6 border border-border">
-              <Text className="text-lg font-heading-medium text-foreground mb-4">
+            <View className="bg-surface/80 backdrop-blur-xl rounded-3xl p-8 border border-border/50 shadow-lg">
+              <Text className="text-xl font-heading-medium text-foreground mb-6">
                 {t('dashboard.quick_stats')}
               </Text>
-              <View className="flex-row gap-4">
-                <View className="flex-1 items-center">
-                  <IconSymbol size={32} name="folder.fill" color={colors.primary} />
-                  <Text className="text-2xl font-heading text-primary mt-2">
-                    {projects.length}
-                  </Text>
+              <View className="flex-row gap-6">
+                <View className="flex-1 bg-primary/5 rounded-2xl p-4">
+                  <View className="flex-row items-center gap-2 mb-2">
+                    <IconSymbol size={20} name="chart.bar.fill" color={colors.primary} />
+                    <Text className="text-3xl font-heading text-primary">
+                      {projects.length}
+                    </Text>
+                  </View>
                   <Text className="text-sm font-body text-muted">{t('dashboard.total_projects')}</Text>
                 </View>
-                <View className="flex-1 items-center">
-                  <IconSymbol size={32} name="checkmark.circle.fill" color={colors.success} />
-                  <Text className="text-2xl font-heading text-success mt-2">
-                    {projects.filter(p => p.results && p.results.roi > 0).length}
-                  </Text>
+                <View className="flex-1 bg-success/5 rounded-2xl p-4">
+                  <View className="flex-row items-center gap-2 mb-2">
+                    <IconSymbol size={20} name="checkmark.circle.fill" color={colors.success} />
+                    <Text className="text-3xl font-heading text-success">
+                      {projects.filter(p => p.results && p.results.roi > 0).length}
+                    </Text>
+                  </View>
                   <Text className="text-sm font-body text-muted">{t('status.viable')}</Text>
                 </View>
               </View>
@@ -232,7 +238,7 @@ export default function HomeScreen() {
       <View className="absolute bottom-6 right-6">
         <TouchableOpacity
           onPress={handleNewProject}
-          className="bg-primary rounded-full w-16 h-16 items-center justify-center shadow-lg"
+          className="bg-primary rounded-full w-16 h-16 items-center justify-center shadow-2xl"
           style={{
             shadowColor: colors.primary,
             shadowOffset: { width: 0, height: 4 },
