@@ -200,9 +200,11 @@ export function SectionHeading({
 export function Badge({
     children,
     variant = 'default',
+    className = '',
 }: {
     children: React.ReactNode;
     variant?: 'default' | 'success' | 'warning' | 'danger';
+    className?: string;
 }) {
     const variantClasses = {
         default: 'bg-[#14B8A6]/20 text-[#14B8A6] border-[#14B8A6]/30',
@@ -213,7 +215,7 @@ export function Badge({
 
     return (
         <View
-            className={`px-3 py-1 rounded-full border ${variantClasses[variant]}`}
+            className={`px-3 py-1 rounded-full border ${variantClasses[variant]} ${className}`}
         >
             <Text className="text-xs font-medium">{children}</Text>
         </View>

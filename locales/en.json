@@ -123,46 +123,53 @@
   },
   "wizard": {
     "step1": {
-      "subtitle": "Step 1 of 6",
+      "subtitle": "Step 1 of 7",
       "question": "What's your project name?",
       "helper": "Give your business or project a descriptive name",
       "placeholder": "e.g., Downtown Cafe, Online Store",
       "help": "Tip: Use a name that clearly describes your business"
     },
     "step2": {
-      "subtitle": "Step 2 of 6",
+      "subtitle": "Step 2 of 7",
       "question": "How much money do you need to invest?",
       "helper": "Include equipment, inventory, permits, etc.",
       "placeholder": "100000",
       "help": "Tip: Add up everything you need to buy before opening"
     },
     "step3": {
-      "subtitle": "Step 3 of 6",
-      "question": "How much do you expect to sell per month?",
-      "helper": "A realistic estimate of your monthly sales",
-      "placeholder": "50000",
+      "subtitle": "Step 3 of 7",
+      "question": "How much do you expect to sell per year?",
+      "helper": "A realistic estimate of your annual sales",
+      "placeholder": "500000",
       "help": "Tip: Research similar businesses in your area to estimate"
     },
     "step4": {
-      "subtitle": "Step 4 of 6",
-      "question": "How much do you spend per month?",
-      "helper": "Rent, salaries, utilities, raw materials",
-      "placeholder": "20000",
+      "subtitle": "Step 4 of 7",
+      "question": "How much do you spend per year?",
+      "helper": "Rent, salaries, utilities, maintenance (annual)",
+      "placeholder": "200000",
       "help": "Tip: Don't forget to include both fixed and variable expenses"
     },
     "step5": {
-      "subtitle": "Step 5 of 6",
+      "subtitle": "Step 5 of 7",
       "question": "For how long should we analyze the project?",
       "helper": "In months (typically 12 to 36 months)",
       "placeholder": "24",
       "help": "Tip: 24 months (2 years) is a common period for SMEs"
     },
     "step6": {
-      "subtitle": "Step 6 of 6",
+      "subtitle": "Step 6 of 7",
       "question": "Do you expect to grow over time?",
       "helper": "Estimated monthly growth percentage",
       "placeholder": "5",
       "help": "Tip: 5% monthly is realistic for new businesses"
+    },
+    "step7": {
+      "subtitle": "Step 7 of 7",
+      "question": "What is your discount rate?",
+      "helper": "Annual rate for the time value of money",
+      "placeholder": "10",
+      "help": "Tip: 10% is a standard rate for commercial projects"
     }
   },
   "metrics": {
@@ -185,7 +192,19 @@
     "roi_description": "Return on investment",
     "npv_description": "Net present value",
     "irr_description": "Internal rate of return",
-    "payback_description": "Payback period"
+    "payback_description": "Payback period",
+    "ofi": {
+      "label": "Operational Friction (OFI)",
+      "description": "Cost of manual processes vs revenue"
+    },
+    "tfdi": {
+      "label": "Tech-Debt Drag (TFDI)",
+      "description": "Financial impact of technical maintenance"
+    },
+    "ser": {
+      "label": "Strategic Efficiency (SER)",
+      "description": "Ratio between growth and capital burn"
+    }
   },
   "results": {
     "created": "Created",
@@ -197,6 +216,9 @@
     "metrics_title": "Financial Metrics",
     "charts_title": "Visual Analysis",
     "recommendations_title": "Smart Recommendations",
+    "advanced_title": "Complex Calculations",
+    "vanguard_metrics": "Vanguard Crux Metrics",
+    "vanguard_description": "Proprietary metrics for operational efficiency analysis",
     "roi": "ROI",
     "roi_full": "Return on Investment",
     "npv": "NPV",
@@ -217,9 +239,6 @@
     "tab_scenarios": "Scenarios",
     "chart_monthly_cashflow": "Monthly Cash Flow",
     "chart_cumulative_cashflow": "Cumulative Cash Flow",
-    "expected_case": "Expected Case",
-    "best_case": "Best Case",
-    "worst_case": "Worst Case",
     "export_pdf": "Export to PDF",
     "compare_scenarios": "Compare Scenarios",
     "calculating": "Calculating...",
@@ -289,35 +308,19 @@
     "pdf_format_a4": "A4",
     "pdf_format_letter": "Letter",
     "include_charts": "Include Charts in PDF",
-    "about": "About",
-    "version": "Version",
-    "terms": "Terms and Conditions",
-    "privacy": "Privacy Policy",
-    "support": "Support"
-  },
-  "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "appearance": "Appearance",
-    "light_mode": "Light Mode",
-    "dark_mode": "Dark Mode",
-    "auto_mode": "Automatic",
-    "auto_mode_desc": "Follow system setting",
-    "theme_changed": "Theme changed",
-    "restart_required": "Restart the app to see changes",
-    "data_backup": "Data & Backup",
+    "data_backup": "Data and Backup",
     "export_projects": "Export Projects",
     "export_projects_desc": "Save all projects as JSON file",
     "import_projects": "Import Projects",
     "import_projects_desc": "Restore projects from JSON file",
-    "data_cache": "Data & Cache",
+    "data_cache": "Data and Cache",
     "clear_cache": "Clear Cache",
-    "clear_cache_desc": "Remove saved AI analyses",
+    "clear_cache_desc": "Delete saved AI analysis",
     "clear_cache_confirm": "Are you sure you want to clear the cache?",
     "cache_cleared": "Cache cleared successfully",
     "cache_clear_error": "Error clearing cache",
     "no_projects_title": "No Projects",
-    "no_projects_message": "There are no projects to export",
+    "no_projects_message": "No projects to export",
     "export_success": "{{count}} project(s) exported successfully",
     "export_error": "Error exporting projects",
     "import": "Import",
@@ -329,8 +332,11 @@
     "import_error": "Error importing projects. Check the file format.",
     "about": "About",
     "version": "Version",
-    "app_description": "Professional tool for financial analysis of business projects with advanced ROI, NPV, IRR calculations and AI-powered viability diagnosis.",
+    "app_description": "Professional tool for financial analysis of business projects. Calculates ROI, NPV, IRR and feasibility diagnosis with AI.",
     "view_tutorial": "View Tutorial",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "support": "Support",
     "copyright": "© 2026 Vanguard Crux. All rights reserved."
   },
   "ai": {
@@ -394,10 +400,20 @@
     "invalid_investment": "Initial investment must be a positive number",
     "invalid_revenue": "Yearly revenue must be a positive number",
     "save_error": "Error saving project",
+    "invalid_costs": "Invalid costs. Must be a positive number.",
+    "invalid_duration": "Invalid duration. Must be a positive number.",
+    "invalid_growth": "Invalid growth. Must be a valid number.",
     "project_not_found": "Project not found",
     "export_error": "Error exporting PDF",
     "duplicate_error": "Error duplicating project",
-    "duplicate_success": "Project duplicated successfully"
+    "duplicate_success": "Project duplicated successfully",
+    "delete_error": "Error deleting project",
+    "required": "This field is required",
+    "positive_number": "Must be a positive number",
+    "valid_percentage": "Must be a valid percentage (0-100)",
+    "min_value": "Minimum value is {{min}}",
+    "max_value": "Maximum value is {{max}}",
+    "invalid_format": "Invalid format"
   },
   "errors": {
     "generic": "An unexpected error occurred",
@@ -597,88 +613,43 @@
     "encouragement": "You're doing great! Every analysis brings you closer to financial clarity.",
     "next_step": "What would you like to explore next?"
   },
-  "validations": {
-    "error": "Error",
-    "project_name_required": "Project name is required",
-    "invalid_investment": "Initial investment must be a positive number",
-    "invalid_revenue": "Yearly revenue must be a positive number",
-    "save_error": "Error saving project",
-    "invalid_costs": "Invalid costs. Must be a positive number.",
-    "invalid_duration": "Invalid duration. Must be a positive number.",
-    "invalid_growth": "Invalid growth. Must be a valid number.",
-    "project_not_found": "Project not found",
-    "export_error": "Error exporting PDF",
-    "duplicate_error": "Error duplicating project",
-    "duplicate_success": "Project duplicated successfully",
-    "delete_error": "Error deleting project",
-    "required": "This field is required",
-    "positive_number": "Must be a positive number",
-    "valid_percentage": "Must be a valid percentage (0-100)",
-    "min_value": "Minimum value is {{min}}",
-    "max_value": "Maximum value is {{max}}",
-    "invalid_format": "Invalid format"
-  },
-    "calculators": {
-    "break_even": {
-      "title": "Break-Even Point",
-      "description": "How much to sell to avoid losses?"
-    },
-    "cash_flow": {
-      "title": "Cash Flow",
-      "description": "12-month income and expense projection"
-    },
-    "pricing": {
-      "title": "Pricing Calculator",
-      "description": "Calculate optimal price"
-    },
-    "loan": {
-      "title": "Loan Evaluator",
-      "description": "Compare financing options"
-    },
-    "employee_roi": {
-      "title": "Employee ROI",
-      "description": "Is hiring worth it?"
-    },
-    "marketing_roi": {
-      "title": "Marketing ROI",
-      "description": "Measure your advertising"
-    }
-  },
   "calculator": {
     "enter_data": "Enter your data",
     "results": "Results",
     "recommendations": "Recommendations",
     "export_pdf": "Export to PDF",
     "no_data": "Enter your data to see the analysis",
-    
+    "units": "units",
     "break_even": {
       "title": "Break-Even Point",
-      "subtitle": "Discover how many units you need to sell to avoid losses",
-      "fixed_costs": "Monthly fixed costs",
-      "fixed_costs_hint": "Rent, salaries, utilities, etc.",
-      "unit_price": "Price per unit",
-      "unit_price_hint": "What you charge for each product/service",
-      "variable_cost": "Variable cost per unit",
-      "variable_cost_hint": "Materials, commissions, shipping, etc.",
-      "current_sales": "Current sales (optional)",
-      "current_sales_hint": "To calculate your safety margin",
-      "break_even_units": "Break-Even Point (Units)",
-      "break_even_revenue": "Break-Even Point (Revenue)",
-      "contribution_margin": "Contribution per Unit",
-      "above_break_even": "Above break-even",
-      "below_break_even": "Below break-even",
-      "safety_margin": "Safety margin",
+      "subtitle": "How many units do you need to sell to not lose money?",
+      "fixed_costs": "Fixed Costs",
+      "fixed_costs_hint": "Rent, salaries, insurance",
+      "unit_price": "Price per Unit",
+      "unit_price_hint": "Selling price to public",
+      "variable_cost": "Variable Cost",
+      "variable_cost_hint": "Supplies, commissions, shipping",
+      "current_sales": "Current Sales (optional)",
+      "current_sales_hint": "Units currently sold",
+      "break_even_units": "Units for Break-Even",
+      "break_even_revenue": "Revenue for Break-Even",
+      "contribution_margin": "Contribution Margin",
+      "safety_margin": "Safety Margin",
+      "above_break_even": "YOU ARE GENERATING PROFITS",
+      "below_break_even": "YOU ARE IN LOSSES",
       "visualization": "Visualization",
+      "loss": "Loss",
+      "profit": "Profit",
+      "break_even": "Equilibrium",
       "recommendations": {
-        "above_break_even": "✅ You are above break-even with {{percent}}% safety margin.",
-        "below_break_even": "⚠️ You need to sell {{units}} more units to reach break-even.",
-        "increase_price": "Consider increasing price by {{percent}}% to improve your margin.",
-        "reduce_costs": "Reduce fixed costs by ${{amount}} to lower your break-even point.",
-        "increase_volume": "Increase sales volume to take advantage of economies of scale.",
-        "monitor_costs": "Monitor variable costs monthly to avoid surprises."
+        "above_break_even": "✅ Your business is profitable. You operate {{percent}}% above the break-even point.",
+        "below_break_even": "⚠️ You are operating at a loss. You need to sell {{units}} more units to cover costs.",
+        "increase_price": "Consider increasing the price by {{percent}}% or reducing variable costs to improve margin.",
+        "reduce_costs": "A reduction of ${{amount}} in fixed costs would significantly improve your profitability.",
+        "increase_volume": "Your contribution margin is excellent. Focus on increasing sales volume.",
+        "monitor_costs": "Monitor your variable costs monthly to avoid capital leaks."
       }
     },
-    
     "cash_flow": {
       "title": "Cash Flow",
       "subtitle": "Project your income and expenses for the next 12 months",
@@ -712,7 +683,6 @@
         "growth_opportunity": "📈 With this growth, you could expand your business in 6-12 months."
       }
     },
-    
     "pricing": {
       "title": "Pricing Calculator",
       "subtitle": "Find the optimal price to maximize your profits",
@@ -747,7 +717,6 @@
         "high_margin": "You have a healthy margin. Consider investing in marketing to increase volume."
       }
     },
-    
     "loan": {
       "title": "Loan Evaluator",
       "subtitle": "Analyze if financing is convenient for your business",
@@ -771,9 +740,16 @@
         "remaining_low": "After monthly payment you have ${{amount}} left. Consider creating an emergency fund.",
         "compare_options": "Compare at least 3 loan options before deciding.",
         "negotiate_terms": "Read the terms and conditions; negotiate fees for opening, prepayment, etc."
-      }
+      },
+      "amortization_title": "Amortization Table (Preview)",
+      "month": "Month",
+      "payment": "Payment",
+      "principal": "Principal",
+      "interest": "Interest",
+      "balance": "Balance",
+      "more_months": "... {{count}} more months in PDF",
+      "risky_loan": "RISKY Loan"
     },
-    
     "employee_roi": {
       "title": "Employee ROI",
       "subtitle": "Is hiring this person worth it?",
@@ -797,9 +773,35 @@
         "optimize_role": "Review metrics 18 months later to adjust expectations and optimize performance.",
         "negative_roi": "⚠️ The numbers show this hire might not be profitable yet. Consider waiting.",
         "adjust_expectations": "Consider adjusting the role or value generation expectations."
-      }
+      },
+      "role_type": "Role type",
+      "roles": {
+        "sales": "Sales",
+        "operations": "Operations",
+        "technical": "Technical",
+        "administrative": "Admin"
+      },
+      "onboarding_costs": "Onboarding costs",
+      "onboarding_hint": "Training, equipment, recruitment",
+      "hours_per_week": "Hours per week",
+      "hrs": "hrs",
+      "first_year": "First year",
+      "revenue_minus_cost": "Revenue - Cost",
+      "per_dollar_invested": "For every $1 invested",
+      "return": "Return",
+      "productivity_title": "Productivity",
+      "cost_per_hour": "Cost/hour",
+      "revenue_per_hour": "Revenue/hour",
+      "ratio": "Ratio",
+      "productivity_label": "Productivity:",
+      "vs_industry": "vs industry average",
+      "productivity_levels": {
+        "high": "HIGH",
+        "average": "AVERAGE",
+        "low": "LOW"
+      },
+      "payback_desc": "to recover onboarding costs"
     },
-    
     "marketing_roi": {
       "title": "Marketing ROI",
       "subtitle": "Measure your advertising investment return",
@@ -827,34 +829,27 @@
         "optimize_campaign": "Monitor metrics during the first 2 weeks of the campaign.",
         "losing_campaign": "❌ This campaign is losing money (ROI <100%). Review strategy or pause.",
         "cac_high": "Your CAC is high vs. industry. Optimize targeting and creatives."
+      },
+      "marketing_channel": "Marketing channel",
+      "channels": {
+        "facebook": "Facebook",
+        "google": "Google",
+        "instagram": "Instagram",
+        "email": "Email",
+        "referral": "Referral",
+        "other": "Other"
+      },
+      "optional_metrics": "Optional metrics (for detailed analysis)",
+      "impressions": "Impressions",
+      "clicks": "Clicks",
+      "conversions": "Conversions",
+      "funnel_title": "Conversion Funnel",
+      "loss": "Loss",
+      "cac_levels": {
+        "better": "↓ Low",
+        "worse": "↑ High",
+        "equal": "~ Normal"
       }
-    }
-  },
-  
-  "calculators": {
-    "break_even": {
-      "title": "Break-Even Point",
-      "description": "How much do you need to sell to not lose money?"
-    },
-    "cash_flow": {
-      "title": "Cash Flow",
-      "description": "12-month revenue and expense projection"
-    },
-    "pricing": {
-      "title": "Pricing Calculator",
-      "description": "Calculate the optimal price"
-    },
-    "loan": {
-      "title": "Loan Evaluator",
-      "description": "Compare financing options"
-    },
-    "employee_roi": {
-      "title": "Employee ROI",
-      "description": "Is it worth hiring?"
-    },
-    "marketing_roi": {
-      "title": "Marketing ROI",
-      "description": "Measure your advertising"
     }
   }
 }

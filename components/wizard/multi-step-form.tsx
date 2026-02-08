@@ -17,6 +17,7 @@ interface MultiStepFormProps {
   onComplete: () => void;
   onCancel: () => void;
   showProgress?: boolean;
+  loading?: boolean;
 }
 
 export function MultiStepForm({
@@ -24,6 +25,7 @@ export function MultiStepForm({
   onComplete,
   onCancel,
   showProgress = true,
+  loading = false,
 }: MultiStepFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(1));
@@ -132,10 +134,14 @@ export function MultiStepForm({
           {/* Next/Complete Button */}
           <TouchableOpacity
             onPress={handleNext}
-            className="bg-gradient-to-r from-gradient-start to-gradient-end rounded-xl py-4 items-center"
+            disabled={loading}
+            className={cn(
+              "bg-gradient-to-r from-gradient-start to-gradient-end rounded-xl py-4 items-center",
+              loading && "opacity-50"
+            )}
           >
             <Text className="text-background font-semibold text-base font-body-bold">
-              {isLastStep ? '✓ Calcular y Guardar' : 'Siguiente →'}
+              {loading ? 'Guardando...' : (isLastStep ? '✓ Calcular y Guardar' : 'Siguiente →')}
             </Text>
           </TouchableOpacity>
 
@@ -160,8 +166,8 @@ export function MultiStepForm({
                 index === currentStep
                   ? 'w-8 bg-primary'
                   : index < currentStep
-                  ? 'w-2 bg-success'
-                  : 'w-2 bg-border'
+                    ? 'w-2 bg-success'
+                    : 'w-2 bg-border'
               )}
             />
           ))}

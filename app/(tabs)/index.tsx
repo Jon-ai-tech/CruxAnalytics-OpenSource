@@ -326,7 +326,7 @@ export default function HomeScreen() {
               Herramientas de Análisis
             </Text>
             <View className="flex-row flex-wrap justify-between gap-4">
-              {TOOL_CARDS.map(tool => (
+              {getToolCards(t).map(tool => (
                 <ToolCard key={tool.href} {...tool} colors={colors} />
               ))}
             </View>

@@ -14,6 +14,11 @@ export interface FinancialResults {
   npvWorst: number;
   monthlyCashFlow: number[];
   cumulativeCashFlow: number[];
+  vanguard?: {
+    ofi: number;
+    tfdi: number;
+    ser: number;
+  };
 }
 
 /**
@@ -34,6 +39,10 @@ export const projects = mysqlTable('projects', {
   bestCaseMultiplier: int('best_case_multiplier').notNull(),
   worstCaseMultiplier: int('worst_case_multiplier').notNull(),
   results: json('results').$type<FinancialResults>(),
+  vanguardInput: json('vanguard_input'),
+  saasInput: json('saas_input'),
+  riskInput: json('risk_input'),
+  businessModel: varchar('business_model', { length: 50 }).default('standard'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow().onUpdateNow(),
 }, (table) => ({

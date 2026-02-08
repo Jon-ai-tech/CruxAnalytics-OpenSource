@@ -19,27 +19,16 @@ export async function generateAIInsights(
   request: AIInsightRequest
 ): Promise<AIInsightResponse> {
   const { project, results, language, deviceId } = request;
-  
+
   const prompt = buildPrompt(project, results, language);
-  
+
   try {
-    // Build headers with device ID for usage tracking
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    if (deviceId) {
-      headers['x-device-id'] = deviceId;
-    }
-
-    // TODO: Add x-user-openid from auth context
-    // For now, using a placeholder - should be replaced with real auth
-    headers['x-user-openid'] = 'current-user-openid';
-
     // Use the built-in server LLM endpoint
     const response = await fetch('/api/ai/insights', {
       method: 'POST',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         prompt,
         language,
@@ -48,17 +37,11 @@ export async function generateAIInsights(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      
-      // Check if paywall should be shown
-      if (response.status === 403 && errorData.showPaywall) {
-        throw new Error('PAYWALL_REQUIRED');
-      }
-      
       throw new Error(errorData.message || `AI API error: ${response.statusText}`);
     }
 
     const data = await response.json();
-    
+
     return {
       insights: data.insights,
       timestamp: new Date().toISOString(),
@@ -79,7 +62,7 @@ function buildPrompt(
 ): string {
   const isViable = results.roi > 0 && results.npv > 0;
   const irrVsDiscount = results.irr - project.discountRate;
-  
+
   if (language === 'es') {
     return `
 Eres un consultor financiero experto. Analiza este business case y proporciona un diagnóstico profesional de viabilidad.
@@ -141,64 +124,64 @@ export function generateFallbackInsight(
 ): string {
   const isViable = results.roi > 0 && results.npv > 0;
   const irrVsDiscount = results.irr - project.discountRate;
-  
+
   if (language === 'es') {
     let insight = '';
-    
+
     if (isViable) {
       insight += `✅ **Proyecto Viable**: El proyecto muestra métricas positivas con un ROI de ${results.roi.toFixed(1)}% y un VPN de ${results.npv.toLocaleString('es-ES', { style: 'currency', currency: 'USD' })}. `;
     } else {
       insight += `⚠️ **Proyecto Riesgoso**: El proyecto presenta métricas negativas que requieren atención. `;
     }
-    
+
     if (irrVsDiscount > 0) {
       insight += `La TIR (${results.irr.toFixed(1)}%) supera la tasa de descuento por ${irrVsDiscount.toFixed(1)} puntos porcentuales, indicando rentabilidad superior al costo de capital. `;
     } else {
       insight += `La TIR (${results.irr.toFixed(1)}%) está por debajo de la tasa de descuento, lo que sugiere que el proyecto no genera suficiente retorno. `;
     }
-    
+
     if (results.paybackPeriod < project.projectDuration / 2) {
       insight += `El período de recuperación de ${results.paybackPeriod.toFixed(1)} meses es favorable. `;
     } else {
       insight += `El período de recuperación de ${results.paybackPeriod.toFixed(1)} meses es considerable. `;
     }
-    
+
     insight += '\n\n**Recomendaciones**: ';
     if (isViable) {
       insight += 'Proceder con el proyecto monitoreando los supuestos clave. Considerar análisis de sensibilidad para variables críticas.';
     } else {
       insight += 'Revisar los supuestos de ingresos y costos. Explorar alternativas para mejorar la rentabilidad antes de proceder.';
     }
-    
+
     return insight;
   } else {
     let insight = '';
-    
+
     if (isViable) {
       insight += `✅ **Viable Project**: The project shows positive metrics with an ROI of ${results.roi.toFixed(1)}% and an NPV of ${results.npv.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}. `;
     } else {
       insight += `⚠️ **Risky Project**: The project presents negative metrics that require attention. `;
     }
-    
+
     if (irrVsDiscount > 0) {
       insight += `The IRR (${results.irr.toFixed(1)}%) exceeds the discount rate by ${irrVsDiscount.toFixed(1)} percentage points, indicating profitability above the cost of capital. `;
     } else {
       insight += `The IRR (${results.irr.toFixed(1)}%) is below the discount rate, suggesting the project doesn't generate sufficient returns. `;
     }
-    
+
     if (results.paybackPeriod < project.projectDuration / 2) {
       insight += `The payback period of ${results.paybackPeriod.toFixed(1)} months is favorable. `;
     } else {
       insight += `The payback period of ${results.paybackPeriod.toFixed(1)} months is considerable. `;
     }
-    
+
     insight += '\n\n**Recommendations**: ';
     if (isViable) {
       insight += 'Proceed with the project while monitoring key assumptions. Consider sensitivity analysis for critical variables.';
     } else {
       insight += 'Review revenue and cost assumptions. Explore alternatives to improve profitability before proceeding.';
     }
-    
+
     return insight;
   }
 }

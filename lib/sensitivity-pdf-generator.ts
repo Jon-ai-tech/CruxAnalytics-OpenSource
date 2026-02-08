@@ -1,5 +1,7 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
+import { Platform } from 'react-native';
+import { downloadWebFile } from './platform-utils';
 import type { ProjectData } from '@/types/project';
 import {
   calculateMultiVariableSensitivity,
@@ -9,7 +11,7 @@ import {
   type SensitivityVariable,
   type TornadoChartData,
 } from './sensitivity-calculator';
-import { formatCurrency, formatPercentage } from './financial-calculator';
+import { formatCurrency, formatPercentage } from './utils';
 
 interface SensitivityPDFOptions {
   project: ProjectData;
@@ -34,20 +36,20 @@ function generateRecommendations(
   language: 'es' | 'en'
 ): SensitivityRecommendation[] {
   const recommendations: SensitivityRecommendation[] = [];
-  
+
   // Sort by impact (already sorted in tornadoData)
   const maxRange = tornadoData[0]?.range || 1;
-  
+
   for (const item of tornadoData) {
     const impactRatio = item.range / maxRange;
     const impact = impactRatio > 0.7 ? 'high' : impactRatio > 0.4 ? 'medium' : 'low';
-    
+
     // Determine risk based on negative impact
     const negativeImpactRatio = Math.abs(item.negativeImpact) / Math.abs(project.results?.npv || 1);
     const risk = negativeImpactRatio > 0.5 ? 'high' : negativeImpactRatio > 0.25 ? 'medium' : 'low';
-    
+
     let recommendation = '';
-    
+
     if (language === 'es') {
       if (item.variable === 'yearlyRevenue') {
         if (impact === 'high') {
@@ -102,7 +104,7 @@ function generateRecommendations(
         }
       }
     }
-    
+
     recommendations.push({
       variable: item.variable,
       variableName: language === 'es' ? getVariableNameES(item.variable) : item.variableName,
@@ -111,7 +113,7 @@ function generateRecommendations(
       recommendation,
     });
   }
-  
+
   return recommendations;
 }
 
@@ -127,39 +129,39 @@ function generateSensitivityHTML(
   const results = calculateMultiVariableSensitivity(project, variations);
   const tornadoData = generateTornadoChartData(project);
   const recommendations = generateRecommendations(project, tornadoData, language);
-  
+
   const variables: SensitivityVariable[] = [
     'initialInvestment',
     'yearlyRevenue',
     'operatingCosts',
     'maintenanceCosts',
   ];
-  
+
   const getVariableLabel = (variable: SensitivityVariable): string => {
     return language === 'es' ? getVariableNameES(variable) : variable.replace(/([A-Z])/g, ' $1').trim();
   };
-  
+
   const getValue = (variable: SensitivityVariable, variation: number): number => {
     const result = results[variable].find((r) => r.variation === variation);
     return result ? (metric === 'npv' ? result.npv : result.roi) : 0;
   };
-  
+
   const baseValue = getValue('initialInvestment', 0);
-  
+
   const getCellColor = (value: number): string => {
     const change = ((value - baseValue) / Math.abs(baseValue)) * 100;
     if (change > 10) return '#d4edda'; // Light green
     if (change < -10) return '#f8d7da'; // Light red
     return '#fff3cd'; // Light yellow
   };
-  
+
   const getCellTextColor = (value: number): string => {
     const change = ((value - baseValue) / Math.abs(baseValue)) * 100;
     if (change > 10) return '#155724'; // Dark green
     if (change < -10) return '#721c24'; // Dark red
     return '#856404'; // Dark yellow
   };
-  
+
   const t = (key: string): string => {
     const translations: Record<string, Record<string, string>> = {
       es: {
@@ -209,7 +211,7 @@ function generateSensitivityHTML(
     };
     return translations[language][key] || key;
   };
-  
+
   // Generate matrix table HTML
   let matrixHTML = `
     <table class="matrix-table">
@@ -221,40 +223,40 @@ function generateSensitivityHTML(
       </thead>
       <tbody>
   `;
-  
+
   for (const variable of variables) {
     matrixHTML += '<tr>';
     matrixHTML += `<td class="variable-name">${getVariableLabel(variable)}</td>`;
-    
+
     for (const variation of variations) {
       const value = getValue(variable, variation);
       const bgColor = getCellColor(value);
       const textColor = getCellTextColor(value);
       const isBase = variation === 0;
-      
+
       matrixHTML += `
         <td class="${isBase ? 'base-case' : ''}" style="background-color: ${bgColor}; color: ${textColor};">
           ${formatSensitivityValue(value, metric === 'npv' ? 'currency' : 'percentage')}
         </td>
       `;
     }
-    
+
     matrixHTML += '</tr>';
   }
-  
+
   matrixHTML += `
       </tbody>
     </table>
   `;
-  
+
   // Generate tornado chart HTML (simplified bar chart)
   let tornadoHTML = '<div class="tornado-chart">';
-  
+
   for (const item of tornadoData) {
     const maxAbs = Math.max(...tornadoData.map(d => Math.max(Math.abs(d.negativeImpact), Math.abs(d.positiveImpact))));
     const negativeWidth = (Math.abs(item.negativeImpact) / maxAbs) * 100;
     const positiveWidth = (Math.abs(item.positiveImpact) / maxAbs) * 100;
-    
+
     tornadoHTML += `
       <div class="tornado-row">
         <div class="tornado-label">${getVariableLabel(item.variable)}</div>
@@ -270,16 +272,16 @@ function generateSensitivityHTML(
       </div>
     `;
   }
-  
+
   tornadoHTML += '</div>';
-  
+
   // Generate recommendations HTML
   let recommendationsHTML = '<div class="recommendations">';
-  
+
   for (const rec of recommendations) {
     const impactBadge = `<span class="badge badge-${rec.impact}">${t(rec.impact)}</span>`;
     const riskBadge = `<span class="badge badge-${rec.risk}">${t(rec.risk)}</span>`;
-    
+
     recommendationsHTML += `
       <div class="recommendation-card">
         <h4>${rec.variableName}</h4>
@@ -291,9 +293,9 @@ function generateSensitivityHTML(
       </div>
     `;
   }
-  
+
   recommendationsHTML += '</div>';
-  
+
   // Complete HTML document
   return `
 <!DOCTYPE html>
@@ -592,23 +594,35 @@ export async function generateSensitivityPDF(
   options: SensitivityPDFOptions
 ): Promise<string> {
   const { project, metric, language } = options;
-  
+
   const html = generateSensitivityHTML(project, metric, language);
-  
+
   const fileName = `sensitivity-analysis-${project.name.replace(/\s+/g, '-')}-${Date.now()}.html`;
   const filePath = `${FileSystem.documentDirectory ?? ''}${fileName}`;
-  
+
   await FileSystem.writeAsStringAsync(filePath, html);
-  
+
   return filePath;
 }
 
 /**
  * Share sensitivity analysis PDF
  */
-export async function shareSensitivityPDF(filePath: string): Promise<void> {
+export async function shareSensitivityPDF(
+  filePath: string,
+  project: ProjectData,
+  metric: 'npv' | 'roi',
+  language: 'es' | 'en'
+): Promise<void> {
+  if (Platform.OS === 'web') {
+    const html = generateSensitivityHTML(project, metric, language);
+    const fileName = `sensitivity-analysis-${project.name.replace(/\s+/g, '-')}.html`;
+    downloadWebFile(html, fileName);
+    return;
+  }
+
   const isAvailable = await Sharing.isAvailableAsync();
-  
+
   if (isAvailable) {
     await Sharing.shareAsync(filePath, {
       mimeType: 'text/html',

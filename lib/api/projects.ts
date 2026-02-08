@@ -55,7 +55,7 @@ export async function getProject(id: string): Promise<ProjectData | null> {
   }
 }
 
-export async function saveProject(project: ProjectData): Promise<void> {
+export async function saveProject(project: ProjectData): Promise<string> {
   try {
     const client = getVanillaClient();
     if (project.id && !project.id.startsWith('project-') && isValidUUID(project.id)) {
@@ -65,10 +65,12 @@ export async function saveProject(project: ProjectData): Promise<void> {
         data: mapProjectDataToDbProject(project),
       });
       eventEmitter.emit(Events.PROJECT_UPDATED, project);
+      return project.id;
     } else {
       // Create new
       const { id } = await client.projects.create.mutate(mapProjectDataToDbProject(project));
       eventEmitter.emit(Events.PROJECT_CREATED, { ...project, id });
+      return id;
     }
   } catch (error) {
     console.error('Error saving project:', error);
@@ -86,7 +88,7 @@ export async function updateProject(
       id,
       data: mapProjectDataToDbProject(updates as ProjectData),
     });
-    
+
     // Fetch updated project
     const updatedProject = await getProject(id);
     if (updatedProject) {
@@ -115,7 +117,7 @@ export async function duplicateProject(id: string): Promise<ProjectData | null> 
     const client = getVanillaClient();
     const { id: newId } = await client.projects.duplicate.mutate({ id });
     eventEmitter.emit(Events.PROJECT_DUPLICATED, newId);
-    
+
     // Fetch the duplicated project
     return await getProject(newId);
   } catch (error) {
@@ -212,12 +214,16 @@ function mapDbProjectToProjectData(dbProject: any): ProjectData {
     createdAt: dbProject.createdAt?.toISOString() || new Date().toISOString(),
     updatedAt: dbProject.updatedAt?.toISOString() || new Date().toISOString(),
     scenarios: [], // Scenarios are fetched separately
+    vanguardInput: dbProject.vanguardInput,
+    saasInput: dbProject.saasInput,
+    riskInput: dbProject.riskInput,
+    businessModel: dbProject.businessModel,
   };
 }
 
 function mapProjectDataToDbProject(project: Partial<ProjectData>) {
   const data: any = {};
-  
+
   if (project.name !== undefined) data.name = project.name;
   if (project.description !== undefined) data.description = project.description;
   if (project.initialInvestment !== undefined) data.initialInvestment = project.initialInvestment;
@@ -230,7 +236,11 @@ function mapProjectDataToDbProject(project: Partial<ProjectData>) {
   if (project.bestCaseMultiplier !== undefined) data.bestCaseMultiplier = project.bestCaseMultiplier;
   if (project.worstCaseMultiplier !== undefined) data.worstCaseMultiplier = project.worstCaseMultiplier;
   if (project.results !== undefined) data.results = project.results;
-  
+  if (project.vanguardInput !== undefined) data.vanguardInput = project.vanguardInput;
+  if (project.saasInput !== undefined) data.saasInput = project.saasInput;
+  if (project.riskInput !== undefined) data.riskInput = project.riskInput;
+  if (project.businessModel !== undefined) data.businessModel = project.businessModel;
+
   return data;
 }
 
@@ -254,7 +264,7 @@ function isValidUUID(str: string): boolean {
 
 // Re-export functions that are still needed from legacy storage
 // These will be implemented later or kept as legacy
-export { 
+export {
   exportAllProjects,
   importProjects,
   searchProjects,

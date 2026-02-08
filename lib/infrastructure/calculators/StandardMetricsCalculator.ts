@@ -53,7 +53,7 @@ export class StandardMetricsCalculator extends BaseCalculator {
     cumulativeCashFlow: number[];
   } {
     this.validate(input);
-    
+
     const {
       initialInvestment,
       discountRate,
@@ -68,19 +68,19 @@ export class StandardMetricsCalculator extends BaseCalculator {
     // Calculate monthly cash flows
     const monthlyCashFlow: number[] = [];
     const cumulativeCashFlow: number[] = [];
-    
+
     let cumulative = -initialInvestment;
-    
+
     for (let month = 0; month < projectDuration; month++) {
-      const year = Math.floor(month / 12);
-      const growthFactor = Math.pow(1 + revenueGrowth / 100, year);
-      
+      // Use geometric compounding for monthly growth (smoother curve)
+      const growthFactor = Math.pow(1 + revenueGrowth / 100, month / 12);
+
       const monthlyRevenue = (yearlyRevenue * growthFactor * multiplier) / 12;
       const monthlyCosts = (operatingCosts + maintenanceCosts) / 12;
-      
+
       const netCashFlow = monthlyRevenue - monthlyCosts;
       monthlyCashFlow.push(netCashFlow);
-      
+
       cumulative += netCashFlow;
       cumulativeCashFlow.push(cumulative);
     }
@@ -115,7 +115,7 @@ export class StandardMetricsCalculator extends BaseCalculator {
    */
   protected override validate(input: FinancialCalculationInput): void {
     super.validate(input);
-    
+
     this.assertPositive(input.initialInvestment, 'initialInvestment');
     this.assertRange(input.discountRate, 0, 100, 'discountRate');
     this.assertRange(input.projectDuration, 1, 600, 'projectDuration');
@@ -156,13 +156,14 @@ export class StandardMetricsCalculator extends BaseCalculator {
     discountRate: number
   ): number {
     let npv = -initialInvestment;
-    
+
     for (let month = 0; month < cashFlows.length; month++) {
-      const periodRate = discountRate / 12;
-      const discountFactor = Math.pow(1 + periodRate, month + 1);
+      // Use precise geometric monthly rate: (1 + r)^(1/12) - 1
+      const monthlyRate = Math.pow(1 + discountRate, 1 / 12) - 1;
+      const discountFactor = Math.pow(1 + monthlyRate, month + 1);
       npv += cashFlows[month] / discountFactor;
     }
-    
+
     return this.round(npv, 2);
   }
 
@@ -180,10 +181,10 @@ export class StandardMetricsCalculator extends BaseCalculator {
     cashFlows: number[]
   ): number {
     let cumulative = -initialInvestment;
-    
+
     for (let month = 0; month < cashFlows.length; month++) {
       cumulative += cashFlows[month];
-      
+
       if (cumulative >= 0) {
         // Linear interpolation for more accurate payback period
         const previousCumulative = cumulative - cashFlows[month];
@@ -191,7 +192,7 @@ export class StandardMetricsCalculator extends BaseCalculator {
         return this.round(month + fraction, 2);
       }
     }
-    
+
     // If payback is not achieved within project duration
     return cashFlows.length;
   }
@@ -215,41 +216,41 @@ export class StandardMetricsCalculator extends BaseCalculator {
   ): number {
     // Initial guess for IRR (10% annual rate)
     let rate = 0.10 / 12; // Monthly rate
-    
+
     for (let iteration = 0; iteration < maxIterations; iteration++) {
       let npv = -initialInvestment;
       let derivative = 0;
-      
+
       // Calculate NPV and its derivative at current rate
       for (let month = 0; month < cashFlows.length; month++) {
         const period = month + 1;
         const discountFactor = Math.pow(1 + rate, period);
-        
+
         npv += cashFlows[month] / discountFactor;
         derivative -= (period * cashFlows[month]) / Math.pow(1 + rate, period + 1);
       }
-      
+
       // Check for convergence
       if (Math.abs(npv) < tolerance) {
         // Convert monthly rate to annual percentage
         return this.round((Math.pow(1 + rate, 12) - 1) * 100, 2);
       }
-      
+
       // Newton-Raphson iteration
       if (Math.abs(derivative) < 1e-10) {
         // Avoid division by zero
         break;
       }
-      
+
       rate = rate - npv / derivative;
-      
+
       // Ensure rate stays within reasonable bounds
       if (rate < -0.99 || rate > 10) {
         rate = 0.10 / 12; // Reset to initial guess
         break;
       }
     }
-    
+
     // If convergence failed, return the current estimate
     // Convert monthly rate to annual percentage
     return this.round((Math.pow(1 + rate, 12) - 1) * 100, 2);

@@ -18,6 +18,10 @@ const projectInputSchema = z.object({
   bestCaseMultiplier: z.number().positive(),
   worstCaseMultiplier: z.number().positive(),
   results: z.any().optional(),
+  vanguardInput: z.any().optional(),
+  saasInput: z.any().optional(),
+  riskInput: z.any().optional(),
+  businessModel: z.enum(['standard', 'saas', 'ecommerce', 'manufacturing']).optional(),
 });
 
 export const projectsRouter = router({
@@ -30,10 +34,26 @@ export const projectsRouter = router({
       .orderBy(desc(projects.createdAt));
   }),
 
-  // Create new project
   create: protectedProcedure
     .input(projectInputSchema)
     .mutation(async ({ input, ctx }) => {
+      // 1. Ensure user exists in DB (CRITICAL for Guest Mode)
+      if (ctx.user.id === 1) {
+        const { users } = await import('../../drizzle/schema');
+        await db.insert(users).values({
+          id: 1,
+          openId: 'guest-user-openid',
+          name: 'Guest User',
+          email: 'guest@crux.local',
+          loginMethod: 'open-source',
+          role: 'admin',
+          subscriptionTier: 'premium',
+        }).onDuplicateKeyUpdate({
+          set: { lastSignedIn: new Date() }
+        });
+      }
+
+
       const id = randomUUID();
       await db.insert(projects).values({
         id,
@@ -52,7 +72,7 @@ export const projectsRouter = router({
         .from(projects)
         .where(and(eq(projects.id, input.id), eq(projects.userId, ctx.user.id)))
         .limit(1);
-      
+
       if (!project) {
         throw new Error('Project not found');
       }
@@ -79,12 +99,12 @@ export const projectsRouter = router({
     .mutation(async ({ input, ctx }) => {
       // Delete scenarios first (cascade)
       await db.delete(scenarios).where(eq(scenarios.projectId, input.id));
-      
+
       // Delete project
       await db
         .delete(projects)
         .where(and(eq(projects.id, input.id), eq(projects.userId, ctx.user.id)));
-      
+
       return { success: true };
     }),
 
@@ -97,7 +117,7 @@ export const projectsRouter = router({
         .from(projects)
         .where(and(eq(projects.id, input.id), eq(projects.userId, ctx.user.id)))
         .limit(1);
-      
+
       if (!original) {
         throw new Error('Project not found');
       }
@@ -125,7 +145,7 @@ export const projectsRouter = router({
           .from(projects)
           .where(and(eq(projects.id, input.projectId), eq(projects.userId, ctx.user.id)))
           .limit(1);
-        
+
         if (!project) {
           throw new Error('Project not found');
         }
@@ -154,7 +174,7 @@ export const projectsRouter = router({
           .from(projects)
           .where(and(eq(projects.id, input.projectId), eq(projects.userId, ctx.user.id)))
           .limit(1);
-        
+
         if (!project) {
           throw new Error('Project not found');
         }
@@ -183,7 +203,7 @@ export const projectsRouter = router({
           .from(scenarios)
           .where(eq(scenarios.id, input.id))
           .limit(1);
-        
+
         if (!scenario) {
           throw new Error('Scenario not found');
         }
@@ -193,7 +213,7 @@ export const projectsRouter = router({
           .from(projects)
           .where(and(eq(projects.id, scenario.projectId), eq(projects.userId, ctx.user.id)))
           .limit(1);
-        
+
         if (!project) {
           throw new Error('Unauthorized');
         }

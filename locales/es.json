@@ -123,46 +123,74 @@
   },
   "wizard": {
     "step1": {
-      "subtitle": "Paso 1 de 6",
+      "subtitle": "Paso 1 de 10",
       "question": "¿Cómo se llama tu proyecto?",
       "helper": "Dale un nombre descriptivo a tu negocio o proyecto",
       "placeholder": "Ej: Cafetería Centro, Tienda Online",
       "help": "Consejo: Usa un nombre que describa claramente tu negocio"
     },
     "step2": {
-      "subtitle": "Paso 2 de 6",
+      "subtitle": "Paso 2 de 10",
       "question": "¿Cuánto dinero necesitas invertir?",
       "helper": "Incluye equipos, inventario, permisos, etc.",
       "placeholder": "100000",
       "help": "Consejo: Suma todo lo que necesitas comprar antes de abrir"
     },
     "step3": {
-      "subtitle": "Paso 3 de 6",
-      "question": "¿Cuánto esperas vender cada mes?",
-      "helper": "Una estimación realista de tus ventas mensuales",
-      "placeholder": "50000",
+      "subtitle": "Paso 3 de 10",
+      "question": "¿Cuánto esperas vender al año?",
+      "helper": "Una estimación realista de tus ventas anuales",
+      "placeholder": "500000",
       "help": "Consejo: Investiga negocios similares en tu zona para estimar"
     },
     "step4": {
-      "subtitle": "Paso 4 de 6",
-      "question": "¿Cuánto gastas al mes?",
-      "helper": "Renta, sueldos, servicios, materia prima",
-      "placeholder": "20000",
+      "subtitle": "Paso 4 de 10",
+      "question": "¿Cuánto gastas al año?",
+      "helper": "Renta, sueldos, servicios, mantenimiento (anual)",
+      "placeholder": "200000",
       "help": "Consejo: No olvides incluir gastos fijos y variables"
     },
     "step5": {
-      "subtitle": "Paso 5 de 6",
+      "subtitle": "Paso 5 de 10",
       "question": "¿Por cuánto tiempo analizamos el proyecto?",
       "helper": "En meses (típicamente 12 a 36 meses)",
       "placeholder": "24",
       "help": "Consejo: 24 meses (2 años) es un periodo común para PyMEs"
     },
     "step6": {
-      "subtitle": "Paso 6 de 6",
+      "subtitle": "Paso 6 de 10",
       "question": "¿Esperas crecer con el tiempo?",
       "helper": "Porcentaje de crecimiento mensual estimado",
       "placeholder": "5",
       "help": "Consejo: Un 5% mensual es realista para negocios nuevos"
+    },
+    "step7": {
+      "subtitle": "Paso 7 de 10",
+      "question": "¿Cuál es tu tasa de descuento?",
+      "helper": "Tasa anual para el valor del dinero en el tiempo",
+      "placeholder": "10",
+      "help": "Consejo: El 10% es una tasa estándar para proyectos comerciales"
+    },
+    "step8": {
+      "subtitle": "Paso 8 de 10",
+      "question": "Fricción Operativa",
+      "helper": "Horas manuales por semana y costo por hora",
+      "placeholder": "15",
+      "help": "Consejo: Calcula cuánto tiempo pasas haciendo tareas que podrían automatizarse"
+    },
+    "step9": {
+      "subtitle": "Paso 9 de 10",
+      "question": "Deuda Técnica",
+      "helper": "Mantenimiento vs Desarrollo total",
+      "placeholder": "20",
+      "help": "Consejo: El mantenimiento excesivo quita tiempo a la innovación"
+    },
+    "step10": {
+      "subtitle": "Paso 10 de 10",
+      "question": "Trayectoria Financiera",
+      "helper": "Ingresos y gastos del periodo anterior",
+      "placeholder": "50000",
+      "help": "Consejo: Comparar con el pasado ayuda a ver la eficiencia real"
     }
   },
   "metrics": {
@@ -185,7 +213,19 @@
     "roi_description": "Retorno de la inversión",
     "npv_description": "Valor presente neto",
     "irr_description": "Tasa interna de retorno",
-    "payback_description": "Período de recuperación"
+    "payback_description": "Período de recuperación",
+    "ofi": {
+      "label": "Fricción Operativa (OFI)",
+      "description": "Costo de procesos manuales vs ingresos"
+    },
+    "tfdi": {
+      "label": "Deuda Técnica (TFDI)",
+      "description": "Impacto financiero del mantenimiento técnico"
+    },
+    "ser": {
+      "label": "Eficiencia Estratégica (SER)",
+      "description": "Relación entre crecimiento y quema de capital"
+    }
   },
   "results": {
     "created": "Creado",
@@ -197,6 +237,9 @@
     "metrics_title": "Métricas Financieras",
     "charts_title": "Análisis Visual",
     "recommendations_title": "Recomendaciones Inteligentes",
+    "advanced_title": "Cálculos Complejos",
+    "vanguard_metrics": "Métricas Vanguard Crux",
+    "vanguard_description": "Métricas propietarias para análisis de eficiencia operacional",
     "roi": "ROI",
     "roi_full": "Retorno de Inversión",
     "npv": "VPN",
@@ -217,9 +260,6 @@
     "tab_scenarios": "Escenarios",
     "chart_monthly_cashflow": "Flujo de Caja Mensual",
     "chart_cumulative_cashflow": "Flujo de Caja Acumulado",
-    "expected_case": "Caso Esperado",
-    "best_case": "Mejor Caso",
-    "worst_case": "Peor Caso",
     "export_pdf": "Exportar a PDF",
     "compare_scenarios": "Comparar Escenarios",
     "calculating": "Calculando...",
@@ -293,12 +333,7 @@
     "version": "Versión",
     "terms": "Términos y Condiciones",
     "privacy": "Política de Privacidad",
-    "support": "Soporte"
-  },
-  "settings": {
-    "title": "Configuración",
-    "language": "Idioma",
-    "appearance": "Apariencia",
+    "support": "Soporte",
     "light_mode": "Modo Claro",
     "dark_mode": "Modo Oscuro",
     "auto_mode": "Automático",
@@ -327,8 +362,6 @@
     "confirm_import_message": "¿Deseas importar los proyectos desde este archivo? Los proyectos existentes no serán eliminados.",
     "import_success": "{{imported}} proyecto(s) importado(s), {{skipped}} omitido(s)",
     "import_error": "Error al importar proyectos. Verifica el formato del archivo.",
-    "about": "Acerca de",
-    "version": "Versión",
     "app_description": "Herramienta profesional para análisis financiero de proyectos empresariales. Calcula ROI, NPV, TIR y diagnóstico de viabilidad con IA.",
     "view_tutorial": "Ver Tutorial"
   },
@@ -439,24 +472,6 @@
     "restaurant_description": "Servicio de alimentos con costos de inventario y personal",
     "consulting_name": "Consultoría/Servicios",
     "consulting_description": "Servicios profesionales con baja inversión inicial"
-  },
-  "paywall": {
-    "title": "Desbloquea Premium",
-    "subtitle": "Análisis ilimitados con IA y funciones avanzadas",
-    "currentPlan": "Plan Actual",
-    "freePlan": "Gratis",
-    "premiumPlan": "Premium",
-    "analysisUsed": "{{used}} de {{total}} análisis usados este mes",
-    "premiumFeatures": "Funciones Premium",
-    "feature1": "Análisis IA ilimitados",
-    "feature2": "Acceso prioritario a nuevas funciones",
-    "feature3": "Análisis de sensibilidad avanzado",
-    "feature4": "Soporte prioritario",
-    "loading": "Cargando planes...",
-    "noPackages": "No hay planes disponibles en este momento",
-    "restorePurchases": "Restaurar Compras",
-    "close": "Cerrar",
-    "terms": "Al suscribirte, aceptas nuestros términos y condiciones. La suscripción se renovará automáticamente."
   },
   "share": {
     "share": "Compartir",
@@ -605,7 +620,7 @@
     "max_value": "El valor máximo es {{max}}",
     "invalid_format": "Formato inválido"
   },
-    "calculators": {
+  "calculators": {
     "break_even": {
       "title": "Punto de Equilibrio",
       "description": "¿Cuánto debes vender para no perder?"
@@ -637,35 +652,37 @@
     "recommendations": "Recomendaciones",
     "export_pdf": "Exportar a PDF",
     "no_data": "Ingresa tus datos para ver el análisis",
-    
+    "units": "unidades",
     "break_even": {
       "title": "Punto de Equilibrio",
-      "subtitle": "Descubre cuántas unidades necesitas vender para no perder dinero",
-      "fixed_costs": "Costos fijos mensuales",
-      "fixed_costs_hint": "Renta, salarios, servicios, etc.",
-      "unit_price": "Precio por unidad",
-      "unit_price_hint": "Lo que cobras por cada producto/servicio",
-      "variable_cost": "Costo variable por unidad",
-      "variable_cost_hint": "Materiales, comisiones, envío, etc.",
-      "current_sales": "Ventas actuales (opcional)",
-      "current_sales_hint": "Para calcular tu margen de seguridad",
-      "break_even_units": "Punto de Equilibrio (Unidades)",
-      "break_even_revenue": "Punto de Equilibrio (Ingresos)",
-      "contribution_margin": "Contribución por Unidad",
-      "above_break_even": "Por encima del equilibrio",
-      "below_break_even": "Por debajo del equilibrio",
-      "safety_margin": "Margen de seguridad",
+      "subtitle": "¿Cuánto debes vender para no perder dinero?",
+      "fixed_costs": "Costos Fijos",
+      "fixed_costs_hint": "Renta, salarios, seguros",
+      "unit_price": "Precio por Unidad",
+      "unit_price_hint": "Precio de venta al público",
+      "variable_cost": "Costo Variable",
+      "variable_cost_hint": "Insumos, comisiones, envío",
+      "current_sales": "Venta Actual (opcional)",
+      "current_sales_hint": "Unidades vendidas actualmente",
+      "break_even_units": "Uds. para Equilibrio",
+      "break_even_revenue": "Venta para Equilibrio",
+      "contribution_margin": "Margen de Contribución",
+      "safety_margin": "Margen de Seguridad",
+      "above_break_even": "ESTÁS GENERANDO GANANCIAS",
+      "below_break_even": "ESTÁS EN PÉRDIDAS",
       "visualization": "Visualización",
+      "loss": "Pérdida",
+      "profit": "Ganancia",
+      "break_even": "Equilibrio",
       "recommendations": {
-        "above_break_even": "✅ Estás por encima del punto de equilibrio con {{percent}}% de margen de seguridad.",
-        "below_break_even": "⚠️ Necesitas vender {{units}} unidades más para alcanzar el punto de equilibrio.",
-        "increase_price": "Considera aumentar el precio en {{percent}}% para mejorar tu margen.",
-        "reduce_costs": "Reduce costos fijos en ${{amount}} para bajar tu punto de equilibrio.",
-        "increase_volume": "Aumenta volumen de ventas para aprovechar economías de escala.",
-        "monitor_costs": "Monitorea costos variables mensualmente para evitar sorpresas."
+        "above_break_even": "✅ Tu negocio es rentable. Operas un {{percent}}% por encima del punto de equilibrio.",
+        "below_break_even": "⚠️ Estás operando en pérdida. Necesitas vender {{units}} unidades más para cubrir costos.",
+        "increase_price": "Considera aumentar el precio un {{percent}}% o reducir costos variables para mejorar el margen.",
+        "reduce_costs": "Una reducción de ${{amount}} en costos fijos mejoraría significativamente tu rentabilidad.",
+        "increase_volume": "Tu margen de contribución es excelente. Enfócate en aumentar el volumen de ventas.",
+        "monitor_costs": "Monitorea tus costos variables mensualmente para evitar fugas de capital."
       }
     },
-    
     "cash_flow": {
       "title": "Flujo de Caja",
       "subtitle": "Proyecta tus ingresos y gastos para los próximos 12 meses",
@@ -699,7 +716,6 @@
         "growth_opportunity": "📈 Con este crecimiento, podrías expandir tu negocio en 6-12 meses."
       }
     },
-    
     "pricing": {
       "title": "Calculadora de Precios",
       "subtitle": "Encuentra el precio óptimo para maximizar tus ganancias",
@@ -734,7 +750,6 @@
         "high_margin": "Tienes un margen saludable. Considera invertir en marketing para aumentar volumen."
       }
     },
-    
     "loan": {
       "title": "Evaluador de Préstamos",
       "subtitle": "Analiza si el financiamiento es conveniente para tu negocio",
@@ -758,9 +773,16 @@
         "remaining_low": "Después del pago mensual te quedan ${{amount}}. Considera crear un fondo de emergencia.",
         "compare_options": "Compara al menos 3 opciones de préstamo antes de decidir.",
         "negotiate_terms": "Lee los términos y condiciones; negocia comisiones por apertura, prepago, etc."
-      }
+      },
+      "amortization_title": "Tabla de Amortización (Vista previa)",
+      "month": "Mes",
+      "payment": "Pago",
+      "principal": "Capital",
+      "interest": "Interés",
+      "balance": "Saldo",
+      "more_months": "... {{count}} meses más en el PDF",
+      "risky_loan": "Préstamo RIESGOSO"
     },
-    
     "employee_roi": {
       "title": "ROI de Empleados",
       "subtitle": "¿Vale la pena contratar a esta persona?",
@@ -784,9 +806,35 @@
         "optimize_role": "Revisa métricas 18 meses después para ajustar expectativas y optimizar desempeño.",
         "negative_roi": "⚠️ Los números muestran que esta contratación podría no ser rentable aún. Considera esperar.",
         "adjust_expectations": "Considera ajustar el rol o las expectativas de valor generado."
-      }
+      },
+      "role_type": "Tipo de rol",
+      "roles": {
+        "sales": "Ventas",
+        "operations": "Operaciones",
+        "technical": "Técnico",
+        "administrative": "Admin"
+      },
+      "onboarding_costs": "Costos de onboarding",
+      "onboarding_hint": "Training, equipo, reclutamiento",
+      "hours_per_week": "Horas por semana",
+      "hrs": "hrs",
+      "first_year": "Primer año",
+      "revenue_minus_cost": "Revenue - Costo",
+      "per_dollar_invested": "Por cada $1 invertido",
+      "return": "Retorno",
+      "productivity_title": "Productividad",
+      "cost_per_hour": "Costo/hora",
+      "revenue_per_hour": "Revenue/hora",
+      "ratio": "Ratio",
+      "productivity_label": "Productividad:",
+      "vs_industry": "vs promedio de industria",
+      "productivity_levels": {
+        "high": "ALTA",
+        "average": "PROMEDIO",
+        "low": "BAJA"
+      },
+      "payback_desc": "para recuperar costos de onboarding"
     },
-    
     "marketing_roi": {
       "title": "ROI de Marketing",
       "subtitle": "Mide el retorno de tu inversión en publicidad",
@@ -814,34 +862,27 @@
         "optimize_campaign": "Monitorea métricas durante las primeras 2 semanas de la campaña.",
         "losing_campaign": "❌ Esta campaña pierde dinero (ROI <100%). Revisa estrategia o pausa.",
         "cac_high": "Tu CAC está alto vs. industria. Optimiza segmentación y creativos."
+      },
+      "marketing_channel": "Canal de marketing",
+      "channels": {
+        "facebook": "Facebook",
+        "google": "Google",
+        "instagram": "Instagram",
+        "email": "Email",
+        "referral": "Referidos",
+        "other": "Otro"
+      },
+      "optional_metrics": "Métricas opcionales (para análisis detallado)",
+      "impressions": "Impresiones",
+      "clicks": "Clicks",
+      "conversions": "Conversiones",
+      "funnel_title": "Funnel de Conversión",
+      "loss": "Pérdida",
+      "cac_levels": {
+        "better": "↓ Bajo",
+        "worse": "↑ Alto",
+        "equal": "~ Normal"
       }
-    }
-  },
-  
-  "calculators": {
-    "break_even": {
-      "title": "Punto de Equilibrio",
-      "description": "¿Cuánto debes vender para no perder?"
-    },
-    "cash_flow": {
-      "title": "Flujo de Caja",
-      "description": "Proyección de ingresos y gastos 12 meses"
-    },
-    "pricing": {
-      "title": "Calculadora de Precios",
-      "description": "Calcula el precio óptimo"
-    },
-    "loan": {
-      "title": "Evaluador de Préstamos",
-      "description": "Compara opciones de financiamiento"
-    },
-    "employee_roi": {
-      "title": "ROI de Empleados",
-      "description": "¿Vale la pena contratar?"
-    },
-    "marketing_roi": {
-      "title": "ROI de Marketing",
-      "description": "Mide tu publicidad"
     }
   }
 }

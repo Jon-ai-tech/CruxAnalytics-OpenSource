@@ -18,7 +18,7 @@ import { MultiStepForm, type WizardStep } from '@/components/wizard/multi-step-f
 import { WizardInput, type QuickSuggestion } from '@/components/wizard/wizard-input';
 import { useTranslation } from '@/lib/i18n-context';
 import { saveProject, saveDraft, loadDraft, clearDraft, hasDraft } from '@/lib/project-storage';
-import { calculateFinancialMetrics } from '@/lib/financial-calculator';
+import { CalculationService } from '@/lib/application/services/CalculationService';
 import { eventEmitter, Events } from '@/lib/event-emitter';
 import {
   scheduleProjectReminder,
@@ -43,6 +43,16 @@ export default function NewProjectScreen() {
   const [maintenanceCosts, setMaintenanceCosts] = useState('');
   const [loading, setLoading] = useState(false);
   const [showTemplateSelector, setShowTemplateSelector] = useState(true);
+
+  // Vanguard Business Metrics
+  const [manualHours, setManualHours] = useState('15');
+  const [hourlyCost, setHourlyCost] = useState('45');
+  const [maintHours, setMaintHours] = useState('20');
+  const [totalSprintHours, setTotalSprintHours] = useState('80');
+  const [devTeamCost, setDevTeamCost] = useState('120000');
+  const [incidentCost, setIncidentCost] = useState('1000');
+  const [prevRevenue, setPrevRevenue] = useState('');
+  const [prevBurnRate, setPrevBurnRate] = useState('');
   const [useWizard] = useState(true);
   const [reminderFrequency, setReminderFrequency] = useState<ReminderFrequency>('monthly');
   const [notificationsAvailable, setNotificationsAvailable] = useState(false);
@@ -169,6 +179,50 @@ export default function NewProjectScreen() {
     return true;
   };
 
+  const validateStep7 = () => {
+    const discount = parseFloat(discountRate);
+    if (isNaN(discount) || discount < 0 || discount > 100) {
+      setErrors({ discount: t('validations.invalid_discount_rate') || 'Please enter a valid rate (0-100)' });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep8 = () => {
+    const hours = parseFloat(manualHours);
+    const cost = parseFloat(hourlyCost);
+    if (isNaN(hours) || hours < 0 || isNaN(cost) || cost < 0) {
+      setErrors({ manual: 'Please enter valid operational numbers' });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep9 = () => {
+    const mHours = parseFloat(maintHours);
+    const sHours = parseFloat(totalSprintHours);
+    if (isNaN(mHours) || isNaN(sHours) || mHours > sHours) {
+      setErrors({ tech: 'Maintenance cannot exceed total sprint hours' });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const validateStep10 = () => {
+    const rev = parseFloat(prevRevenue);
+    const burn = parseFloat(prevBurnRate);
+    if ((prevRevenue !== '' && isNaN(rev)) || (prevBurnRate !== '' && isNaN(burn))) {
+      setErrors({ trajectory: 'Please enter valid historic numbers or leave blank' });
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+
   // Quick suggestion values
   const investmentSuggestions: QuickSuggestion[] = [
     { label: '$50,000', value: '50000' },
@@ -178,15 +232,15 @@ export default function NewProjectScreen() {
   ];
 
   const revenueSuggestions: QuickSuggestion[] = [
-    { label: '$20,000', value: '20000' },
-    { label: '$50,000', value: '50000' },
+    { label: '$25,000', value: '25000' },
     { label: '$100,000', value: '100000' },
+    { label: '$500,000', value: '500000' },
   ];
 
   const costsSuggestions: QuickSuggestion[] = [
     { label: '$10,000', value: '10000' },
-    { label: '$20,000', value: '20000' },
     { label: '$50,000', value: '50000' },
+    { label: '$200,000', value: '200000' },
   ];
 
   const durationSuggestions: QuickSuggestion[] = [
@@ -197,9 +251,15 @@ export default function NewProjectScreen() {
 
   const growthSuggestions: QuickSuggestion[] = [
     { label: '0%', value: '0' },
-    { label: '3%', value: '3' },
     { label: '5%', value: '5' },
     { label: '10%', value: '10' },
+    { label: '20%', value: '20' },
+  ];
+
+  const discountSuggestions: QuickSuggestion[] = [
+    { label: '5%', value: '5' },
+    { label: '10%', value: '10' },
+    { label: '15%', value: '15' },
   ];
 
   // Wizard steps
@@ -316,13 +376,114 @@ export default function NewProjectScreen() {
         />
       ),
     },
+    {
+      id: 'discount',
+      title: t('wizard.step7.question'),
+      subtitle: t('wizard.step7.subtitle'),
+      validation: validateStep7,
+      component: (
+        <WizardInput
+          question={t('wizard.step7.question')}
+          helper={t('wizard.step7.helper')}
+          helpText={t('wizard.step7.help')}
+          value={discountRate}
+          onChangeText={setDiscountRate}
+          placeholder={t('wizard.step7.placeholder')}
+          keyboardType="numeric"
+          suggestions={discountSuggestions}
+          error={errors.discount}
+        />
+      ),
+    },
+    {
+      id: 'vanguard_ofi',
+      title: t('wizard.step8.question'),
+      subtitle: t('wizard.step8.subtitle'),
+      validation: validateStep8,
+      component: (
+        <View className="gap-4">
+          <WizardInput
+            question="Horas manuales / semana"
+            helper="¿Cuánto tiempo pierdes en tareas manuales?"
+            value={manualHours}
+            onChangeText={setManualHours}
+            placeholder="15"
+            keyboardType="numeric"
+          />
+          <WizardInput
+            question="Costo promedio / hora ($)"
+            helper="Costo laboral promedio"
+            value={hourlyCost}
+            onChangeText={setHourlyCost}
+            placeholder="45"
+            keyboardType="numeric"
+            error={errors.manual}
+          />
+        </View>
+      ),
+    },
+    {
+      id: 'vanguard_tfdi',
+      title: t('wizard.step9.question'),
+      subtitle: t('wizard.step9.subtitle'),
+      validation: validateStep9,
+      component: (
+        <View className="gap-4">
+          <WizardInput
+            question="Horas de mantenimiento / sprint"
+            helper="Tiempo dedicado a bugs y 'technical debt'"
+            value={maintHours}
+            onChangeText={setMaintHours}
+            placeholder="20"
+            keyboardType="numeric"
+          />
+          <WizardInput
+            question="Horas totales del equipo / sprint"
+            helper="Capacidad total de desarrollo"
+            value={totalSprintHours}
+            onChangeText={setTotalSprintHours}
+            placeholder="80"
+            keyboardType="numeric"
+            error={errors.tech}
+          />
+        </View>
+      ),
+    },
+    {
+      id: 'vanguard_ser',
+      title: t('wizard.step10.question'),
+      subtitle: t('wizard.step10.subtitle'),
+      validation: validateStep10,
+      component: (
+        <View className="gap-4">
+          <WizardInput
+            question="Ingresos Periodo Anterior ($)"
+            helper="Para medir eficiencia de crecimiento"
+            value={prevRevenue}
+            onChangeText={setPrevRevenue}
+            placeholder="50000"
+            keyboardType="numeric"
+          />
+          <WizardInput
+            question="Gastos Periodo Anterior ($)"
+            helper="Para medir 'burn rate' relativo"
+            value={prevBurnRate}
+            onChangeText={setPrevBurnRate}
+            placeholder="40000"
+            keyboardType="numeric"
+            error={errors.trajectory}
+          />
+        </View>
+      ),
+    },
+
   ];
 
   const handleSelectTemplate = (template: ProjectTemplate) => {
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
-    
+
     // Apply template data to form
     if (template.id !== 'blank') {
       setInitialInvestment(template.data.initialInvestment.toString());
@@ -331,7 +492,7 @@ export default function NewProjectScreen() {
       setProjectDuration(template.data.projectDuration.toString());
       setDiscountRate(template.data.discountRate.toString());
     }
-    
+
     setShowTemplateSelector(false);
   };
 
@@ -384,7 +545,8 @@ export default function NewProjectScreen() {
     setLoading(true);
 
     try {
-      // Calculate results for all scenarios
+      const calculationService = new CalculationService();
+
       const baseParams = {
         initialInvestment: investment,
         discountRate: parseFloat(discountRate),
@@ -395,20 +557,41 @@ export default function NewProjectScreen() {
         maintenanceCosts: maintCosts || 0,
       };
 
-      const expectedCase = calculateFinancialMetrics({ ...baseParams, multiplier: 1.0 });
-      const bestCase = calculateFinancialMetrics({ ...baseParams, multiplier: 1.2 });
-      const worstCase = calculateFinancialMetrics({ ...baseParams, multiplier: 0.8 });
+      // Calculate Expected, Best and Worst cases using modern service
+      const expectedResults = await calculationService.calculateStandard(baseParams);
+      const bestResults = await calculationService.calculateStandard({ ...baseParams, multiplier: 1.2 });
+      const worstResults = await calculationService.calculateStandard({ ...baseParams, multiplier: 0.8 });
+
+      // Build Vanguard input with real user data
+      const vanguardInput = {
+        manualProcessHoursPerWeek: parseFloat(manualHours) || 0,
+        averageHourlyCost: parseFloat(hourlyCost) || 0,
+        automationPotential: 60,      // Keep reasonable baseline for now
+        maintenanceHoursPerSprint: parseFloat(maintHours) || 0,
+        totalDevHoursPerSprint: parseFloat(totalSprintHours) || 1,
+        devTeamAnnualCost: parseFloat(devTeamCost) || 1,
+        incidentCostPerMonth: parseFloat(incidentCost) || 0,
+        currentRevenue: revenue,
+        previousRevenue: parseFloat(prevRevenue) || revenue * 0.8,
+        currentBurnRate: opCosts,
+        previousBurnRate: parseFloat(prevBurnRate) || opCosts * 0.9,
+      };
+
+
+      const vanguardResults = await calculationService.calculateVanguard(vanguardInput);
 
       const results = {
-        ...expectedCase,
-        roiBest: bestCase.roi,
-        npvBest: bestCase.npv,
-        paybackBest: bestCase.paybackPeriod,
-        irrBest: bestCase.irr,
-        roiWorst: worstCase.roi,
-        npvWorst: worstCase.npv,
-        paybackWorst: worstCase.paybackPeriod,
-        irrWorst: worstCase.irr,
+        ...expectedResults,
+        roiBest: bestResults.roi,
+        npvBest: bestResults.npv,
+        paybackBest: bestResults.paybackPeriod,
+        irrBest: bestResults.irr,
+        roiWorst: worstResults.roi,
+        npvWorst: worstResults.npv,
+        paybackWorst: worstResults.paybackPeriod,
+        irrWorst: worstResults.irr,
+        // Include Vanguard results in the results object
+        vanguard: vanguardResults,
       };
 
       // Create project
@@ -427,17 +610,20 @@ export default function NewProjectScreen() {
         bestCaseMultiplier: 1.2,
         worstCaseMultiplier: 0.8,
         results,
+        vanguardInput, // Save the input too
       };
 
-      await saveProject(project);
-      
+      console.log('Sending project to API...', project);
+      const savedId = await saveProject(project);
+      console.log('Project saved successfully! ID:', savedId);
+
       // Emit event to refresh other screens
-      eventEmitter.emit(Events.PROJECT_CREATED, project.id);
+      eventEmitter.emit(Events.PROJECT_CREATED, savedId);
 
       // Schedule reminder if notifications are enabled
       if (notificationsAvailable && reminderFrequency !== 'none') {
         try {
-          await scheduleProjectReminder(project.id, project.name, reminderFrequency);
+          await scheduleProjectReminder(savedId, project.name, reminderFrequency);
         } catch (error) {
           console.error('Error scheduling reminder:', error);
         }
@@ -450,11 +636,28 @@ export default function NewProjectScreen() {
         await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
-      // Navigate to project details to show full analysis with charts and metrics
-      router.replace(`/project/${project.id}`);
+      console.log('Navigating to project details:', `/project/${savedId}`);
+
+      // Force navigation with a small delay to ensure UI updates finish
+      // and try push if replace fails (though replace is preferred)
+      setTimeout(() => {
+        try {
+          if (router.canDismiss()) {
+            router.dismissAll();
+          }
+          router.replace(`/project/${savedId}`);
+        } catch (e) {
+          console.error("Navigation failed, trying push...", e);
+          router.push(`/project/${savedId}`);
+        }
+      }, 100);
     } catch (error) {
-      console.error('Error saving project:', error);
-      Alert.alert(t('validations.error'), t('validations.save_error'));
+      console.error('Error in handleSave:', error);
+      // Detailed error alert
+      Alert.alert(
+        t('validations.error'),
+        `Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     } finally {
       setLoading(false);
     }
@@ -475,221 +678,220 @@ export default function NewProjectScreen() {
           onComplete={handleSave}
           onCancel={() => router.back()}
           showProgress={true}
+          loading={loading}
         />
       ) : (
         <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
-      >
-        {showTemplateSelector ? (
-          <TemplateSelector onSelectTemplate={handleSelectTemplate} />
-        ) : (
-          <>
-            {/* Header */}
-            <View className="mb-6">
-              <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-3xl font-bold text-foreground">
-                  {t('form.new_project')}
+          className="flex-1"
+          contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+        >
+          {showTemplateSelector ? (
+            <TemplateSelector onSelectTemplate={handleSelectTemplate} />
+          ) : (
+            <>
+              {/* Header */}
+              <View className="mb-6">
+                <View className="flex-row items-center justify-between mb-2">
+                  <Text className="text-3xl font-bold text-foreground">
+                    {t('form.new_project')}
+                  </Text>
+                  <AutoSaveIndicator status={status} lastSaved={lastSaved} />
+                </View>
+                <Text className="text-sm text-muted">
+                  {t('form.fill_details')}
                 </Text>
-                <AutoSaveIndicator status={status} lastSaved={lastSaved} />
               </View>
-              <Text className="text-sm text-muted">
-                {t('form.fill_details')}
-              </Text>
-            </View>
 
-        {/* Form Fields */}
-        <View className="gap-4">
-          {/* Project Name */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.project_name')} *
-            </Text>
-            <TextInput
-              value={name}
-              onChangeText={setName}
-              placeholder={t('form.project_name_placeholder')}
-              placeholderTextColor="#9CA3AF"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
+              {/* Form Fields */}
+              <View className="gap-4">
+                {/* Project Name */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.project_name')} *
+                  </Text>
+                  <TextInput
+                    value={name}
+                    onChangeText={setName}
+                    placeholder={t('form.project_name_placeholder')}
+                    placeholderTextColor="#9CA3AF"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
 
-          {/* Initial Investment */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.initial_investment')} * ($)
-            </Text>
-            <TextInput
-              value={initialInvestment}
-              onChangeText={setInitialInvestment}
-              placeholder="100000"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
+                {/* Initial Investment */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.initial_investment')} * ($)
+                  </Text>
+                  <TextInput
+                    value={initialInvestment}
+                    onChangeText={setInitialInvestment}
+                    placeholder="100000"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
 
-          {/* Project Duration */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.project_duration')} ({t('common.months')})
-            </Text>
-            <TextInput
-              value={projectDuration}
-              onChangeText={setProjectDuration}
-              placeholder="24"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
+                {/* Project Duration */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.project_duration')} ({t('common.months')})
+                  </Text>
+                  <TextInput
+                    value={projectDuration}
+                    onChangeText={setProjectDuration}
+                    placeholder="24"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
 
-          {/* Yearly Revenue */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.yearly_revenue')} * ($)
-            </Text>
-            <TextInput
-              value={yearlyRevenue}
-              onChangeText={setYearlyRevenue}
-              placeholder="50000"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
+                {/* Yearly Revenue */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.yearly_revenue')} * ($)
+                  </Text>
+                  <TextInput
+                    value={yearlyRevenue}
+                    onChangeText={setYearlyRevenue}
+                    placeholder="50000"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
 
-          {/* Revenue Growth */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.revenue_growth')} (%)
-            </Text>
-            <TextInput
-              value={revenueGrowth}
-              onChangeText={setRevenueGrowth}
-              placeholder="5"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
+                {/* Revenue Growth */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.revenue_growth')} (%)
+                  </Text>
+                  <TextInput
+                    value={revenueGrowth}
+                    onChangeText={setRevenueGrowth}
+                    placeholder="5"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
 
-          {/* Operating Costs */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.operating_costs')} ($)
-            </Text>
-            <TextInput
-              value={operatingCosts}
-              onChangeText={setOperatingCosts}
-              placeholder="20000"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
+                {/* Operating Costs */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.operating_costs')} ($)
+                  </Text>
+                  <TextInput
+                    value={operatingCosts}
+                    onChangeText={setOperatingCosts}
+                    placeholder="20000"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
 
-          {/* Maintenance Costs */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.maintenance_costs')} ($)
-            </Text>
-            <TextInput
-              value={maintenanceCosts}
-              onChangeText={setMaintenanceCosts}
-              placeholder="5000"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
+                {/* Maintenance Costs */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.maintenance_costs')} ($)
+                  </Text>
+                  <TextInput
+                    value={maintenanceCosts}
+                    onChangeText={setMaintenanceCosts}
+                    placeholder="5000"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
 
-          {/* Discount Rate */}
-          <View>
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.discount_rate')} (%)
-            </Text>
-            <TextInput
-              value={discountRate}
-              onChangeText={setDiscountRate}
-              placeholder="10"
-              placeholderTextColor="#9CA3AF"
-              keyboardType="numeric"
-              className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
-            />
-          </View>
-        </View>
+                {/* Discount Rate */}
+                <View>
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    {t('form.discount_rate')} (%)
+                  </Text>
+                  <TextInput
+                    value={discountRate}
+                    onChangeText={setDiscountRate}
+                    placeholder="10"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
+                  />
+                </View>
+              </View>
 
-        {/* Reminder Frequency (if notifications enabled) */}
-        {notificationsAvailable && (
-          <View className="mt-6">
-            <Text className="text-sm font-semibold text-foreground mb-2">
-              🔔 {t('notifications.reminder_frequency')}
-            </Text>
-            <View className="bg-surface border border-border rounded-xl overflow-hidden">
-              {(['none', 'weekly', 'biweekly', 'monthly', 'quarterly'] as ReminderFrequency[]).map(
-                (freq) => (
-                  <TouchableOpacity
-                    key={freq}
-                    onPress={() => {
-                      if (Platform.OS !== 'web') {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                      }
-                      setReminderFrequency(freq);
-                    }}
-                    className="flex-row items-center justify-between p-4 border-b border-border/50"
-                  >
-                    <Text
-                      className={`text-base ${
-                        reminderFrequency === freq
-                          ? 'text-primary font-semibold'
-                          : 'text-foreground'
-                      }`}
-                    >
-                      {getFrequencyDisplayName(freq, language)}
-                    </Text>
-                    {reminderFrequency === freq && (
-                      <View className="w-6 h-6 rounded-full bg-primary items-center justify-center">
-                        <Text className="text-background text-xs font-bold">✓</Text>
-                      </View>
+              {/* Reminder Frequency (if notifications enabled) */}
+              {notificationsAvailable && (
+                <View className="mt-6">
+                  <Text className="text-sm font-semibold text-foreground mb-2">
+                    🔔 {t('notifications.reminder_frequency')}
+                  </Text>
+                  <View className="bg-surface border border-border rounded-xl overflow-hidden">
+                    {(['none', 'weekly', 'biweekly', 'monthly', 'quarterly'] as ReminderFrequency[]).map(
+                      (freq) => (
+                        <TouchableOpacity
+                          key={freq}
+                          onPress={() => {
+                            if (Platform.OS !== 'web') {
+                              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                            }
+                            setReminderFrequency(freq);
+                          }}
+                          className="flex-row items-center justify-between p-4 border-b border-border/50"
+                        >
+                          <Text
+                            className={`text-base ${reminderFrequency === freq
+                              ? 'text-primary font-semibold'
+                              : 'text-foreground'
+                              }`}
+                          >
+                            {getFrequencyDisplayName(freq, language)}
+                          </Text>
+                          {reminderFrequency === freq && (
+                            <View className="w-6 h-6 rounded-full bg-primary items-center justify-center">
+                              <Text className="text-background text-xs font-bold">✓</Text>
+                            </View>
+                          )}
+                        </TouchableOpacity>
+                      )
                     )}
-                  </TouchableOpacity>
-                )
+                  </View>
+                  <Text className="text-xs text-muted mt-2">
+                    {t('notifications.reminder_frequency_desc')}
+                  </Text>
+                </View>
               )}
-            </View>
-            <Text className="text-xs text-muted mt-2">
-              {t('notifications.reminder_frequency_desc')}
-            </Text>
-          </View>
-        )}
 
-        {/* Action Buttons */}
-        <View className="gap-3 mt-8">
-          <TouchableOpacity
-            onPress={handleSave}
-            disabled={loading}
-            className={`bg-primary rounded-xl py-4 items-center ${
-              loading ? 'opacity-50' : ''
-            }`}
-          >
-            <Text className="text-background font-semibold text-base">
-              {loading ? t('common.saving') : t('common.calculate_save')}
-            </Text>
-          </TouchableOpacity>
+              {/* Action Buttons */}
+              <View className="gap-3 mt-8">
+                <TouchableOpacity
+                  onPress={handleSave}
+                  disabled={loading}
+                  className={`bg-primary rounded-xl py-4 items-center ${loading ? 'opacity-50' : ''
+                    }`}
+                >
+                  <Text className="text-background font-semibold text-base">
+                    {loading ? t('common.saving') : t('common.calculate_save')}
+                  </Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => router.back()}
-            disabled={loading}
-            className="bg-surface border border-border rounded-xl py-4 items-center"
-          >
-            <Text className="text-foreground font-semibold text-base">
-              {t('common.cancel')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-          </>
-        )}
-      </ScrollView>
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  disabled={loading}
+                  className="bg-surface border border-border rounded-xl py-4 items-center"
+                >
+                  <Text className="text-foreground font-semibold text-base">
+                    {t('common.cancel')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </ScrollView>
       )}
     </ScreenContainer>
   );

@@ -3,30 +3,31 @@ export interface ProjectData {
   name: string;
   createdAt: string;
   updatedAt: string;
-  
+  description?: string;
+
   // Basic Information
   initialInvestment: number;
   discountRate: number;
   projectDuration: number; // in months
-  
+
   // Revenue Projections
   yearlyRevenue: number;
   revenueGrowth: number; // percentage
-  
+
   // Costs
   operatingCosts: number;
   maintenanceCosts: number;
-  
+
   // Scenario Analysis
   bestCaseMultiplier: number;
   worstCaseMultiplier: number;
-  
+
   // Calculated Results
   results?: ProjectResults;
-  
+
   // Scenarios
   scenarios?: ScenarioSnapshot[];
-  
+
   // New fields for modular architecture
   businessModel?: 'standard' | 'saas' | 'ecommerce' | 'manufacturing';
   vanguardInput?: VanguardInput;
@@ -40,23 +41,30 @@ export interface ProjectResults {
   npv: number;
   paybackPeriod: number;
   irr: number;
-  
+
   // Best Case
   roiBest: number;
   npvBest: number;
   paybackBest: number;
   irrBest: number;
-  
+
   // Worst Case
   roiWorst: number;
   npvWorst: number;
   paybackWorst: number;
   irrWorst: number;
-  
+
   // Cash Flow Data
   monthlyCashFlow: number[];
   cumulativeCashFlow: number[];
-  
+
+  // Vanguard Proprietary Metrics
+  vanguard?: {
+    ofi: number;
+    tfdi: number;
+    ser: number;
+  };
+
   // AI Insights
   aiInsights?: string;
   aiGeneratedAt?: string;
@@ -67,12 +75,12 @@ export interface ScenarioSnapshot {
   name: string;
   createdAt: string;
   isBase: boolean;
-  
+
   // Adjustments (percentage changes from original)
   salesAdjustment: number; // -50 to +50
   costsAdjustment: number; // -50 to +50
   discountAdjustment: number; // -5 to +5
-  
+
   // Calculated Results for this scenario
   results: {
     roi: number;
@@ -129,13 +137,13 @@ export interface VanguardInput {
   manualProcessHoursPerWeek: number;
   averageHourlyCost: number;
   automationPotential: number; // 0-100%
-  
+
   // TFDI inputs
   maintenanceHoursPerSprint: number;
   totalDevHoursPerSprint: number;
   devTeamAnnualCost: number;
   incidentCostPerMonth: number;
-  
+
   // SER inputs
   currentRevenue: number;
   previousRevenue: number;

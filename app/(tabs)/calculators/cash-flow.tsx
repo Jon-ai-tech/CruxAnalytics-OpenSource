@@ -12,6 +12,7 @@ import {
     SectionHeading,
     Badge,
 } from '@/components/landing/shared-components';
+import { router } from 'expo-router';
 import { CashFlowForecastCalculator } from '@/lib/infrastructure/calculators/CashFlowForecastCalculator';
 import { useTranslation } from '@/lib/i18n-context';
 import { LanguageSelector } from '@/components/language-selector';
@@ -86,9 +87,10 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
     );
 }
 
-function AlertsPanel({ alerts }: { alerts: string[] }) {
+function AlertsPanel({ alerts }: { alerts?: string[] }) {
     const { t } = useTranslation();
-    if (alerts.length === 0) {
+    const safeAlerts = alerts ?? [];
+    if (safeAlerts.length === 0) {
         return (
             <GlassCard className="border border-[#86EFAC]/30">
                 <View className="flex-row items-center gap-3">
@@ -106,7 +108,7 @@ function AlertsPanel({ alerts }: { alerts: string[] }) {
         <GlassCard className="border border-[#FB923C]/30">
             <Text className="text-white font-semibold mb-4">{t('calculator.cash_flow.alerts')}</Text>
             <View className="gap-2">
-                {alerts.map((alert, index) => (
+                {safeAlerts.map((alert, index) => (
                     <View key={index} className="flex-row items-start gap-2">
                         <Text className="text-rose-400">•</Text>
                         <Text className="text-gray-300 flex-1">{alert}</Text>
@@ -150,37 +152,37 @@ export default function CashFlowPage() {
     // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
-        
+
         const recs: string[] = [];
-        
+
         if (!result.isHealthy) {
             recs.push(t('calculator.cash_flow.recommendations.negative_flow'));
         }
-        
+
         if (result.monthsUntilDeficit && result.monthsUntilDeficit < 6) {
             recs.push(t('calculator.cash_flow.recommendations.deficit_warning', { months: result.monthsUntilDeficit.toString() }));
         }
-        
-        if (result.endingCash < result.minimumCashReserve) {
+
+        if (result.endingCashBalance < result.minimumCashReserveNeeded) {
             recs.push(t('calculator.cash_flow.recommendations.below_reserve'));
         }
-        
+
         const netMargin = ((parseFloat(monthlyRevenue) - parseFloat(monthlyExpenses)) / parseFloat(monthlyRevenue)) * 100;
         if (netMargin < 20) {
             recs.push(t('calculator.cash_flow.recommendations.low_margin'));
         }
-        
+
         if (result.isHealthy && recs.length === 0) {
             recs.push(t('calculator.cash_flow.recommendations.healthy_invest'));
             recs.push(t('calculator.cash_flow.recommendations.growth_opportunity'));
         }
-        
+
         return recs;
     }, [result, monthlyRevenue, monthlyExpenses, t]);
 
     const handleExportPDF = async () => {
         if (!result) return;
-        
+
         setExporting(true);
         try {
             const html = generateCashFlowPDF({
@@ -191,10 +193,10 @@ export default function CashFlowPage() {
                     expectedGrowthRate: parseFloat(expectedGrowth) || 0,
                 },
                 results: {
-                    endingCash: result.endingCash,
+                    endingCash: result.endingCashBalance,
                     monthsUntilDeficit: result.monthsUntilDeficit,
                     isHealthy: result.isHealthy,
-                    minimumCashReserve: result.minimumCashReserve,
+                    minimumCashReserve: result.minimumCashReserveNeeded,
                 },
                 recommendations,
             });
@@ -207,20 +209,28 @@ export default function CashFlowPage() {
     };
 
     return (
-        <ScrollView 
+        <ScrollView
             className="flex-1 bg-[#020617]"
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                {/* Header with Language Selector */}
-                <View className="flex-row items-start justify-between mb-6">
-                    <View className="flex-1">
-                        <SectionHeading
-                            title={t('calculator.cash_flow.title')}
-                            subtitle={t('calculator.cash_flow.subtitle')}
-                        />
-                    </View>
+                {/* Top Navigation */}
+                <View className="flex-row items-center justify-between mb-8">
+                    <Pressable
+                        onPress={() => router.back()}
+                        className="p-3 bg-white/10 rounded-full border border-white/20 active:scale-95 transition-transform"
+                    >
+                        <Ionicons name="arrow-back" size={24} color="white" />
+                    </Pressable>
                     <LanguageSelector />
+                </View>
+
+                {/* Header Title Section */}
+                <View className="mb-6">
+                    <SectionHeading
+                        title={t('calculator.cash_flow.title')}
+                        subtitle={t('calculator.cash_flow.subtitle')}
+                    />
                 </View>
 
                 <View className="flex-row flex-wrap gap-6">
@@ -271,8 +281,8 @@ export default function CashFlowPage() {
                                 <View className="flex-row flex-wrap gap-4">
                                     <GlassCard className="flex-1 min-w-[140px]">
                                         <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.final_balance')}</Text>
-                                        <Text className={`text-2xl font-bold ${result.endingCash >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                            ${(result.endingCash ?? 0).toLocaleString()}
+                                        <Text className={`text-2xl font-bold ${result.endingCashBalance >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                            ${(result.endingCashBalance ?? 0).toLocaleString()}
                                         </Text>
                                     </GlassCard>
 
@@ -286,7 +296,7 @@ export default function CashFlowPage() {
                                     <GlassCard className="flex-1 min-w-[140px]">
                                         <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.minimum_reserve')}</Text>
                                         <Text className="text-2xl font-bold text-amber-400">
-                                            ${(result.minimumCashReserve ?? 0).toLocaleString()}
+                                            ${(result.minimumCashReserveNeeded ?? 0).toLocaleString()}
                                         </Text>
                                     </GlassCard>
                                 </View>
@@ -302,7 +312,7 @@ export default function CashFlowPage() {
                                             <Text className={result.isHealthy ? 'text-emerald-400' : 'text-rose-400'}>
                                                 {result.isHealthy
                                                     ? t('calculator.cash_flow.sufficient_liquidity')
-                                                    : t('calculator.cash_flow.run_out_warning', { months: result.monthsUntilDeficit })
+                                                    : t('calculator.cash_flow.run_out_warning', { months: String(result.monthsUntilDeficit ?? '?') })
                                                 }
                                             </Text>
                                         </View>
@@ -310,10 +320,10 @@ export default function CashFlowPage() {
                                 </GlassCard>
 
                                 {/* Timeline Chart */}
-                                <CashFlowTimeline forecasts={result.monthlyForecasts} />
+                                <CashFlowTimeline forecasts={result.monthlyForecasts.map(f => ({ month: f.month, netCash: f.netCashFlow, balance: f.endingCash }))} />
 
                                 {/* Alerts */}
-                                <AlertsPanel alerts={result.alerts} />
+                                <AlertsPanel alerts={calculator.generateAlerts(result)} />
 
                                 {/* Recommendations */}
                                 {recommendations && recommendations.length > 0 && (
@@ -330,10 +340,10 @@ export default function CashFlowPage() {
                                     </GlassCard>
                                 )}
 
-                                <GradientButton 
-                                    size="lg" 
-                                    onPress={handleExportPDF}
-                                    disabled={exporting}
+                                <GradientButton
+                                    size="lg"
+                                    onPress={exporting ? undefined : handleExportPDF}
+                                    className={exporting ? 'opacity-50' : ''}
                                 >
                                     📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
                                 </GradientButton>

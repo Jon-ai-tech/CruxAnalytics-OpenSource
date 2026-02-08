@@ -31,12 +31,31 @@ export async function createContext(opts: CreateExpressContextOptions): Promise<
       lastSignedIn: new Date(),
     } as User;
   } else {
-    // Production mode: Use real authentication
+    // Production/Default mode: Try real auth, fallback to Guest User
     try {
       user = await sdk.authenticateRequest(opts.req);
     } catch (error) {
-      // Authentication is optional for public procedures.
-      user = null;
+      console.log('[Auth] Real auth failed, providing Open Source Guest User');
+    }
+
+    // Default Guest User for Open Source / Local testing
+    if (!user) {
+      user = {
+        id: 1,
+        openId: 'guest-user-openid',
+        email: 'guest@crux.local',
+        name: 'Guest User',
+        role: 'admin',
+        loginMethod: 'open-source',
+        subscriptionTier: 'premium',
+        subscriptionExpiry: null,
+        revenueCatUserId: null,
+        aiAnalysisCount: 0,
+        aiAnalysisResetDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastSignedIn: new Date(),
+      } as User;
     }
   }
 

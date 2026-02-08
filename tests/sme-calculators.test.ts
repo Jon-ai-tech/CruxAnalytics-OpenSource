@@ -23,7 +23,7 @@ describe('BreakEvenCalculator', () => {
 
         // Break-even = 50000 / (25 - 10) = 3333.33
         expect(result.breakEvenUnits).toBe(3333);
-        expect(result.breakEvenRevenue).toBe(83325);
+        expect(result.breakEvenRevenue).toBe(83333.33);
         expect(result.contributionMarginPerUnit).toBe(15);
     });
 

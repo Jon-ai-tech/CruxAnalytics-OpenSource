@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -12,9 +12,11 @@ import {
     SectionHeading,
     Badge,
 } from '@/components/landing/shared-components';
+import { router } from 'expo-router';
 import { LoanCalculator } from '@/lib/infrastructure/calculators/LoanCalculator';
 import { useTranslation } from '@/lib/i18n-context';
 import { LanguageSelector } from '@/components/language-selector';
+import { generateLoanPDF, printPDF } from '@/lib/export/pdf-generator';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -41,22 +43,22 @@ function InputField({
     );
 }
 
-function AmortizationPreview({ schedule }: { schedule: Array<{ month: number; payment: number; principal: number; interest: number; balance: number }> }) {
+function AmortizationPreview({ schedule, t }: { schedule: Array<{ month: number; payment: number; principal: number; interest: number; balance: number }>, t: any }) {
     // Show first 6 and last 3 months
     const preview = [...schedule.slice(0, 6), ...schedule.slice(-3)];
 
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">📋 Tabla de Amortización (Vista previa)</Text>
+            <Text className="text-white font-semibold mb-4">📋 {t('calculator.loan.amortization_title')}</Text>
 
             <View className="bg-slate-800 rounded-lg overflow-hidden">
                 {/* Header */}
                 <View className="flex-row bg-slate-700 py-2 px-3">
-                    <Text className="text-gray-400 text-xs flex-1 text-center">Mes</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">Pago</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">Capital</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">Interés</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">Saldo</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.month')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.payment')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.principal')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.interest')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.balance')}</Text>
                 </View>
 
                 {/* Rows */}
@@ -73,7 +75,7 @@ function AmortizationPreview({ schedule }: { schedule: Array<{ month: number; pa
                 {schedule.length > 9 && (
                     <View className="py-2 px-3 bg-slate-700/50">
                         <Text className="text-gray-500 text-xs text-center">
-                            ... {schedule.length - 9} meses más en el PDF
+                            {t('calculator.loan.more_months', { count: (schedule.length - 9).toString() })}
                         </Text>
                     </View>
                 )}
@@ -84,6 +86,7 @@ function AmortizationPreview({ schedule }: { schedule: Array<{ month: number; pa
 
 export default function LoanPage() {
     const { t } = useTranslation();
+    const [exporting, setExporting] = useState(false);
     const [principal, setPrincipal] = useState('100000');
     const [interestRate, setInterestRate] = useState('8.5');
     const [termMonths, setTermMonths] = useState('60');
@@ -117,42 +120,76 @@ export default function LoanPage() {
     // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
-        
+
         const recs: string[] = [];
-        
+
         if (result.affordability.isAffordable === false) {
             recs.push(t('calculator.loan.recommendations.unaffordable'));
         } else if (result.affordability.isAffordable === true) {
             recs.push(t('calculator.loan.recommendations.affordable'));
         }
-        
+
         if (result.affordability.cushionAfterPayment !== null && result.affordability.cushionAfterPayment > 0) {
-            recs.push(t('calculator.loan.recommendations.remaining_low', { 
-                amount: result.affordability.cushionAfterPayment.toLocaleString() 
+            recs.push(t('calculator.loan.recommendations.remaining_low', {
+                amount: result.affordability.cushionAfterPayment.toLocaleString()
             }));
         }
-        
+
         recs.push(t('calculator.loan.recommendations.compare_options'));
         recs.push(t('calculator.loan.recommendations.negotiate_terms'));
-        
+
         return recs;
     }, [result, t]);
 
+    const handleExportPDF = async () => {
+        if (!result) return;
+
+        setExporting(true);
+        try {
+            const html = generateLoanPDF({
+                inputs: {
+                    principal: parseFloat(principal) || 0,
+                    annualInterestRate: parseFloat(interestRate) || 0,
+                    termMonths: parseInt(termMonths) || 0,
+                },
+                results: {
+                    monthlyPayment: result.monthlyPayment,
+                    totalPayment: result.totalPayment,
+                    totalInterest: result.totalInterest,
+                },
+                recommendations,
+            });
+            await printPDF(html);
+        } catch (error) {
+            Alert.alert(t('common.error'), t('common.export_failed') || 'No se pudo exportar el PDF');
+        } finally {
+            setExporting(false);
+        }
+    };
+
     return (
-        <ScrollView 
+        <ScrollView
             className="flex-1 bg-[#020617]"
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                {/* Header with Language Selector */}
-                <View className="flex-row items-start justify-between mb-6">
-                    <View className="flex-1">
-                        <SectionHeading
-                            title={`💳 ${t('calculator.loan.title')}`}
-                            subtitle={t('calculator.loan.subtitle')}
-                        />
-                    </View>
+                {/* Top Navigation */}
+                <View className="flex-row items-center justify-between mb-8">
+                    <Pressable
+                        onPress={() => router.back()}
+                        className="p-3 bg-white/10 rounded-full border border-white/20 active:scale-95 transition-transform"
+                    >
+                        <Ionicons name="arrow-back" size={24} color="white" />
+                    </Pressable>
                     <LanguageSelector />
+                </View>
+
+                {/* Header Title Section */}
+                <View className="mb-6">
+                    <SectionHeading
+                        title={`💳 ${t('calculator.loan.title')}`}
+                        subtitle={t('calculator.loan.subtitle')}
+                    />
                 </View>
 
                 <View className="flex-row flex-wrap gap-6">
@@ -252,12 +289,12 @@ export default function LoanPage() {
                                                 <Text className="text-white font-bold text-lg">
                                                     {result.affordability.isAffordable
                                                         ? t('calculator.loan.affordable')
-                                                        : 'Préstamo RIESGOSO'
+                                                        : t('calculator.loan.risky_loan')
                                                     }
                                                 </Text>
                                                 <Text className="text-gray-400 text-sm">
-                                                    {t('calculator.loan.debt_service_ratio', { 
-                                                        ratio: result.affordability.debtServiceRatio != null ? result.affordability.debtServiceRatio.toFixed(1) : '0' 
+                                                    {t('calculator.loan.debt_service_ratio', {
+                                                        ratio: result.affordability.debtServiceRatio != null ? result.affordability.debtServiceRatio.toFixed(1) : '0'
                                                     })}
                                                 </Text>
                                             </View>
@@ -276,7 +313,7 @@ export default function LoanPage() {
                                 )}
 
                                 {/* Amortization Table */}
-                                <AmortizationPreview schedule={result.amortizationSchedule} />
+                                <AmortizationPreview schedule={result.amortizationSchedule} t={t} />
 
                                 {/* Recommendations */}
                                 {recommendations.length > 0 && (
@@ -290,7 +327,13 @@ export default function LoanPage() {
                                     </GlassCard>
                                 )}
 
-                                <GradientButton size="lg">📄 {t('calculator.export_pdf')}</GradientButton>
+                                <GradientButton
+                                    size="lg"
+                                    onPress={exporting ? undefined : handleExportPDF}
+                                    className={exporting ? 'opacity-50' : ''}
+                                >
+                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">

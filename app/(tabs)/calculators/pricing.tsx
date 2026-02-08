@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -12,9 +12,11 @@ import {
     SectionHeading,
     Badge,
 } from '@/components/landing/shared-components';
+import { router } from 'expo-router';
 import { PricingCalculator } from '@/lib/infrastructure/calculators/PricingCalculator';
 import { useTranslation } from '@/lib/i18n-context';
 import { LanguageSelector } from '@/components/language-selector';
+import { generatePricingPDF, printPDF } from '@/lib/export/pdf-generator';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -47,7 +49,7 @@ function PriceStrategyCard({
     strategy: string; price: number; benefits: string; recommended?: boolean;
 }) {
     const { t } = useTranslation();
-    
+
     return (
         <GlassCard className={`flex-1 min-w-[150px] ${recommended ? 'border-2 border-[#14B8A6]' : ''}`}>
             {recommended && (
@@ -62,6 +64,7 @@ function PriceStrategyCard({
 
 export default function PricingPage() {
     const { t } = useTranslation();
+    const [exporting, setExporting] = useState(false);
     const [costPerUnit, setCostPerUnit] = useState('15');
     const [desiredMargin, setDesiredMargin] = useState('40');
     const [competitorPrice, setCompetitorPrice] = useState('30');
@@ -89,11 +92,11 @@ export default function PricingPage() {
     // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
-        
+
         const recs: string[] = [];
         const cost = parseFloat(costPerUnit);
         const margin = parseFloat(desiredMargin);
-        
+
         if (result.competitorComparison) {
             const percentDiff = Math.abs(result.competitorComparison.percentageDiff).toFixed(1);
             if (result.competitorComparison.position === 'above') {
@@ -102,32 +105,66 @@ export default function PricingPage() {
                 recs.push(t('calculator.pricing.recommendations.low_vs_competition', { percent: percentDiff }));
             }
         }
-        
+
         if (margin > 50) {
             recs.push(t('calculator.pricing.recommendations.high_margin'));
         }
-        
+
         recs.push(t('calculator.pricing.recommendations.test_prices'));
         recs.push(t('calculator.pricing.recommendations.monitor_prices'));
-        
+
         return recs;
     }, [result, costPerUnit, desiredMargin, t]);
 
+    const handleExportPDF = async () => {
+        if (!result) return;
+
+        setExporting(true);
+        try {
+            const html = generatePricingPDF({
+                inputs: {
+                    costPerUnit: parseFloat(costPerUnit) || 0,
+                    desiredMargin: parseFloat(desiredMargin) || 0,
+                    competitorPrice: competitorPrice ? parseFloat(competitorPrice) : undefined,
+                },
+                results: {
+                    recommendedPrice: result.recommendedPrice,
+                    grossProfitPerUnit: result.grossProfitPerUnit,
+                    markup: result.markupPercentage,
+                },
+                recommendations,
+            });
+            await printPDF(html);
+        } catch (error) {
+            Alert.alert(t('common.error'), t('common.export_failed') || 'No se pudo exportar el PDF');
+        } finally {
+            setExporting(false);
+        }
+    };
+
     return (
-        <ScrollView 
+        <ScrollView
             className="flex-1 bg-[#020617]"
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                {/* Header with Language Selector */}
-                <View className="flex-row items-start justify-between mb-6">
-                    <View className="flex-1">
-                        <SectionHeading
-                            title={`🏷️ ${t('calculator.pricing.title')}`}
-                            subtitle={t('calculator.pricing.subtitle')}
-                        />
-                    </View>
+                {/* Top Navigation */}
+                <View className="flex-row items-center justify-between mb-8">
+                    <Pressable
+                        onPress={() => router.back()}
+                        className="p-3 bg-white/10 rounded-full border border-white/20 active:scale-95 transition-transform"
+                    >
+                        <Ionicons name="arrow-back" size={24} color="white" />
+                    </Pressable>
                     <LanguageSelector />
+                </View>
+
+                {/* Header Title Section */}
+                <View className="mb-6">
+                    <SectionHeading
+                        title={`🏷️ ${t('calculator.pricing.title')}`}
+                        subtitle={t('calculator.pricing.subtitle')}
+                    />
                 </View>
 
                 <View className="flex-row flex-wrap gap-6">
@@ -259,7 +296,13 @@ export default function PricingPage() {
                                     </GlassCard>
                                 )}
 
-                                <GradientButton size="lg">📄 {t('calculator.export_pdf')}</GradientButton>
+                                <GradientButton
+                                    size="lg"
+                                    onPress={exporting ? undefined : handleExportPDF}
+                                    className={exporting ? 'opacity-50' : ''}
+                                >
+                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">

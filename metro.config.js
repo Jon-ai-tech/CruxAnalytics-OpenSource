@@ -1,10 +1,19 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
 
+const path = require('path');
 const config = getDefaultConfig(__dirname);
+
+// Force absolute paths to be resolved correctly on Windows
+const projectRoot = path.resolve(__dirname);
+config.projectRoot = projectRoot;
+config.watchFolders = [projectRoot];
 
 // Add CSS support for web
 config.resolver.sourceExts.push('css');
+
+// Enable symlinks for pnpm on Windows
+config.resolver.unstable_enableSymlinks = true;
 
 // ✅ NUEVO: Agregar soporte para workers y import.meta
 config.transformer = {

@@ -35,13 +35,24 @@ export function getApiBaseUrl(): string {
     return API_BASE_URL.replace(/\/$/, "");
   }
 
-  // On web, derive from current hostname by replacing port 8081 with 3000
+  // On web, derive from current hostname
   if (ReactNative.Platform.OS === "web" && typeof window !== "undefined" && window.location) {
-    const { protocol, hostname } = window.location;
+    const { protocol, hostname, port } = window.location;
+
+    // Handle standard localhost development
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return `${protocol}//${hostname}:3000`;
+    }
+
     // Pattern: 8081-sandboxid.region.domain -> 3000-sandboxid.region.domain
     const apiHostname = hostname.replace(/^8081-/, "3000-");
     if (apiHostname !== hostname) {
       return `${protocol}//${apiHostname}`;
+    }
+
+    // Fallback for any port-based local dev
+    if (port === "8081") {
+      return `${protocol}//${hostname}:3000`;
     }
   }
 

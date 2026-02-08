@@ -8,6 +8,13 @@
       "when": 1769901947219,
       "tag": "0000_unusual_loki",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1770391371884,
+      "tag": "0001_silky_golden_guardian",
+      "breakpoints": true
     }
   ]
 }

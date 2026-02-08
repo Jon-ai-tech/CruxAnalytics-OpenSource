@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -12,9 +12,11 @@ import {
     SectionHeading,
     Badge,
 } from '@/components/landing/shared-components';
+import { router } from 'expo-router';
 import { EmployeeROICalculator } from '@/lib/infrastructure/calculators/EmployeeROICalculator';
 import { useTranslation } from '@/lib/i18n-context';
 import { LanguageSelector } from '@/components/language-selector';
+import { generateEmployeeROIPDF, printPDF } from '@/lib/export/pdf-generator';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -41,25 +43,25 @@ function InputField({
     );
 }
 
-function RoleSelector({ selected, onSelect }: { selected: string; onSelect: (role: string) => void }) {
+function RoleSelector({ selected, onSelect, t }: { selected: string; onSelect: (role: string) => void, t: any }) {
     const roles = [
-        { id: 'sales', label: 'Ventas', icon: '💼' },
-        { id: 'operations', label: 'Operaciones', icon: '⚙️' },
-        { id: 'technical', label: 'Técnico', icon: '💻' },
-        { id: 'administrative', label: 'Admin', icon: '📋' },
+        { id: 'sales', label: t('calculator.employee_roi.roles.sales'), icon: '💼' },
+        { id: 'operations', label: t('calculator.employee_roi.roles.operations'), icon: '⚙️' },
+        { id: 'technical', label: t('calculator.employee_roi.roles.technical'), icon: '💻' },
+        { id: 'administrative', label: t('calculator.employee_roi.roles.administrative'), icon: '📋' },
     ];
 
     return (
         <View className="mb-4">
-            <Text className="text-gray-300 font-medium mb-2">Tipo de rol</Text>
+            <Text className="text-gray-300 font-medium mb-2">{t('calculator.employee_roi.role_type')}</Text>
             <View className="flex-row flex-wrap gap-2">
                 {roles.map((role) => (
                     <Pressable
                         key={role.id}
                         onPress={() => onSelect(role.id)}
                         className={`px-4 py-2 rounded-xl border ${selected === role.id
-                                ? 'bg-[#14B8A6]/20 border-[#14B8A6]'
-                                : 'bg-slate-800 border-white/10'
+                            ? 'bg-[#14B8A6]/20 border-[#14B8A6]'
+                            : 'bg-slate-800 border-white/10'
                             }`}
                     >
                         <Text className="text-white">{role.icon} {role.label}</Text>
@@ -83,12 +85,10 @@ function ROIGauge({ roi }: { roi: number }) {
 
     return (
         <View className="items-center">
-            <View className="w-48 h-48 rounded-full border-8 border-white/10 items-center justify-center relative">
+            <View className="w-48 h-48 rounded-full border-8 border-white/10 items-center justify-center relative overflow-hidden">
                 <View
-                    className={`absolute inset-0 rounded-full ${colors.bg} opacity-20`}
-                    style={{
-                        clipPath: `polygon(0 ${100 - fillPercent}%, 100% ${100 - fillPercent}%, 100% 100%, 0 100%)`
-                    }}
+                    className={`absolute bottom-0 left-0 right-0 ${colors.bg} opacity-20`}
+                    style={{ height: `${fillPercent}%` }}
                 />
                 <View className="items-center">
                     <Text className={`text-5xl font-bold ${colors.text}`}>{roi != null ? roi.toFixed(0) : '0'}%</Text>
@@ -101,6 +101,7 @@ function ROIGauge({ roi }: { roi: number }) {
 
 export default function EmployeeROIPage() {
     const { t } = useTranslation();
+    const [exporting, setExporting] = useState(false);
     const [annualSalary, setAnnualSalary] = useState('60000');
     const [annualBenefits, setAnnualBenefits] = useState('12000');
     const [onboardingCosts, setOnboardingCosts] = useState('5000');
@@ -136,9 +137,9 @@ export default function EmployeeROIPage() {
     // Generate recommendations using translations
     const recommendations = useMemo(() => {
         if (!result) return [];
-        
+
         const recs: string[] = [];
-        
+
         if (result.roiPercentage >= 50) {
             recs.push(t('calculator.employee_roi.recommendations.positive_hire'));
         } else if (result.roiPercentage < 0) {
@@ -146,33 +147,68 @@ export default function EmployeeROIPage() {
         } else {
             recs.push(t('calculator.employee_roi.recommendations.adjust_expectations'));
         }
-        
+
         if (result.paybackMonths && result.paybackMonths <= 6) {
-            recs.push(t('calculator.employee_roi.recommendations.fast_payback', { 
-                months: result.paybackMonths.toString() 
+            recs.push(t('calculator.employee_roi.recommendations.fast_payback', {
+                months: result.paybackMonths.toString()
             }));
         }
-        
+
         recs.push(t('calculator.employee_roi.recommendations.optimize_role'));
-        
+
         return recs;
     }, [result, t]);
 
+    const handleExportPDF = async () => {
+        if (!result) return;
+
+        setExporting(true);
+        try {
+            const html = generateEmployeeROIPDF({
+                inputs: {
+                    annualSalary: parseFloat(annualSalary) || 0,
+                    annualBenefits: parseFloat(annualBenefits) || 0,
+                    onboardingCosts: parseFloat(onboardingCosts) || 0,
+                    revenueGenerated: parseFloat(revenueGenerated) || 0,
+                },
+                results: {
+                    totalCost: result.totalCost,
+                    roiPercentage: result.roiPercentage,
+                    paybackMonths: result.paybackMonths ?? null,
+                },
+                recommendations,
+            });
+            await printPDF(html);
+        } catch (error) {
+            Alert.alert(t('common.error'), t('common.export_failed') || 'No se pudo exportar el PDF');
+        } finally {
+            setExporting(false);
+        }
+    };
+
     return (
-        <ScrollView 
+        <ScrollView
             className="flex-1 bg-[#020617]"
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                {/* Header with Language Selector */}
-                <View className="flex-row items-start justify-between mb-6">
-                    <View className="flex-1">
-                        <SectionHeading
-                            title={`👥 ${t('calculator.employee_roi.title')}`}
-                            subtitle={t('calculator.employee_roi.subtitle')}
-                        />
-                    </View>
+                {/* Top Navigation */}
+                <View className="flex-row items-center justify-between mb-8">
+                    <Pressable
+                        onPress={() => router.back()}
+                        className="p-3 bg-white/10 rounded-full border border-white/20 active:scale-95 transition-transform"
+                    >
+                        <Ionicons name="arrow-back" size={24} color="white" />
+                    </Pressable>
                     <LanguageSelector />
+                </View>
+
+                {/* Header Title Section */}
+                <View className="mb-6">
+                    <SectionHeading
+                        title={`👥 ${t('calculator.employee_roi.title')}`}
+                        subtitle={t('calculator.employee_roi.subtitle')}
+                    />
                 </View>
 
                 <View className="flex-row flex-wrap gap-6">
@@ -183,7 +219,7 @@ export default function EmployeeROIPage() {
                                 {t('calculator.enter_data')}
                             </Text>
 
-                            <RoleSelector selected={roleType} onSelect={setRoleType} />
+                            <RoleSelector selected={roleType} onSelect={setRoleType} t={t} />
 
                             <InputField
                                 label={t('calculator.employee_roi.annual_salary')}
@@ -200,11 +236,11 @@ export default function EmployeeROIPage() {
                             />
 
                             <InputField
-                                label="Costos de onboarding"
+                                label={t('calculator.employee_roi.onboarding_costs')}
                                 value={onboardingCosts}
                                 onChange={setOnboardingCosts}
                                 prefix="$"
-                                hint="Training, equipo, reclutamiento"
+                                hint={t('calculator.employee_roi.onboarding_hint')}
                             />
 
                             <InputField
@@ -215,7 +251,7 @@ export default function EmployeeROIPage() {
                             />
 
                             <InputField
-                                label="Horas por semana"
+                                label={t('calculator.employee_roi.hours_per_week')}
                                 value={hoursPerWeek}
                                 onChange={setHoursPerWeek}
                                 suffix="hrs"
@@ -244,7 +280,7 @@ export default function EmployeeROIPage() {
                                         <Text className="text-2xl font-bold text-white">
                                             ${result.totalCost.toLocaleString()}
                                         </Text>
-                                        <Text className="text-gray-500 text-xs">Primer año</Text>
+                                        <Text className="text-gray-500 text-xs">{t('calculator.employee_roi.first_year')}</Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
@@ -252,32 +288,32 @@ export default function EmployeeROIPage() {
                                         <Text className={`text-2xl font-bold ${result.netContribution >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                                             ${result.netContribution.toLocaleString()}
                                         </Text>
-                                        <Text className="text-gray-500 text-xs">Revenue - Costo</Text>
+                                        <Text className="text-gray-500 text-xs">{t('calculator.employee_roi.revenue_minus_cost')}</Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">Por cada $1 invertido</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculator.employee_roi.per_dollar_invested')}</Text>
                                         <Text className="text-2xl font-bold text-indigo-400">
                                             ${result.revenuePerDollarSpent != null ? result.revenuePerDollarSpent.toFixed(2) : '0.00'}
                                         </Text>
-                                        <Text className="text-gray-500 text-xs">Retorno</Text>
+                                        <Text className="text-gray-500 text-xs">{t('calculator.employee_roi.return')}</Text>
                                     </GlassCard>
                                 </View>
 
                                 {/* Productivity */}
                                 <GlassCard>
-                                    <Text className="text-white font-semibold mb-4">📊 Productividad</Text>
+                                    <Text className="text-white font-semibold mb-4">📊 {t('calculator.employee_roi.productivity_title')}</Text>
                                     <View className="flex-row justify-between">
                                         <View className="items-center flex-1">
-                                            <Text className="text-gray-400 text-xs">Costo/hora</Text>
+                                            <Text className="text-gray-400 text-xs">{t('calculator.employee_roi.cost_per_hour')}</Text>
                                             <Text className="text-white text-xl font-bold">${result.costPerHour}</Text>
                                         </View>
                                         <View className="items-center flex-1">
-                                            <Text className="text-gray-400 text-xs">Revenue/hora</Text>
+                                            <Text className="text-gray-400 text-xs">{t('calculator.employee_roi.revenue_per_hour')}</Text>
                                             <Text className="text-emerald-400 text-xl font-bold">${result.revenuePerHour}</Text>
                                         </View>
                                         <View className="items-center flex-1">
-                                            <Text className="text-gray-400 text-xs">Ratio</Text>
+                                            <Text className="text-gray-400 text-xs">{t('calculator.employee_roi.ratio')}</Text>
                                             <Text className="text-indigo-400 text-xl font-bold">{result.productivityRatio}x</Text>
                                         </View>
                                     </View>
@@ -285,9 +321,9 @@ export default function EmployeeROIPage() {
                                     <View className="mt-4 pt-4 border-t border-white/10">
                                         <View className="flex-row items-center gap-2">
                                             <Badge variant={result.benchmarkComparison.productivityLevel === 'high' ? 'success' : result.benchmarkComparison.productivityLevel === 'low' ? 'danger' : 'warning'}>
-                                                Productividad: {result.benchmarkComparison.productivityLevel.toUpperCase()}
+                                                {t('calculator.employee_roi.productivity_label')} {t(`calculator.employee_roi.productivity_levels.${result.benchmarkComparison.productivityLevel}`)}
                                             </Badge>
-                                            <Text className="text-gray-500 text-xs">vs promedio de industria</Text>
+                                            <Text className="text-gray-500 text-xs">{t('calculator.employee_roi.vs_industry')}</Text>
                                         </View>
                                     </View>
                                 </GlassCard>
@@ -300,7 +336,7 @@ export default function EmployeeROIPage() {
                                             <View>
                                                 <Text className="text-white font-bold">{t('calculator.employee_roi.payback')}</Text>
                                                 <Text className="text-indigo-400">
-                                                    {result.paybackMonths} {t('calculator.employee_roi.months')} para recuperar costos de onboarding
+                                                    {result.paybackMonths} {t('calculator.employee_roi.months')} {t('calculator.employee_roi.payback_desc')}
                                                 </Text>
                                             </View>
                                         </View>
@@ -319,7 +355,13 @@ export default function EmployeeROIPage() {
                                     </GlassCard>
                                 )}
 
-                                <GradientButton size="lg">📄 {t('calculator.export_pdf')}</GradientButton>
+                                <GradientButton
+                                    size="lg"
+                                    onPress={exporting ? undefined : handleExportPDF}
+                                    className={exporting ? 'opacity-50' : ''}
+                                >
+                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">

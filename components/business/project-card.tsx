@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { cn } from '@/lib/utils';
-import { formatCurrency, formatPercentage } from '@/lib/financial-calculator';
+import { cn, formatCurrency, formatPercentage } from '@/lib/utils';
 import { ProjectStatusBadge } from '@/components/project-status-badge';
 import { hasActiveReminder } from '@/lib/notification-manager';
 import type { ProjectData } from '@/types/project';
@@ -32,7 +31,7 @@ export const ProjectCard = React.memo(function ProjectCard({ project, onPress, c
 
   const getStatusColor = () => {
     if (!project.results) return 'bg-muted';
-    
+
     const isViable = project.results.roi > 0 && project.results.npv > 0;
     return isViable ? 'bg-success' : 'bg-error';
   };
@@ -87,7 +86,7 @@ export const ProjectCard = React.memo(function ProjectCard({ project, onPress, c
                 {formatPercentage(project.results.roi)}
               </Text>
             </View>
-            
+
             <View className="flex-1">
               <Text className="text-xs text-muted">NPV</Text>
               <Text className={cn(

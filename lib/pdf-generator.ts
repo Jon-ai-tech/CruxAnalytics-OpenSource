@@ -1,8 +1,10 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
+import { Platform } from 'react-native';
 import type { ProjectData } from '@/types/project';
-import { formatCurrency, formatPercentage, formatMonths } from './financial-calculator';
+import { formatCurrency, formatPercentage, formatMonths } from './utils';
 import { calculateBreakEven } from './break-even-calculator';
+import { downloadWebFile } from './platform-utils';
 
 interface PDFGenerationOptions {
   project: ProjectData;
@@ -19,28 +21,35 @@ interface PDFGenerationOptions {
  */
 export async function generatePDFReport(options: PDFGenerationOptions): Promise<string> {
   const { project, chartImages, language } = options;
-  
+
   const html = generateHTMLReport(project, chartImages, language);
-  
+
   // For React Native, we'll use a simpler approach with HTML
   // In production, you would use react-native-html-to-pdf or similar
-  
+
   const fileName = `business-case-${project.name.replace(/\s+/g, '-')}-${Date.now()}.html`;
   const filePath = `${FileSystem.documentDirectory}${fileName}`;
-  
+
   await FileSystem.writeAsStringAsync(filePath, html, {
     encoding: FileSystem.EncodingType.UTF8,
   });
-  
+
   return filePath;
 }
 
 /**
  * Share the generated PDF report
  */
-export async function sharePDFReport(filePath: string): Promise<void> {
+export async function sharePDFReport(filePath: string, project: ProjectData, language: 'es' | 'en'): Promise<void> {
+  if (Platform.OS === 'web') {
+    const html = generateHTMLReport(project, {}, language);
+    const fileName = `business-case-${project.name.replace(/\s+/g, '-')}.html`;
+    downloadWebFile(html, fileName);
+    return;
+  }
+
   const isAvailable = await Sharing.isAvailableAsync();
-  
+
   if (isAvailable) {
     await Sharing.shareAsync(filePath, {
       mimeType: 'text/html',
@@ -60,7 +69,7 @@ function generateHTMLReport(
   language: 'es' | 'en'
 ): string {
   const t = language === 'es' ? getSpanishTranslations() : getEnglishTranslations();
-  
+
   if (!project.results) {
     throw new Error('Project results are required to generate a report');
   }
@@ -362,7 +371,7 @@ function generateHTMLReport(
  */
 function generateBreakEvenSection(project: ProjectData, t: ReturnType<typeof getSpanishTranslations>): string {
   const breakEvenData = calculateBreakEven(project);
-  
+
   if (!breakEvenData.breakEvenPoint.achieved) {
     return `
       <div class="project-info">
@@ -377,10 +386,10 @@ function generateBreakEvenSection(project: ProjectData, t: ReturnType<typeof get
       </div>
     `;
   }
-  
+
   const monthLabel = `${t.months.charAt(0).toUpperCase() + t.months.slice(1)} ${breakEvenData.breakEvenPoint.month}`;
   const thirdOfPeriod = project.projectDuration / 3;
-  
+
   let interpretation = '';
   if (breakEvenData.breakEvenPoint.month <= thirdOfPeriod) {
     interpretation = t.breakeven_early;
@@ -389,7 +398,7 @@ function generateBreakEvenSection(project: ProjectData, t: ReturnType<typeof get
   } else {
     interpretation = t.breakeven_late;
   }
-  
+
   return `
     <div class="metrics-grid">
       <div class="metric-card">
