@@ -215,7 +215,7 @@ export function Badge({
 
     return (
         <View
-            className={`px-3 py-1 rounded-full border ${variantClasses[variant]} ${className}`}
+            className={`px-3 py-1 rounded-lg border ${variantClasses[variant]} ${className}`}
         >
             <Text className="text-xs font-medium">{children}</Text>
         </View>

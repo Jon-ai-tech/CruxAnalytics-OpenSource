@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from '@/lib/i18n-context';
 import { useColors } from '@/hooks/use-colors';
+import { LanguageSelector } from '@/components/language-selector';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -91,7 +92,7 @@ export function OnboardingTutorial({
 
   const animateStep = (direction: 'next' | 'prev') => {
     const toValue = direction === 'next' ? -50 : 50;
-    
+
     Animated.sequence([
       Animated.timing(slideAnim, {
         toValue,
@@ -109,7 +110,7 @@ export function OnboardingTutorial({
       } else {
         setCurrentStep((prev) => Math.max(prev - 1, 0));
       }
-      
+
       Animated.parallel([
         Animated.spring(slideAnim, {
           toValue: 0,
@@ -128,7 +129,7 @@ export function OnboardingTutorial({
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
+
     if (currentStep === steps.length - 1) {
       onComplete();
     } else {
@@ -140,7 +141,7 @@ export function OnboardingTutorial({
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
+
     if (currentStep > 0) {
       animateStep('prev');
     }
@@ -190,6 +191,11 @@ export function OnboardingTutorial({
               alignItems: 'center',
             }}
           >
+            {/* Language Selector - Crucial for onboarding accessibility */}
+            <View style={{ marginBottom: 24 }}>
+              <LanguageSelector />
+            </View>
+
             {/* Icon */}
             <View style={{
               width: 80,

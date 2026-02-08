@@ -26,7 +26,7 @@ import { useProjectFilters } from '@/hooks/use-project-filters';
 // ============================================
 function calculateHealthScore(projects: ProjectData[]): number | null {
   if (projects.length < 3) return null;
-  
+
   const viableCount = projects.filter(p => p.results && p.results.roi > 0).length;
   const score = Math.round((viableCount / projects.length) * 100);
   return Math.min(100, Math.max(0, score));
@@ -38,22 +38,22 @@ function getScoreColor(score: number): string {
   return '#FB923C'; // Coral (error)
 }
 
-function getScoreLabel(score: number): string {
-  if (score >= 75) return 'Excelente';
-  if (score >= 50) return 'Bueno';
-  return 'Necesita atención';
+function getScoreLabel(score: number, t: (key: string) => string): string {
+  if (score >= 75) return t('dashboard.excellent');
+  if (score >= 50) return t('dashboard.good');
+  return t('dashboard.needs_attention');
 }
 
 // ============================================
 // HEALTH SCORE GAUGE COMPONENT
 // ============================================
-function HealthScoreGauge({ score, colors }: { score: number | null; colors: any }) {
+function HealthScoreGauge({ score, colors, t }: { score: number | null; colors: any; t: (key: string) => string }) {
   return (
     <View className="bg-surface border border-border rounded-3xl p-8">
-      <Text className="text-muted text-sm mb-4 uppercase tracking-wider font-body-medium">HEALTH SCORE</Text>
+      <Text className="text-muted text-sm mb-4 uppercase tracking-wider font-body-medium">{t('dashboard.health_score')}</Text>
       {score !== null ? (
         <>
-          <View 
+          <View
             className="w-36 h-36 rounded-full border-8 items-center justify-center mb-4"
             style={{ borderColor: `${getScoreColor(score)}30` }}
           >
@@ -61,7 +61,7 @@ function HealthScoreGauge({ score, colors }: { score: number | null; colors: any
               {score}
             </Text>
           </View>
-          <Text className="text-success font-body-medium">{getScoreLabel(score)}</Text>
+          <Text className="text-success font-body-medium">{getScoreLabel(score, t)}</Text>
         </>
       ) : (
         <>
@@ -69,7 +69,7 @@ function HealthScoreGauge({ score, colors }: { score: number | null; colors: any
             <IconSymbol size={48} name="chart.line.uptrend.xyaxis" color={colors.muted} />
           </View>
           <Text className="text-muted font-body text-center text-sm">
-            Completa al menos 3 análisis para ver tu score
+            {t('dashboard.complete_3')}
           </Text>
         </>
       )}
@@ -82,44 +82,44 @@ function HealthScoreGauge({ score, colors }: { score: number | null; colors: any
 // ============================================
 function getToolCards(t: (key: string) => string) {
   return [
-    { 
-      icon: 'chart.line.uptrend.xyaxis', 
-      title: t('calculators.break_even.title'), 
+    {
+      icon: 'chart.line.uptrend.xyaxis',
+      title: t('calculators.break_even.title'),
       description: t('calculators.break_even.description'),
       href: '/(tabs)/calculators/break-even' as const,
       color: 'primary' as const
     },
-    { 
-      icon: 'dollarsign.circle', 
-      title: t('calculators.cash_flow.title'), 
+    {
+      icon: 'dollarsign.circle',
+      title: t('calculators.cash_flow.title'),
       description: t('calculators.cash_flow.description'),
       href: '/(tabs)/calculators/cash-flow' as const,
       color: 'success' as const
     },
-    { 
-      icon: 'tag', 
-      title: t('calculators.pricing.title'), 
+    {
+      icon: 'tag',
+      title: t('calculators.pricing.title'),
       description: t('calculators.pricing.description'),
       href: '/(tabs)/calculators/pricing' as const,
       color: 'warning' as const
     },
-    { 
-      icon: 'creditcard', 
-      title: t('calculators.loan.title'), 
+    {
+      icon: 'creditcard',
+      title: t('calculators.loan.title'),
       description: t('calculators.loan.description'),
       href: '/(tabs)/calculators/loan' as const,
       color: 'primary' as const
     },
-    { 
-      icon: 'person.2', 
-      title: t('calculators.employee_roi.title'), 
+    {
+      icon: 'person.2',
+      title: t('calculators.employee_roi.title'),
       description: t('calculators.employee_roi.description'),
       href: '/(tabs)/calculators/employee-roi' as const,
       color: 'success' as const
     },
-    { 
-      icon: 'megaphone', 
-      title: t('calculators.marketing_roi.title'), 
+    {
+      icon: 'megaphone',
+      title: t('calculators.marketing_roi.title'),
       description: t('calculators.marketing_roi.description'),
       href: '/(tabs)/calculators/marketing' as const,
       color: 'warning' as const
@@ -145,13 +145,13 @@ function ToolCard({ icon, title, description, href, color, colors }: any) {
   };
 
   return (
-    <Pressable 
-      onPress={handlePress} 
+    <Pressable
+      onPress={handlePress}
       className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] mb-4"
       style={{ minWidth: 280 }}
     >
       <View className="bg-surface border border-border rounded-2xl p-6 h-full">
-        <View 
+        <View
           className="w-12 h-12 rounded-xl items-center justify-center mb-4"
           style={{ backgroundColor: getBgColor() }}
         >
@@ -171,7 +171,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
-  
+
   const {
     filteredProjects,
     searchQuery,
@@ -193,15 +193,15 @@ export default function HomeScreen() {
     const unsubscribeCreated = eventEmitter.on(Events.PROJECT_CREATED, () => {
       loadProjects();
     });
-    
+
     const unsubscribeUpdated = eventEmitter.on(Events.PROJECT_UPDATED, () => {
       loadProjects();
     });
-    
+
     const unsubscribeDeleted = eventEmitter.on(Events.PROJECT_DELETED, () => {
       loadProjects();
     });
-    
+
     const unsubscribeDuplicated = eventEmitter.on(Events.PROJECT_DUPLICATED, () => {
       loadProjects();
     });
@@ -291,7 +291,7 @@ export default function HomeScreen() {
           {/* Health Score + Quick Stats Row */}
           {projects.length > 0 && (
             <View className="flex-row gap-6">
-              <HealthScoreGauge score={calculateHealthScore(projects)} colors={colors} />
+              <HealthScoreGauge score={calculateHealthScore(projects)} colors={colors} t={t} />
               <View className="flex-1 bg-surface border border-border rounded-3xl p-8">
                 <Text className="text-xl font-heading-medium text-foreground mb-6">
                   {t('dashboard.quick_stats')}
@@ -323,7 +323,7 @@ export default function HomeScreen() {
           {/* Tool Cards Grid */}
           <View>
             <Text className="text-2xl font-heading-medium text-foreground mb-4">
-              Herramientas de Análisis
+              {t('dashboard.tools_title')}
             </Text>
             <View className="flex-row flex-wrap justify-between gap-4">
               {getToolCards(t).map(tool => (
@@ -336,16 +336,16 @@ export default function HomeScreen() {
           {projects.length > 0 && (
             <>
               <Text className="text-2xl font-heading-medium text-foreground mb-4">
-                Proyectos Recientes
+                {t('dashboard.projects_title')}
               </Text>
-              
+
               {/* Search and Filters */}
               <View className="gap-4">
                 <SearchBar
                   onSearch={setSearchQuery}
                   placeholder={t('projects_list.search_placeholder')}
                 />
-                
+
                 <FilterChips
                   selected={filterOption}
                   onSelect={setFilterOption}

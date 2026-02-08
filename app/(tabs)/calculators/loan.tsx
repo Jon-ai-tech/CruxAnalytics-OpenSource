@@ -49,16 +49,16 @@ function AmortizationPreview({ schedule, t }: { schedule: Array<{ month: number;
 
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">📋 {t('calculator.loan.amortization_title')}</Text>
+            <Text className="text-white font-semibold mb-4">📋 {t('calculators.loan.amortization_title')}</Text>
 
             <View className="bg-slate-800 rounded-lg overflow-hidden">
                 {/* Header */}
                 <View className="flex-row bg-slate-700 py-2 px-3">
-                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.month')}</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.payment')}</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.principal')}</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.interest')}</Text>
-                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculator.loan.balance')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculators.loan.month')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculators.loan.payment')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculators.loan.principal')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculators.loan.interest')}</Text>
+                    <Text className="text-gray-400 text-xs flex-1 text-center">{t('calculators.loan.balance')}</Text>
                 </View>
 
                 {/* Rows */}
@@ -75,7 +75,7 @@ function AmortizationPreview({ schedule, t }: { schedule: Array<{ month: number;
                 {schedule.length > 9 && (
                     <View className="py-2 px-3 bg-slate-700/50">
                         <Text className="text-gray-500 text-xs text-center">
-                            {t('calculator.loan.more_months', { count: (schedule.length - 9).toString() })}
+                            {t('calculators.loan.more_months', { count: (schedule.length - 9).toString() })}
                         </Text>
                     </View>
                 )}
@@ -124,19 +124,19 @@ export default function LoanPage() {
         const recs: string[] = [];
 
         if (result.affordability.isAffordable === false) {
-            recs.push(t('calculator.loan.recommendations.unaffordable'));
+            recs.push(t('calculators.loan.recommendations.unaffordable'));
         } else if (result.affordability.isAffordable === true) {
-            recs.push(t('calculator.loan.recommendations.affordable'));
+            recs.push(t('calculators.loan.recommendations.affordable'));
         }
 
         if (result.affordability.cushionAfterPayment !== null && result.affordability.cushionAfterPayment > 0) {
-            recs.push(t('calculator.loan.recommendations.remaining_low', {
+            recs.push(t('calculators.loan.recommendations.remaining_low', {
                 amount: result.affordability.cushionAfterPayment.toLocaleString()
             }));
         }
 
-        recs.push(t('calculator.loan.recommendations.compare_options'));
-        recs.push(t('calculator.loan.recommendations.negotiate_terms'));
+        recs.push(t('calculators.loan.recommendations.compare_options'));
+        recs.push(t('calculators.loan.recommendations.negotiate_terms'));
 
         return recs;
     }, [result, t]);
@@ -187,8 +187,8 @@ export default function LoanPage() {
                 {/* Header Title Section */}
                 <View className="mb-6">
                     <SectionHeading
-                        title={`💳 ${t('calculator.loan.title')}`}
-                        subtitle={t('calculator.loan.subtitle')}
+                        title={`💳 ${t('calculators.loan.title')}`}
+                        subtitle={t('calculators.loan.subtitle')}
                     />
                 </View>
 
@@ -197,44 +197,44 @@ export default function LoanPage() {
                     <View className="flex-1 min-w-[300px]">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">
-                                {t('calculator.enter_data')}
+                                {t('calculators.enter_data')}
                             </Text>
 
                             <InputField
-                                label={t('calculator.loan.loan_amount')}
+                                label={t('calculators.loan.loan_amount')}
                                 value={principal}
                                 onChange={setPrincipal}
                                 prefix="$"
                             />
 
                             <InputField
-                                label={t('calculator.loan.interest_rate')}
+                                label={t('calculators.loan.interest_rate')}
                                 value={interestRate}
                                 onChange={setInterestRate}
                                 suffix="%"
                             />
 
                             <InputField
-                                label={t('calculator.loan.term')}
+                                label={t('calculators.loan.term')}
                                 value={termMonths}
                                 onChange={setTermMonths}
-                                suffix={t('calculator.loan.months')}
+                                suffix={t('calculators.loan.months')}
                             />
 
                             <View className="h-px bg-white/10 my-4" />
                             <Text className="text-gray-400 text-sm mb-4">
-                                {t('calculator.loan.affordability_analysis')}
+                                {t('calculators.loan.affordability_analysis')}
                             </Text>
 
                             <InputField
-                                label={t('calculator.loan.monthly_income')}
+                                label={t('calculators.loan.monthly_income')}
                                 value={monthlyRevenue}
                                 onChange={setMonthlyRevenue}
                                 prefix="$"
                             />
 
                             <InputField
-                                label={t('calculator.loan.monthly_expenses')}
+                                label={t('calculators.loan.monthly_expenses')}
                                 value={monthlyExpenses}
                                 onChange={setMonthlyExpenses}
                                 prefix="$"
@@ -248,7 +248,7 @@ export default function LoanPage() {
                             <>
                                 {/* Monthly Payment */}
                                 <GlassCard gradient className="items-center py-8">
-                                    <Text className="text-gray-400">{t('calculator.loan.monthly_payment')}</Text>
+                                    <Text className="text-gray-400">{t('calculators.loan.monthly_payment')}</Text>
                                     <Text className="text-5xl font-bold text-white mt-2">
                                         ${result.monthlyPayment.toLocaleString()}
                                     </Text>
@@ -257,21 +257,21 @@ export default function LoanPage() {
                                 {/* Summary Cards */}
                                 <View className="flex-row flex-wrap gap-4">
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">{t('calculator.loan.total_to_pay')}</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculators.loan.total_to_pay')}</Text>
                                         <Text className="text-2xl font-bold text-white">
                                             ${result.totalPayment.toLocaleString()}
                                         </Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">{t('calculator.loan.total_interest')}</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculators.loan.total_interest')}</Text>
                                         <Text className="text-2xl font-bold text-rose-400">
                                             ${result.totalInterest.toLocaleString()}
                                         </Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">{t('calculator.loan.effective_rate')}</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculators.loan.effective_rate')}</Text>
                                         <Text className="text-2xl font-bold text-amber-400">
                                             {result.effectiveAnnualRate != null ? result.effectiveAnnualRate.toFixed(1) : '0'}%
                                         </Text>
@@ -288,12 +288,12 @@ export default function LoanPage() {
                                             <View className="flex-1">
                                                 <Text className="text-white font-bold text-lg">
                                                     {result.affordability.isAffordable
-                                                        ? t('calculator.loan.affordable')
-                                                        : t('calculator.loan.risky_loan')
+                                                        ? t('calculators.loan.affordable')
+                                                        : t('calculators.loan.risky_loan')
                                                     }
                                                 </Text>
                                                 <Text className="text-gray-400 text-sm">
-                                                    {t('calculator.loan.debt_service_ratio', {
+                                                    {t('calculators.loan.debt_service_ratio', {
                                                         ratio: result.affordability.debtServiceRatio != null ? result.affordability.debtServiceRatio.toFixed(1) : '0'
                                                     })}
                                                 </Text>
@@ -303,7 +303,7 @@ export default function LoanPage() {
                                         {result.affordability.cushionAfterPayment !== null && (
                                             <View className="mt-4 pt-4 border-t border-white/10">
                                                 <Text className="text-gray-400 text-sm">
-                                                    {t('calculator.loan.remaining_after_payment', {
+                                                    {t('calculators.loan.remaining_after_payment', {
                                                         amount: result.affordability.cushionAfterPayment.toLocaleString()
                                                     })}
                                                 </Text>
@@ -318,7 +318,7 @@ export default function LoanPage() {
                                 {/* Recommendations */}
                                 {recommendations.length > 0 && (
                                     <GlassCard>
-                                        <Text className="text-white font-semibold mb-4">💡 {t('calculator.recommendations')}</Text>
+                                        <Text className="text-white font-semibold mb-4">💡 {t('calculators.recommendations')}</Text>
                                         <View className="gap-2">
                                             {recommendations.map((rec, i) => (
                                                 <Text key={i} className="text-gray-300">• {rec}</Text>
@@ -332,14 +332,14 @@ export default function LoanPage() {
                                     onPress={exporting ? undefined : handleExportPDF}
                                     className={exporting ? 'opacity-50' : ''}
                                 >
-                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                    📄 {exporting ? t('common.exporting') : t('calculators.export_pdf')}
                                 </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">
                                 <Ionicons name="card" size={48} color="#6b7280" />
                                 <Text className="text-gray-400 mt-4 text-center">
-                                    {t('calculator.no_data')}
+                                    {t('calculators.no_data')}
                                 </Text>
                             </GlassCard>
                         )}

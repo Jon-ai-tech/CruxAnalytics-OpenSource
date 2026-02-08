@@ -55,7 +55,7 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
 
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">{t('calculator.cash_flow.projection_12_months')}</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculators.cash_flow.projection_12_months')}</Text>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex-row gap-2 pb-4">
@@ -73,7 +73,7 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
                                     />
                                 </View>
                                 {/* Month label */}
-                                <Text className="text-gray-400 text-xs mt-2">{t('calculator.cash_flow.month')} {forecast.month}</Text>
+                                <Text className="text-gray-400 text-xs mt-2">{t('calculators.cash_flow.month')} {forecast.month}</Text>
                                 {/* Value */}
                                 <Text className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
                                     ${forecast.balance != null ? (forecast.balance / 1000).toFixed(0) : '0'}k
@@ -96,8 +96,8 @@ function AlertsPanel({ alerts }: { alerts?: string[] }) {
                 <View className="flex-row items-center gap-3">
                     <Text className="text-2xl">✅</Text>
                     <View>
-                        <Text className="text-emerald-400 font-bold">{t('calculator.cash_flow.no_critical_alerts')}</Text>
-                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.cash_flow_healthy_desc')}</Text>
+                        <Text className="text-emerald-400 font-bold">{t('calculators.cash_flow.no_critical_alerts')}</Text>
+                        <Text className="text-gray-400 text-sm">{t('calculators.cash_flow.cash_flow_healthy_desc')}</Text>
                     </View>
                 </View>
             </GlassCard>
@@ -106,7 +106,7 @@ function AlertsPanel({ alerts }: { alerts?: string[] }) {
 
     return (
         <GlassCard className="border border-[#FB923C]/30">
-            <Text className="text-white font-semibold mb-4">{t('calculator.cash_flow.alerts')}</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculators.cash_flow.alerts')}</Text>
             <View className="gap-2">
                 {safeAlerts.map((alert, index) => (
                     <View key={index} className="flex-row items-start gap-2">
@@ -156,25 +156,25 @@ export default function CashFlowPage() {
         const recs: string[] = [];
 
         if (!result.isHealthy) {
-            recs.push(t('calculator.cash_flow.recommendations.negative_flow'));
+            recs.push(t('calculators.cash_flow.recommendations.negative_flow'));
         }
 
         if (result.monthsUntilDeficit && result.monthsUntilDeficit < 6) {
-            recs.push(t('calculator.cash_flow.recommendations.deficit_warning', { months: result.monthsUntilDeficit.toString() }));
+            recs.push(t('calculators.cash_flow.recommendations.deficit_warning', { months: result.monthsUntilDeficit.toString() }));
         }
 
         if (result.endingCashBalance < result.minimumCashReserveNeeded) {
-            recs.push(t('calculator.cash_flow.recommendations.below_reserve'));
+            recs.push(t('calculators.cash_flow.recommendations.below_reserve'));
         }
 
         const netMargin = ((parseFloat(monthlyRevenue) - parseFloat(monthlyExpenses)) / parseFloat(monthlyRevenue)) * 100;
         if (netMargin < 20) {
-            recs.push(t('calculator.cash_flow.recommendations.low_margin'));
+            recs.push(t('calculators.cash_flow.recommendations.low_margin'));
         }
 
         if (result.isHealthy && recs.length === 0) {
-            recs.push(t('calculator.cash_flow.recommendations.healthy_invest'));
-            recs.push(t('calculator.cash_flow.recommendations.growth_opportunity'));
+            recs.push(t('calculators.cash_flow.recommendations.healthy_invest'));
+            recs.push(t('calculators.cash_flow.recommendations.growth_opportunity'));
         }
 
         return recs;
@@ -228,8 +228,8 @@ export default function CashFlowPage() {
                 {/* Header Title Section */}
                 <View className="mb-6">
                     <SectionHeading
-                        title={t('calculator.cash_flow.title')}
-                        subtitle={t('calculator.cash_flow.subtitle')}
+                        title={t('calculators.cash_flow.title')}
+                        subtitle={t('calculators.cash_flow.subtitle')}
                     />
                 </View>
 
@@ -237,38 +237,38 @@ export default function CashFlowPage() {
                     {/* Input Form */}
                     <View className="flex-1 min-w-[300px]">
                         <GlassCard>
-                            <Text className="text-white font-semibold text-lg mb-6">{t('calculator.enter_data')}</Text>
+                            <Text className="text-white font-semibold text-lg mb-6">{t('calculators.enter_data')}</Text>
 
                             <InputField
-                                label={t('calculator.cash_flow.starting_cash')}
+                                label={t('calculators.cash_flow.starting_cash')}
                                 value={startingCash}
                                 onChange={setStartingCash}
                                 prefix="$"
-                                hint={t('calculator.cash_flow.starting_cash_hint')}
+                                hint={t('calculators.cash_flow.starting_cash_hint')}
                             />
 
                             <InputField
-                                label={t('calculator.cash_flow.monthly_revenue')}
+                                label={t('calculators.cash_flow.monthly_revenue')}
                                 value={monthlyRevenue}
                                 onChange={setMonthlyRevenue}
                                 prefix="$"
-                                hint={t('calculator.cash_flow.monthly_revenue_hint')}
+                                hint={t('calculators.cash_flow.monthly_revenue_hint')}
                             />
 
                             <InputField
-                                label={t('calculator.cash_flow.monthly_expenses')}
+                                label={t('calculators.cash_flow.monthly_expenses')}
                                 value={monthlyExpenses}
                                 onChange={setMonthlyExpenses}
                                 prefix="$"
-                                hint={t('calculator.cash_flow.monthly_expenses_hint')}
+                                hint={t('calculators.cash_flow.monthly_expenses_hint')}
                             />
 
                             <InputField
-                                label={t('calculator.cash_flow.expected_growth')}
+                                label={t('calculators.cash_flow.expected_growth')}
                                 value={expectedGrowth}
                                 onChange={setExpectedGrowth}
                                 prefix="%"
-                                hint={t('calculator.cash_flow.expected_growth_hint')}
+                                hint={t('calculators.cash_flow.expected_growth_hint')}
                             />
                         </GlassCard>
                     </View>
@@ -280,21 +280,21 @@ export default function CashFlowPage() {
                                 {/* Summary Cards */}
                                 <View className="flex-row flex-wrap gap-4">
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.final_balance')}</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculators.cash_flow.final_balance')}</Text>
                                         <Text className={`text-2xl font-bold ${result.endingCashBalance >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                                             ${(result.endingCashBalance ?? 0).toLocaleString()}
                                         </Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.runway')}</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculators.cash_flow.runway')}</Text>
                                         <Text className="text-2xl font-bold text-white">
-                                            {result.monthsUntilDeficit ?? '∞'} {t('calculator.cash_flow.months')}
+                                            {result.monthsUntilDeficit ?? '∞'} {t('calculators.cash_flow.months')}
                                         </Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.minimum_reserve')}</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculators.cash_flow.minimum_reserve')}</Text>
                                         <Text className="text-2xl font-bold text-amber-400">
                                             ${(result.minimumCashReserveNeeded ?? 0).toLocaleString()}
                                         </Text>
@@ -307,12 +307,12 @@ export default function CashFlowPage() {
                                         <Text className="text-3xl">{result.isHealthy ? '🟢' : '🔴'}</Text>
                                         <View>
                                             <Text className="text-white font-bold text-lg">
-                                                {result.isHealthy ? t('calculator.cash_flow.healthy_cash_flow') : t('calculator.cash_flow.cash_flow_at_risk')}
+                                                {result.isHealthy ? t('calculators.cash_flow.healthy_cash_flow') : t('calculators.cash_flow.cash_flow_at_risk')}
                                             </Text>
                                             <Text className={result.isHealthy ? 'text-emerald-400' : 'text-rose-400'}>
                                                 {result.isHealthy
-                                                    ? t('calculator.cash_flow.sufficient_liquidity')
-                                                    : t('calculator.cash_flow.run_out_warning', { months: String(result.monthsUntilDeficit ?? '?') })
+                                                    ? t('calculators.cash_flow.sufficient_liquidity')
+                                                    : t('calculators.cash_flow.run_out_warning', { months: String(result.monthsUntilDeficit ?? '?') })
                                                 }
                                             </Text>
                                         </View>
@@ -328,7 +328,7 @@ export default function CashFlowPage() {
                                 {/* Recommendations */}
                                 {recommendations && recommendations.length > 0 && (
                                     <GlassCard>
-                                        <Text className="text-white font-semibold mb-4">{t('calculator.recommendations')}</Text>
+                                        <Text className="text-white font-semibold mb-4">{t('calculators.recommendations')}</Text>
                                         <View className="gap-2">
                                             {recommendations.map((rec, i) => (
                                                 <View key={i} className="flex-row gap-2">
@@ -345,14 +345,14 @@ export default function CashFlowPage() {
                                     onPress={exporting ? undefined : handleExportPDF}
                                     className={exporting ? 'opacity-50' : ''}
                                 >
-                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                    📄 {exporting ? t('common.exporting') : t('calculators.export_pdf')}
                                 </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">
                                 <Ionicons name="wallet" size={48} color="#6b7280" />
                                 <Text className="text-gray-400 mt-4 text-center">
-                                    {t('calculator.no_data')}
+                                    {t('calculators.no_data')}
                                 </Text>
                             </GlassCard>
                         )}

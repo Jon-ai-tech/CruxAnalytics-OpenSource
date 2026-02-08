@@ -45,17 +45,17 @@ function InputField({
 
 function ChannelSelector({ selected, onSelect, t }: { selected: string; onSelect: (channel: string) => void, t: any }) {
     const channels = [
-        { id: 'facebook', label: t('calculator.marketing_roi.channels.facebook'), icon: '📘', color: 'bg-blue-500/20 border-blue-500' },
-        { id: 'google', label: t('calculator.marketing_roi.channels.google'), icon: '🔍', color: 'bg-green-500/20 border-green-500' },
-        { id: 'instagram', label: t('calculator.marketing_roi.channels.instagram'), icon: '📸', color: 'bg-pink-500/20 border-pink-500' },
-        { id: 'email', label: t('calculator.marketing_roi.channels.email'), icon: '✉️', color: 'bg-[#FB923C]/20 border-[#FB923C]' },
-        { id: 'referral', label: t('calculator.marketing_roi.channels.referral'), icon: '🤝', color: 'bg-[#86EFAC]/20 border-[#86EFAC]' },
-        { id: 'other', label: t('calculator.marketing_roi.channels.other'), icon: '📊', color: 'bg-gray-500/20 border-gray-500' },
+        { id: 'facebook', label: t('calculators.marketing_roi.channels.facebook'), icon: '📘', color: 'bg-blue-500/20 border-blue-500' },
+        { id: 'google', label: t('calculators.marketing_roi.channels.google'), icon: '🔍', color: 'bg-green-500/20 border-green-500' },
+        { id: 'instagram', label: t('calculators.marketing_roi.channels.instagram'), icon: '📸', color: 'bg-pink-500/20 border-pink-500' },
+        { id: 'email', label: t('calculators.marketing_roi.channels.email'), icon: '✉️', color: 'bg-[#FB923C]/20 border-[#FB923C]' },
+        { id: 'referral', label: t('calculators.marketing_roi.channels.referral'), icon: '🤝', color: 'bg-[#86EFAC]/20 border-[#86EFAC]' },
+        { id: 'other', label: t('calculators.marketing_roi.channels.other'), icon: '📊', color: 'bg-gray-500/20 border-gray-500' },
     ];
 
     return (
         <View className="mb-4">
-            <Text className="text-gray-300 font-medium mb-2">{t('calculator.marketing_roi.marketing_channel')}</Text>
+            <Text className="text-gray-300 font-medium mb-2">{t('calculators.marketing_roi.marketing_channel')}</Text>
             <View className="flex-row flex-wrap gap-2">
                 {channels.map((channel) => (
                     <Pressable
@@ -81,13 +81,13 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
 
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">📊 {t('calculator.marketing_roi.funnel_title')}</Text>
+            <Text className="text-white font-semibold mb-4">📊 {t('calculators.marketing_roi.funnel_title')}</Text>
 
             <View className="gap-3">
                 {impressions && (
                     <View>
                         <View className="flex-row justify-between mb-1">
-                            <Text className="text-gray-400 text-sm">{t('calculator.marketing_roi.impressions')}</Text>
+                            <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.impressions')}</Text>
                             <Text className="text-white">{impressions.toLocaleString()}</Text>
                         </View>
                         <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
@@ -99,7 +99,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
                 {clicks && (
                     <View>
                         <View className="flex-row justify-between mb-1">
-                            <Text className="text-gray-400 text-sm">{t('calculator.marketing_roi.clicks')}</Text>
+                            <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.clicks')}</Text>
                             <Text className="text-white">{clicks.toLocaleString()}</Text>
                         </View>
                         <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
@@ -113,7 +113,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
 
                 <View>
                     <View className="flex-row justify-between mb-1">
-                        <Text className="text-gray-400 text-sm">{t('calculator.marketing_roi.conversions')}</Text>
+                        <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.conversions')}</Text>
                         <Text className="text-emerald-400 font-bold">{conversions.toLocaleString()}</Text>
                     </View>
                     <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
@@ -170,19 +170,19 @@ export default function MarketingPage() {
         const recs: string[] = [];
 
         if (result.roiPercentage >= 200) {
-            recs.push(t('calculator.marketing_roi.recommendations.excellent_roi'));
+            recs.push(t('calculators.marketing_roi.recommendations.excellent_roi'));
         } else if (result.roiPercentage >= 100) {
-            recs.push(t('calculator.marketing_roi.recommendations.good_roi'));
+            recs.push(t('calculators.marketing_roi.recommendations.good_roi'));
         } else {
-            recs.push(t('calculator.marketing_roi.recommendations.losing_campaign'));
+            recs.push(t('calculators.marketing_roi.recommendations.losing_campaign'));
         }
 
         if (result.benchmarkComparison.cacVsBenchmark === 'worse') {
-            recs.push(t('calculator.marketing_roi.recommendations.cac_high'));
+            recs.push(t('calculators.marketing_roi.recommendations.cac_high'));
         }
 
-        recs.push(t('calculator.marketing_roi.recommendations.test_audience'));
-        recs.push(t('calculator.marketing_roi.recommendations.optimize_campaign'));
+        recs.push(t('calculators.marketing_roi.recommendations.test_audience'));
+        recs.push(t('calculators.marketing_roi.recommendations.optimize_campaign'));
 
         return recs;
     }, [result, t]);
@@ -233,8 +233,8 @@ export default function MarketingPage() {
                 {/* Header Title Section */}
                 <View className="mb-6">
                     <SectionHeading
-                        title={`📢 ${t('calculator.marketing_roi.title')}`}
-                        subtitle={t('calculator.marketing_roi.subtitle')}
+                        title={`📢 ${t('calculators.marketing_roi.title')}`}
+                        subtitle={t('calculators.marketing_roi.subtitle')}
                     />
                 </View>
 
@@ -243,42 +243,42 @@ export default function MarketingPage() {
                     <View className="flex-1 min-w-[300px]">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">
-                                {t('calculator.enter_data')}
+                                {t('calculators.enter_data')}
                             </Text>
 
                             <ChannelSelector selected={channel} onSelect={setChannel} t={t} />
 
                             <InputField
-                                label={t('calculator.marketing_roi.campaign_cost')}
+                                label={t('calculators.marketing_roi.campaign_cost')}
                                 value={totalSpend}
                                 onChange={setTotalSpend}
                                 prefix="$"
                             />
 
                             <InputField
-                                label={t('calculator.marketing_roi.leads_generated')}
+                                label={t('calculators.marketing_roi.leads_generated')}
                                 value={conversions}
                                 onChange={setConversions}
                             />
 
                             <InputField
-                                label={t('calculator.marketing_roi.average_sale')}
+                                label={t('calculators.marketing_roi.average_sale')}
                                 value={revenuePerConversion}
                                 onChange={setRevenuePerConversion}
                                 prefix="$"
                             />
 
                             <View className="h-px bg-white/10 my-4" />
-                            <Text className="text-gray-400 text-sm mb-4">{t('calculator.marketing_roi.optional_metrics')}</Text>
+                            <Text className="text-gray-400 text-sm mb-4">{t('calculators.marketing_roi.optional_metrics')}</Text>
 
                             <InputField
-                                label={t('calculator.marketing_roi.impressions')}
+                                label={t('calculators.marketing_roi.impressions')}
                                 value={impressions}
                                 onChange={setImpressions}
                             />
 
                             <InputField
-                                label={t('calculator.marketing_roi.clicks')}
+                                label={t('calculators.marketing_roi.clicks')}
                                 value={clicks}
                                 onChange={setClicks}
                             />
@@ -292,7 +292,7 @@ export default function MarketingPage() {
                                 {/* Main Metrics */}
                                 <View className="flex-row flex-wrap gap-4">
                                     <GlassCard gradient className="flex-1 min-w-[140px] items-center py-6">
-                                        <Text className="text-gray-400 text-sm">{t('calculator.marketing_roi.roi')}</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.roi')}</Text>
                                         <Text className={`text-4xl font-bold ${result.roiPercentage >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                                             {result.roiPercentage != null ? result.roiPercentage.toFixed(0) : '0'}%
                                         </Text>
@@ -314,14 +314,14 @@ export default function MarketingPage() {
                                         <View>
                                             <Text className="text-white font-bold text-lg">
                                                 {result.isProfitable
-                                                    ? t('calculator.marketing_roi.excellent_campaign')
-                                                    : t('calculator.marketing_roi.losing_campaign')
+                                                    ? t('calculators.marketing_roi.excellent_campaign')
+                                                    : t('calculators.marketing_roi.losing_campaign')
                                                 }
                                             </Text>
                                             <Text className={result.isProfitable ? 'text-emerald-400' : 'text-rose-400'}>
                                                 {result.isProfitable
-                                                    ? `${t('calculator.marketing_roi.net_profit')}: $${result.netProfit.toLocaleString()}`
-                                                    : `${t('calculator.marketing_roi.loss')}: $${Math.abs(result.netProfit).toLocaleString()}`
+                                                    ? `${t('calculators.marketing_roi.net_profit')}: $${result.netProfit.toLocaleString()}`
+                                                    : `${t('calculators.marketing_roi.loss')}: $${Math.abs(result.netProfit).toLocaleString()}`
                                                 }
                                             </Text>
                                         </View>
@@ -331,10 +331,10 @@ export default function MarketingPage() {
                                 {/* Detailed Metrics */}
                                 <View className="flex-row flex-wrap gap-4">
                                     <GlassCard className="flex-1 min-w-[100px]">
-                                        <Text className="text-gray-400 text-xs">{t('calculator.marketing_roi.cpa')}</Text>
+                                        <Text className="text-gray-400 text-xs">{t('calculators.marketing_roi.cpa')}</Text>
                                         <Text className="text-xl font-bold text-white">${result.costPerAcquisition}</Text>
                                         <Badge variant={result.benchmarkComparison.cacVsBenchmark === 'better' ? 'success' : result.benchmarkComparison.cacVsBenchmark === 'worse' ? 'danger' : 'warning'}>
-                                            {t(`calculator.marketing_roi.cac_levels.${result.benchmarkComparison.cacVsBenchmark}`)}
+                                            {t(`calculators.marketing_roi.cac_levels.${result.benchmarkComparison.cacVsBenchmark}`)}
                                         </Badge>
                                     </GlassCard>
 
@@ -347,14 +347,14 @@ export default function MarketingPage() {
 
                                     {result.conversionRate && (
                                         <GlassCard className="flex-1 min-w-[100px]">
-                                            <Text className="text-gray-400 text-xs">{t('calculator.marketing_roi.conversion_rate')}</Text>
+                                            <Text className="text-gray-400 text-xs">{t('calculators.marketing_roi.conversion_rate')}</Text>
                                             <Text className="text-xl font-bold text-white">{result.conversionRate}%</Text>
                                         </GlassCard>
                                     )}
 
                                     {result.costPerClick && (
                                         <GlassCard className="flex-1 min-w-[100px]">
-                                            <Text className="text-gray-400 text-xs">{t('calculator.marketing_roi.cpl')}</Text>
+                                            <Text className="text-gray-400 text-xs">{t('calculators.marketing_roi.cpl')}</Text>
                                             <Text className="text-xl font-bold text-white">${result.costPerClick}</Text>
                                         </GlassCard>
                                     )}
@@ -380,10 +380,10 @@ export default function MarketingPage() {
                                             </Text>
                                             <Text className="text-gray-400 text-sm flex-1">
                                                 {result.lifetimeValueToCAC >= 3
-                                                    ? t('calculator.marketing_roi.excellent_description')
+                                                    ? t('calculators.marketing_roi.excellent_description')
                                                     : result.lifetimeValueToCAC >= 1
-                                                        ? t('calculator.marketing_roi.good_description')
-                                                        : t('calculator.marketing_roi.losing_description')
+                                                        ? t('calculators.marketing_roi.good_description')
+                                                        : t('calculators.marketing_roi.losing_description')
                                                 }
                                             </Text>
                                         </View>
@@ -393,7 +393,7 @@ export default function MarketingPage() {
                                 {/* Recommendations */}
                                 {recommendations.length > 0 && (
                                     <GlassCard>
-                                        <Text className="text-white font-semibold mb-4">💡 {t('calculator.recommendations')}</Text>
+                                        <Text className="text-white font-semibold mb-4">💡 {t('calculators.recommendations')}</Text>
                                         <View className="gap-2">
                                             {recommendations.map((rec, i) => (
                                                 <Text key={i} className="text-gray-300">• {rec}</Text>
@@ -407,20 +407,20 @@ export default function MarketingPage() {
                                     onPress={exporting ? undefined : handleExportPDF}
                                     className={exporting ? 'opacity-50' : ''}
                                 >
-                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                    📄 {exporting ? t('common.exporting') : t('calculators.export_pdf')}
                                 </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">
                                 <Ionicons name="megaphone" size={48} color="#6b7280" />
                                 <Text className="text-gray-400 mt-4 text-center">
-                                    {t('calculator.no_data')}
+                                    {t('calculators.no_data')}
                                 </Text>
                             </GlassCard>
                         )}
                     </View>
                 </View>
             </View>
-        </ScrollView>
+        </ScrollView >
     );
 }

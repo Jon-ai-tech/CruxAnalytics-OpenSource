@@ -11,6 +11,7 @@ import { Link, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useColors } from '@/hooks/use-colors';
 import { LanguageSelector } from '@/components/language-selector';
+import { useTranslation } from '@/lib/i18n-context';
 import {
     GlassCard,
     GradientButton,
@@ -28,6 +29,7 @@ import {
 function HeroSection() {
     const router = useRouter();
     const colors = useColors();
+    const { t } = useTranslation();
 
     return (
         <View className="min-h-screen justify-center items-center px-6 py-20 relative overflow-hidden">
@@ -40,20 +42,19 @@ function HeroSection() {
                 <Badge variant="success">
                     <View className="flex-row items-center gap-1.5">
                         <Ionicons name="sparkles" size={14} color={colors.success} />
-                        <Text className="text-success text-xs font-medium">100% Gratis • Sin registro</Text>
+                        <Text className="text-success text-xs font-medium">{t('landing.hero.badge')}</Text>
                     </View>
                 </Badge>
 
                 <Text className="text-4xl md:text-6xl lg:text-7xl font-bold text-white text-center mt-6 leading-tight">
-                    Descubre si tu negocio{'\n'}
+                    {t('landing.hero.title').split('está en riesgo')[0]}
                     <Text className="bg-gradient-to-r from-[#14B8A6] to-[#86EFAC] bg-clip-text text-transparent">
-                        está en riesgo
+                        {t('landing.hero.title').includes('está en riesgo') ? 'está en riesgo' : 'is at risk'}
                     </Text>
                 </Text>
 
                 <Text className="text-xl text-gray-400 text-center mt-6 max-w-2xl leading-relaxed">
-                    El 80% de los negocios quiebran porque no conocen sus números.
-                    CruxAnalytics te dice exactamente qué hacer para evitarlo.
+                    {t('landing.hero.subtitle')}
                 </Text>
 
                 <View className="flex-row gap-4 mt-10">
@@ -62,7 +63,7 @@ function HeroSection() {
                         className="rounded-2xl"
                         onPress={() => router.push('/')}
                     >
-                        Analizar mi negocio →
+                        {t('landing.hero.cta')}
                     </GradientButton>
                 </View>
 
@@ -70,15 +71,15 @@ function HeroSection() {
                 <View className="flex-row gap-8 mt-12 opacity-60">
                     <View className="flex-row items-center gap-2">
                         <Ionicons name="lock-closed" size={16} color="#9ca3af" />
-                        <Text className="text-gray-400 text-sm">Datos 100% privados</Text>
+                        <Text className="text-gray-400 text-sm">{t('landing.hero.privacy')}</Text>
                     </View>
                     <View className="flex-row items-center gap-2">
                         <Ionicons name="flash" size={16} color={colors.primary} />
-                        <Text className="text-gray-400 text-sm">Resultados en 2 min</Text>
+                        <Text className="text-gray-400 text-sm">{t('landing.hero.results')}</Text>
                     </View>
                     <View className="flex-row items-center gap-2">
                         <Ionicons name="bulb" size={16} color={colors.warning} />
-                        <Text className="text-gray-400 text-sm">Con IA explicativa</Text>
+                        <Text className="text-gray-400 text-sm">{t('landing.hero.ai')}</Text>
                     </View>
                 </View>
             </View>
@@ -90,20 +91,22 @@ function HeroSection() {
 // PROBLEM SECTION
 // ============================================
 function ProblemSection() {
+    const { t } = useTranslation();
+
     return (
         <View className="px-6 py-20 bg-gradient-to-b from-transparent to-slate-900/50">
             <View className="max-w-6xl mx-auto">
                 <SectionHeading
-                    title="El problema que nadie te cuenta"
-                    subtitle="La mayoría de emprendedores toman decisiones a ciegas"
+                    title={t('landing.problem.title')}
+                    subtitle={t('landing.problem.subtitle')}
                     centered
                 />
 
                 {/* Statistics */}
                 <View className="flex-row flex-wrap justify-center gap-8 md:gap-16 mt-12">
-                    <StatNumber value={80} suffix="%" label="de negocios quiebran en 5 años" />
-                    <StatNumber value={60} suffix="%" label="no saben su punto de equilibrio" />
-                    <StatNumber value={45} suffix="%" label="no proyectan flujo de caja" />
+                    <StatNumber value={80} suffix="%" label={t('landing.problem.stat1')} />
+                    <StatNumber value={60} suffix="%" label={t('landing.problem.stat2')} />
+                    <StatNumber value={45} suffix="%" label={t('landing.problem.stat3')} />
                 </View>
 
                 {/* Pain points */}
@@ -113,10 +116,10 @@ function ProblemSection() {
                             <Ionicons name="alert-circle" size={32} color="#FB923C" />
                         </View>
                         <Text className="text-white font-bold text-lg mb-2">
-                            "No sé cuánto debo vender"
+                            {t('landing.problem.pain1_title')}
                         </Text>
                         <Text className="text-gray-400">
-                            Sin conocer tu punto de equilibrio, es imposible saber si estás ganando o perdiendo.
+                            {t('landing.problem.pain1_desc')}
                         </Text>
                     </GlassCard>
 
@@ -125,10 +128,10 @@ function ProblemSection() {
                             <Ionicons name="cash" size={32} color="#FB923C" />
                         </View>
                         <Text className="text-white font-bold text-lg mb-2">
-                            "Se me acaba el dinero"
+                            {t('landing.problem.pain2_title')}
                         </Text>
                         <Text className="text-gray-400">
-                            Sin proyectar tu flujo de caja, los gastos inesperados te toman por sorpresa.
+                            {t('landing.problem.pain2_desc')}
                         </Text>
                     </GlassCard>
 
@@ -137,10 +140,10 @@ function ProblemSection() {
                             <Ionicons name="help-circle" size={32} color="#14B8A6" />
                         </View>
                         <Text className="text-white font-bold text-lg mb-2">
-                            "¿Me conviene ese préstamo?"
+                            {t('landing.problem.pain3_title')}
                         </Text>
                         <Text className="text-gray-400">
-                            Sin analizar opciones, podrías pagar miles de dólares de más en intereses.
+                            {t('landing.problem.pain3_desc')}
                         </Text>
                     </GlassCard>
                 </View>
@@ -153,19 +156,21 @@ function ProblemSection() {
 // SOLUTION SECTION
 // ============================================
 function SolutionSection() {
+    const { t } = useTranslation();
+
     return (
         <View className="px-6 py-20">
             <View className="max-w-6xl mx-auto">
                 <View className="flex-row flex-wrap items-center gap-12">
                     {/* Text */}
                     <View className="flex-1 min-w-[300px]">
-                        <Badge>La solución</Badge>
+                        <Badge>{t('landing.solution.badge')}</Badge>
                         <Text className="text-3xl md:text-4xl font-bold text-white mt-4">
-                            Tu analista financiero personal.{'\n'}
-                            <Text className="text-[#14B8A6]">Gratis y en 2 minutos.</Text>
+                            {t('landing.solution.title').split('Gratis')[0]}
+                            <Text className="text-[#14B8A6]">{t('landing.solution.title').includes('Gratis') ? 'Gratis y en 2 minutos.' : 'Free and in 2 minutes.'}</Text>
                         </Text>
                         <Text className="text-gray-400 text-lg mt-6 leading-relaxed">
-                            CruxAnalytics analiza tu negocio y te da:
+                            {t('landing.solution.subtitle')}
                         </Text>
 
                         <View className="mt-6 gap-4">
@@ -173,25 +178,25 @@ function SolutionSection() {
                                 <View className="w-8 h-8 rounded-full bg-emerald-500/20 items-center justify-center">
                                     <Ionicons name="checkmark" size={18} color="#10b981" />
                                 </View>
-                                <Text className="text-white">Tu punto de equilibrio exacto</Text>
+                                <Text className="text-white">{t('landing.solution.feature1')}</Text>
                             </View>
                             <View className="flex-row items-center gap-3">
                                 <View className="w-8 h-8 rounded-full bg-emerald-500/20 items-center justify-center">
                                     <Ionicons name="checkmark" size={18} color="#10b981" />
                                 </View>
-                                <Text className="text-white">Proyección de flujo de caja 12 meses</Text>
+                                <Text className="text-white">{t('landing.solution.feature2')}</Text>
                             </View>
                             <View className="flex-row items-center gap-3">
                                 <View className="w-8 h-8 rounded-full bg-emerald-500/20 items-center justify-center">
                                     <Ionicons name="checkmark" size={18} color="#10b981" />
                                 </View>
-                                <Text className="text-white">Comparación con tu industria</Text>
+                                <Text className="text-white">{t('landing.solution.feature3')}</Text>
                             </View>
                             <View className="flex-row items-center gap-3">
                                 <View className="w-8 h-8 rounded-full bg-emerald-500/20 items-center justify-center">
                                     <Ionicons name="checkmark" size={18} color="#10b981" />
                                 </View>
-                                <Text className="text-white">Recomendaciones con IA explicativa</Text>
+                                <Text className="text-white">{t('landing.solution.feature4')}</Text>
                             </View>
                         </View>
                     </View>
@@ -202,20 +207,20 @@ function SolutionSection() {
                             <View className="bg-slate-900 rounded-xl p-6">
                                 <View className="flex-row items-center gap-2 mb-2">
                                     <Ionicons name="checkmark-circle" size={20} color="#86EFAC" />
-                                    <Text className="text-success text-sm font-bold mb-2">TU NEGOCIO</Text>
+                                    <Text className="text-success text-sm font-bold mb-2">{t('landing.solution.visual_status')}</Text>
                                 </View>
-                                <Text className="text-white text-2xl font-bold">ESTÁ SALUDABLE</Text>
+                                <Text className="text-white text-2xl font-bold">{t('landing.solution.visual_health')}</Text>
 
                                 <View className="flex-row gap-4 mt-6">
                                     <View className="flex-1 bg-slate-800 rounded-lg p-4">
-                                        <Text className="text-gray-400 text-xs">Break-even</Text>
+                                        <Text className="text-gray-400 text-xs">{t('landing.solution.visual_breakeven')}</Text>
                                         <Text className="text-white text-xl font-bold">$8,500</Text>
-                                        <Text className="text-emerald-400 text-xs">↑ 23% margen</Text>
+                                        <Text className="text-emerald-400 text-xs">{t('landing.solution.visual_margin')}</Text>
                                     </View>
                                     <View className="flex-1 bg-slate-800 rounded-lg p-4">
-                                        <Text className="text-gray-400 text-xs">Runway</Text>
-                                        <Text className="text-white text-xl font-bold">14 meses</Text>
-                                        <Text className="text-emerald-400 text-xs">Saludable</Text>
+                                        <Text className="text-gray-400 text-xs">{t('landing.solution.visual_runway')}</Text>
+                                        <Text className="text-white text-xl font-bold">{t('landing.solution.visual_runway_val')}</Text>
+                                        <Text className="text-emerald-400 text-xs">{t('landing.solution.visual_health')}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -231,41 +236,42 @@ function SolutionSection() {
 // FEATURES SECTION
 // ============================================
 function FeaturesSection() {
+    const { t } = useTranslation();
     const features = [
         {
             icon: <Ionicons name="trending-up" size={24} color="white" />,
-            title: 'Punto de Equilibrio',
-            description: 'Descubre cuántas ventas necesitas para cubrir costos y empezar a ganar.',
+            title: t('landing.features.f1_title'),
+            description: t('landing.features.f1_desc'),
             highlight: true,
         },
         {
             icon: <Ionicons name="wallet" size={24} color="white" />,
-            title: 'Flujo de Caja',
-            description: 'Proyecta 12 meses de ingresos y gastos. Anticipa problemas.',
+            title: t('landing.features.f2_title'),
+            description: t('landing.features.f2_desc'),
             highlight: false,
         },
         {
             icon: <Ionicons name="pricetag" size={24} color="white" />,
-            title: 'Calculadora de Precios',
-            description: 'Calcula el precio óptimo para maximizar ganancias.',
+            title: t('landing.features.f3_title'),
+            description: t('landing.features.f3_desc'),
             highlight: false,
         },
         {
             icon: <Ionicons name="card" size={24} color="white" />,
-            title: 'Evaluador de Préstamos',
-            description: 'Compara opciones de financiamiento y elige la mejor.',
+            title: t('landing.features.f4_title'),
+            description: t('landing.features.f4_desc'),
             highlight: false,
         },
         {
             icon: <Ionicons name="people" size={24} color="white" />,
-            title: 'ROI de Empleados',
-            description: '¿Vale la pena contratar? Analiza costo vs. productividad.',
+            title: t('landing.features.f5_title'),
+            description: t('landing.features.f5_desc'),
             highlight: false,
         },
         {
             icon: <Ionicons name="megaphone" size={24} color="white" />,
-            title: 'ROI de Marketing',
-            description: 'Mide qué canal te da mejor retorno por cada peso invertido.',
+            title: t('landing.features.f6_title'),
+            description: t('landing.features.f6_desc'),
             highlight: false,
         },
     ];
@@ -274,8 +280,8 @@ function FeaturesSection() {
         <View className="px-6 py-20 bg-gradient-to-b from-slate-900/50 to-transparent">
             <View className="max-w-6xl mx-auto">
                 <SectionHeading
-                    title="6 herramientas. Un solo objetivo."
-                    subtitle="Tomar mejores decisiones para tu negocio"
+                    title={t('landing.features.title')}
+                    subtitle={t('landing.features.subtitle')}
                     centered
                 />
 
@@ -293,29 +299,31 @@ function FeaturesSection() {
 // TESTIMONIALS SECTION
 // ============================================
 function TestimonialsSection() {
+    const { t } = useTranslation();
+
     return (
         <View className="px-6 py-20">
             <View className="max-w-6xl mx-auto">
                 <SectionHeading
-                    title="Lo que dicen los emprendedores"
+                    title={t('landing.testimonials.title')}
                     centered
                 />
 
                 <View className="flex-row flex-wrap gap-6 mt-12 justify-center">
                     <TestimonialCard
-                        quote="Descubrí que estaba perdiendo dinero en un producto. Ahora sé exactamente cuánto cobrar."
-                        author="María García"
-                        role="Dueña de restaurante"
+                        quote={t('landing.testimonials.t1_quote')}
+                        author={t('landing.testimonials.t1_author')}
+                        role={t('landing.testimonials.t1_role')}
                     />
                     <TestimonialCard
-                        quote="El análisis de flujo de caja me salvó. Vi que en 3 meses me quedaba sin efectivo y pude actuar a tiempo."
-                        author="Carlos Mendoza"
-                        role="E-commerce"
+                        quote={t('landing.testimonials.t2_quote')}
+                        author={t('landing.testimonials.t2_author')}
+                        role={t('landing.testimonials.t2_role')}
                     />
                     <TestimonialCard
-                        quote="Gratis y mejor que un consultor de $5,000. No puedo creer que esto exista."
-                        author="Ana Rodríguez"
-                        role="Consultora independiente"
+                        quote={t('landing.testimonials.t3_quote')}
+                        author={t('landing.testimonials.t3_author')}
+                        role={t('landing.testimonials.t3_role')}
                     />
                 </View>
             </View>
@@ -328,17 +336,17 @@ function TestimonialsSection() {
 // ============================================
 function CTASection() {
     const router = useRouter();
+    const { t } = useTranslation();
 
     return (
         <View className="px-6 py-24">
             <View className="max-w-4xl mx-auto">
                 <GlassCard gradient className="items-center p-12">
                     <Text className="text-3xl md:text-4xl font-bold text-white text-center">
-                        ¿Listo para conocer la{'\n'}verdad sobre tu negocio?
+                        {t('landing.cta.title')}
                     </Text>
                     <Text className="text-gray-300 text-lg mt-4 text-center max-w-xl">
-                        En 2 minutos tendrás más claridad que en meses de intuición.
-                        Sin costo. Sin registro. Sin trucos.
+                        {t('landing.cta.subtitle')}
                     </Text>
 
                     <GradientButton
@@ -346,11 +354,11 @@ function CTASection() {
                         className="mt-8 rounded-2xl"
                         onPress={() => router.push('/')}
                     >
-                        Comenzar análisis gratis →
+                        {t('landing.cta.button')}
                     </GradientButton>
 
                     <Text className="text-gray-500 text-sm mt-6">
-                        Tus datos nunca salen de tu dispositivo. 100% privado.
+                        {t('landing.cta.privacy')}
                     </Text>
                 </GlassCard>
             </View>
@@ -362,6 +370,8 @@ function CTASection() {
 // FOOTER
 // ============================================
 function Footer() {
+    const { t } = useTranslation();
+
     return (
         <View className="px-6 py-12 border-t border-white/10">
             <View className="max-w-6xl mx-auto flex-row flex-wrap justify-between items-center gap-6">
@@ -370,18 +380,18 @@ function Footer() {
                         Crux<Text className="text-[#14B8A6]">Analytics</Text>
                     </Text>
                     <Text className="text-gray-500 text-sm mt-1">
-                        Análisis financiero para emprendedores
+                        {t('landing.footer.description')}
                     </Text>
                 </View>
 
                 <View className="flex-row gap-8">
-                    <Text className="text-gray-400 text-sm">GitHub</Text>
-                    <Text className="text-gray-400 text-sm">Documentación</Text>
-                    <Text className="text-gray-400 text-sm">Contacto</Text>
+                    <Text className="text-gray-400 text-sm">{t('landing.footer.github')}</Text>
+                    <Text className="text-gray-400 text-sm">{t('landing.footer.docs')}</Text>
+                    <Text className="text-gray-400 text-sm">{t('landing.footer.contact')}</Text>
                 </View>
 
                 <Text className="text-gray-600 text-sm">
-                    © 2026 CruxAnalytics. Open Source & Free Forever.
+                    {t('landing.footer.copyright')}
                 </Text>
             </View>
         </View>

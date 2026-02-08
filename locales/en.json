@@ -108,18 +108,28 @@
     "load_draft": "Load draft",
     "discard_draft": "Discard draft",
     "auto_saved": "Auto-saved",
-    "save_error": "Save error",
-    "new_project": "New Project",
-    "fill_details": "Fill in your project details",
-    "project_name": "Project Name",
-    "project_name_placeholder": "e.g., Digital Transformation",
-    "initial_investment": "Initial Investment",
-    "project_duration": "Project Duration",
-    "yearly_revenue": "Yearly Revenue",
-    "revenue_growth": "Revenue Growth",
-    "operating_costs": "Operating Costs",
-    "maintenance_costs": "Maintenance Costs",
-    "discount_rate": "Discount Rate"
+    "project_name_placeholder": "e.g., Digital Transformation"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "auto_mode": "Automatic",
+    "auto_mode_desc": "Follow system settings",
+    "data_backup": "Data & Backup",
+    "export_projects": "Export Projects",
+    "export_projects_desc": "Save a local backup copy",
+    "import_projects": "Import Projects",
+    "import_projects_desc": "Restore from a backup",
+    "clear_cache": "Clear Cache",
+    "clear_cache_desc": "Free up space and reset temporary data",
+    "about": "About",
+    "version": "Version",
+    "app_description": "Professional financial analysis tool.",
+    "view_tutorial": "View Tutorial",
+    "copyright": "© 2026 Crux Analytics. All rights reserved."
   },
   "wizard": {
     "step1": {
@@ -176,22 +186,32 @@
       "question": "Operational Friction (OFI)",
       "helper": "Manual hours per week and hourly cost",
       "placeholder": "15",
-      "help": "Tip: Calculate how much time you spend on tasks that could be automated"
+      "help": "Tip: Calculate how much time you spend on tasks that could be automated",
+      "manual_hours": "Manual hours / week",
+      "cost_per_hour": "Average cost / hour ($)",
+      "labor_cost_helper": "Average labor cost"
     },
     "step9": {
       "subtitle": "Step 9 of 10",
       "question": "Technical Debt (TFDI)",
       "helper": "Maintenance vs Total Development",
       "placeholder": "20",
-      "help": "Tip: Excessive maintenance takes time away from innovation"
+      "help": "Tip: Excessive maintenance takes time away from innovation",
+      "maint_hours": "Maintenance hours / sprint",
+      "team_hours": "Total team hours / sprint",
+      "capacity_helper": "Total development capacity"
     },
     "step10": {
       "subtitle": "Step 10 of 10",
       "question": "Strategic Trajectory (SER)",
       "helper": "Revenue and expenses from the previous period",
       "placeholder": "50000",
-      "help": "Tip: Comparing with the past helps to see real efficiency"
-    }
+      "help": "Tip: Comparing with the past helps to see real efficiency",
+      "prev_revenue": "Previous Period Revenue ($)",
+      "prev_expenses": "Previous Period Expenses ($)",
+      "burn_rate_helper": "To measure relative burn rate"
+    },
+    "months": "months"
   },
   "metrics": {
     "roi": {
@@ -287,6 +307,7 @@
     "title": "My Projects",
     "coming_soon": "Projects list coming soon",
     "search_placeholder": "Search projects...",
+    "recommendation": "Recommendation",
     "filter_all": "All",
     "filter_viable": "Viable",
     "filter_risky": "Risky",
@@ -302,9 +323,7 @@
     "sort_name_asc": "Name (A-Z)",
     "sort_name_desc": "Name (Z-A)",
     "sort_roi_desc": "ROI (Highest)",
-    "sort_roi_asc": "ROI (Lowest)",
-    "sort_npv_desc": "NPV (Highest)",
-    "sort_npv_asc": "NPV (Lowest)"
+    "sort_roi_asc": "ROI (Lowest)"
   },
   "settings": {
     "title": "Settings",
@@ -433,8 +452,104 @@
     "positive_number": "Must be a positive number",
     "valid_percentage": "Must be a valid percentage (0-100)",
     "min_value": "Minimum value is {{min}}",
+    "maint_exceeds_sprint": "Maintenance cannot exceed total sprint hours",
     "max_value": "Maximum value is {{max}}",
-    "invalid_format": "Invalid format"
+    "invalid_trajectory": "Please enter valid historic numbers or leave blank"
+  },
+  "vanguard": {
+    "optimal": "Optimal",
+    "caution": "Caution",
+    "healthy": "Healthy",
+    "critical": "Critical",
+    "ofi_high_friction": "High operational friction detected. Automating manual tasks could save up to 15% in costs.",
+    "ofi_normal": "Operational efficiency is within target limits. Continue monitoring.",
+    "tfdi_high_debt": "Technical debt is severely hindering ROI. Strategic refactoring is recommended.",
+    "tfdi_normal": "Technical infrastructure is stable. Maintain current allocation.",
+    "superior": "Superior",
+    "monitoring": "Monitoring",
+    "strategic_insight": "Strategic Insight",
+    "ser_elite": "Growth is highly capital efficient. You are converting investment into revenue at an elite pace.",
+    "ser_normal": "Focus on improving the conversion efficiency of your growth investments."
+  },
+  "landing": {
+    "hero": {
+      "badge": "100% Free • No registration",
+      "title": "Discover if your business is at risk",
+      "subtitle": "80% of businesses fail because they don't know their numbers. CruxAnalytics tells you exactly what to do to avoid it.",
+      "cta": "Analyze my business →",
+      "privacy": "100% private data",
+      "results": "Results in 2 min",
+      "ai": "With explanatory AI"
+    },
+    "problem": {
+      "title": "The problem no one tells you about",
+      "subtitle": "Most entrepreneurs make decisions blindly",
+      "stat1": "of businesses fail within 5 years",
+      "stat2": "don't know their break-even point",
+      "stat3": "don't project cash flow",
+      "pain1_title": "\"I don't know how much I should sell\"",
+      "pain1_desc": "Without knowing your break-even point, it's impossible to know if you're winning or losing.",
+      "pain2_title": "\"I'm running out of money\"",
+      "pain2_desc": "Without projecting your cash flow, unexpected expenses take you by surprise.",
+      "pain3_title": "\"Is that loan good for me?\"",
+      "pain3_desc": "Without analyzing options, you could pay thousands of dollars more in interest."
+    },
+    "solution": {
+      "badge": "The solution",
+      "title": "Your personal financial analyst. Free and in 2 minutes.",
+      "subtitle": "CruxAnalytics analyzes your business and gives you:",
+      "feature1": "Your exact break-even point",
+      "feature2": "12-month cash flow projection",
+      "feature3": "Comparison with your industry",
+      "feature4": "Recommendations with explanatory AI",
+      "visual_status": "YOUR BUSINESS IS HEALTHY",
+      "visual_breakeven": "Break-even",
+      "visual_margin": "↑ 23% margin",
+      "visual_runway": "Runway",
+      "visual_runway_val": "14 months",
+      "visual_health": "Healthy"
+    },
+    "features": {
+      "title": "6 tools. One single goal.",
+      "subtitle": "Make better decisions for your business",
+      "f1_title": "Break-Even Point",
+      "f1_desc": "Discover how many sales you need to cover costs and start earning.",
+      "f2_title": "Cash Flow",
+      "f2_desc": "Project 12 months of income and expenses. Anticipate problems.",
+      "f3_title": "Pricing Calculator",
+      "f3_desc": "Calculate the optimal price to maximize profits.",
+      "f4_title": "Loan Evaluator",
+      "f4_desc": "Compare financing options and choose the best one.",
+      "f5_title": "Employee ROI",
+      "f5_desc": "Is it worth hiring? Analyze cost vs. productivity.",
+      "f6_title": "Marketing ROI",
+      "f6_desc": "Measure which channel gives you the best return for every dollar invested."
+    },
+    "testimonials": {
+      "title": "What entrepreneurs are saying",
+      "t1_quote": "I discovered I was losing money on a product. Now I know exactly how much to charge.",
+      "t1_author": "Maria Garcia",
+      "t1_role": "Restaurant owner",
+      "t2_quote": "The cash flow analysis saved me. I saw that in 3 months I would run out of cash and was able to act in time.",
+      "t2_author": "Carlos Mendoza",
+      "t2_role": "E-commerce",
+      "t3_quote": "Free and better than a $5,000 consultant. I can't believe this exists.",
+      "t3_author": "Ana Rodriguez",
+      "t3_role": "Independent consultant"
+    },
+    "cta": {
+      "title": "Ready to know the truth about your business?",
+      "subtitle": "In 2 minutes you will have more clarity than in months of intuition. No cost. No registration. No tricks.",
+      "button": "Start free analysis →",
+      "privacy": "Your data never leaves your device. 100% private."
+    },
+    "footer": {
+      "description": "Financial analysis for entrepreneurs",
+      "github": "GitHub",
+      "docs": "Documentation",
+      "contact": "Contact",
+      "copyright": "© 2026 CruxAnalytics. Open Source & Free Forever."
+    }
   },
   "errors": {
     "generic": "An unexpected error occurred",
@@ -469,7 +584,14 @@
     "comparison_chart": "Project Comparison",
     "all_projects": "All Projects",
     "no_projects": "No projects to compare",
-    "no_projects_description": "Create your first project to see statistics and comparisons"
+    "no_projects_description": "Create your first project to see statistics and comparisons",
+    "health_score": "HEALTH SCORE",
+    "excellent": "Excellent",
+    "good": "Good",
+    "needs_attention": "Needs Attention",
+    "complete_3": "Complete at least 3 analyses to see your score",
+    "tools_title": "Analysis Tools",
+    "projects_title": "Recent Projects"
   },
   "templates": {
     "select_template": "Select a Template",
@@ -634,7 +756,7 @@
     "encouragement": "You're doing great! Every analysis brings you closer to financial clarity.",
     "next_step": "What would you like to explore next?"
   },
-  "calculator": {
+  "calculators": {
     "enter_data": "Enter your data",
     "results": "Results",
     "recommendations": "Recommendations",
@@ -643,6 +765,7 @@
     "units": "units",
     "break_even": {
       "title": "Break-Even Point",
+      "description": "Calculate the sales volume needed to cover your costs",
       "subtitle": "How many units do you need to sell to not lose money?",
       "fixed_costs": "Fixed Costs",
       "fixed_costs_hint": "Rent, salaries, insurance",
@@ -673,6 +796,7 @@
     },
     "cash_flow": {
       "title": "Cash Flow",
+      "description": "Project your cash inflows and outflows",
       "subtitle": "Project your income and expenses for the next 12 months",
       "starting_cash": "Starting cash",
       "starting_cash_hint": "Money available now",
@@ -706,6 +830,7 @@
     },
     "pricing": {
       "title": "Pricing Calculator",
+      "description": "Optimize your prices based on costs and margins",
       "subtitle": "Find the optimal price to maximize your profits",
       "cost_per_unit": "Cost per unit",
       "cost_per_unit_hint": "How much it costs you to produce/acquire",
@@ -740,6 +865,7 @@
     },
     "loan": {
       "title": "Loan Evaluator",
+      "description": "Analyze installments and financing amortization",
       "subtitle": "Analyze if financing is convenient for your business",
       "loan_amount": "Loan amount",
       "interest_rate": "Annual interest rate",
@@ -773,6 +899,7 @@
     },
     "employee_roi": {
       "title": "Employee ROI",
+      "description": "Measure the return on investment in human capital",
       "subtitle": "Is hiring this person worth it?",
       "annual_salary": "Annual salary",
       "additional_costs": "Additional costs (insurance, benefits, etc.)",
@@ -825,6 +952,7 @@
     },
     "marketing_roi": {
       "title": "Marketing ROI",
+      "description": "Evaluate the performance of your advertising campaigns",
       "subtitle": "Measure your advertising investment return",
       "campaign_cost": "Campaign cost",
       "leads_generated": "Leads generated",
@@ -869,7 +997,7 @@
       "cac_levels": {
         "better": "↓ Low",
         "worse": "↑ High",
-        "equal": "~ Normal"
+        "same": "~ Normal"
       }
     }
   }

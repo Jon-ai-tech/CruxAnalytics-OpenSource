@@ -26,7 +26,7 @@ export function TornadoChart({ project }: TornadoChartProps) {
   );
 
   const getVariableLabel = (item: TornadoChartData): string => {
-    return language === 'es' ? getVariableNameES(item.variable) : item.variableName;
+    return t(`sensitivity.${item.variable}`);
   };
 
   const getBarWidth = (value: number): number => {

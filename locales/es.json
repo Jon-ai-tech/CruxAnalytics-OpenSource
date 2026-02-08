@@ -107,19 +107,30 @@
     "draft_found_message": "Se encontró un borrador guardado. ¿Deseas cargarlo?",
     "load_draft": "Cargar borrador",
     "discard_draft": "Descartar borrador",
-    "auto_saved": "Guardado automáticamente",
     "save_error": "Error al guardar",
     "new_project": "Nuevo Proyecto",
-    "fill_details": "Completa los detalles de tu proyecto",
-    "project_name": "Nombre del Proyecto",
-    "project_name_placeholder": "Ej: Transformación Digital",
-    "initial_investment": "Inversión Inicial",
-    "project_duration": "Duración del Proyecto",
-    "yearly_revenue": "Ingresos Anuales",
-    "revenue_growth": "Crecimiento de Ingresos",
-    "operating_costs": "Costos Operativos",
-    "maintenance_costs": "Costos de Mantenimiento",
-    "discount_rate": "Tasa de Descuento"
+    "fill_details": "Completa los detalles de tu proyecto"
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "appearance": "Apariencia",
+    "light_mode": "Modo Claro",
+    "dark_mode": "Modo Oscuro",
+    "auto_mode": "Automático",
+    "auto_mode_desc": "Sigue la configuración del sistema",
+    "data_backup": "Datos y Respaldo",
+    "export_projects": "Exportar Proyectos",
+    "export_projects_desc": "Guardar una copia de seguridad local",
+    "import_projects": "Importar Proyectos",
+    "import_projects_desc": "Restaurar desde una copia de seguridad",
+    "clear_cache": "Limpiar Caché",
+    "clear_cache_desc": "Libera espacio y reinicia datos temporales",
+    "about": "Acerca de",
+    "version": "Versión",
+    "app_description": "Herramienta profesional de análisis financiero.",
+    "view_tutorial": "Ver Tutorial",
+    "copyright": "© 2026 Crux Analytics. Todos los derechos reservados."
   },
   "wizard": {
     "step1": {
@@ -176,22 +187,32 @@
       "question": "Fricción Operativa (OFI)",
       "helper": "Horas manuales por semana y costo por hora",
       "placeholder": "15",
-      "help": "Consejo: Calcula cuánto tiempo pasas haciendo tareas que podrían automatizarse"
+      "help": "Consejo: Calcula cuánto tiempo pasas haciendo tareas que podrían automatizarse",
+      "manual_hours": "Horas manuales / semana",
+      "cost_per_hour": "Costo promedio / hora ($)",
+      "labor_cost_helper": "Costo laboral promedio"
     },
     "step9": {
       "subtitle": "Paso 9 de 10",
       "question": "Deuda Técnica",
       "helper": "Mantenimiento vs Desarrollo total",
       "placeholder": "20",
-      "help": "Consejo: El mantenimiento excesivo quita tiempo a la innovación"
+      "help": "Consejo: El mantenimiento excesivo quita tiempo a la innovación",
+      "maint_hours": "Horas de mantenimiento / sprint",
+      "team_hours": "Horas totales del equipo / sprint",
+      "capacity_helper": "Capacidad total de desarrollo"
     },
     "step10": {
       "subtitle": "Paso 10 de 10",
       "question": "Trayectoria Financiera",
       "helper": "Ingresos y gastos del periodo anterior",
       "placeholder": "50000",
-      "help": "Consejo: Comparar con el pasado ayuda a ver la eficiencia real"
-    }
+      "help": "Consejo: Comparar con el pasado ayuda a ver la eficiencia real",
+      "prev_revenue": "Ingresos Periodo Anterior ($)",
+      "prev_expenses": "Gastos Periodo Anterior ($)",
+      "burn_rate_helper": "Para medir 'burn rate' relativo"
+    },
+    "months": "meses"
   },
   "metrics": {
     "roi": {
@@ -287,6 +308,8 @@
     "title": "Mis Proyectos",
     "coming_soon": "Lista de proyectos próximamente",
     "search_placeholder": "Buscar proyectos...",
+    "recommendation": "Recomendación",
+    "no_projects_found": "No se encontraron proyectos",
     "filter_all": "Todos",
     "filter_viable": "Viables",
     "filter_risky": "Riesgosos",
@@ -450,10 +473,17 @@
     "total_investment": "Inversi\u00f3n Total",
     "total_npv": "NPV Total",
     "best_project": "Mejor Proyecto",
-    "comparison_chart": "Comparaci\u00f3n de Proyectos",
+    "comparison_chart": "Comparación de Proyectos",
     "all_projects": "Todos los Proyectos",
     "no_projects": "No hay proyectos para comparar",
-    "no_projects_description": "Crea tu primer proyecto para ver estad\u00edsticas y comparaciones"
+    "no_projects_description": "Crea tu primer proyecto para ver estadísticas y comparaciones",
+    "health_score": "HEALTH SCORE",
+    "excellent": "Excelente",
+    "good": "Bueno",
+    "needs_attention": "Necesita atención",
+    "complete_3": "Completa al menos 3 análisis para ver tu score",
+    "tools_title": "Herramientas de Análisis",
+    "projects_title": "Proyectos Recientes"
   },
   "templates": {
     "select_template": "Selecciona una Plantilla",
@@ -618,7 +648,105 @@
     "valid_percentage": "Debe ser un porcentaje válido (0-100)",
     "min_value": "El valor mínimo es {{min}}",
     "max_value": "El valor máximo es {{max}}",
-    "invalid_format": "Formato inválido"
+    "invalid_format": "Formato inválido",
+    "invalid_operational_numbers": "Por favor ingresa números operacionales válidos",
+    "maint_exceeds_sprint": "El mantenimiento no puede exceder las horas totales del sprint",
+    "invalid_trajectory": "Por favor ingresa números históricos válidos o deja en blanco"
+  },
+  "vanguard": {
+    "optimal": "Óptimo",
+    "caution": "Precaución",
+    "healthy": "Saludable",
+    "critical": "Crítico",
+    "ofi_high_friction": "Alta fricción operativa detectada. Automatizar tareas manuales podría ahorrar hasta un 15% en costos.",
+    "ofi_normal": "La eficiencia operativa está dentro de los límites objetivo. Continúa monitoreando.",
+    "tfdi_high_debt": "La deuda técnica está frenando severamente el ROI. Se recomienda refactorización estratégica.",
+    "tfdi_normal": "La infraestructura técnica es estable. Mantén la asignación actual.",
+    "superior": "Superior",
+    "monitoring": "Monitoreo",
+    "strategic_insight": "Insight Estratégico",
+    "ser_elite": "El crecimiento es altamente eficiente en capital. Estás convirtiendo inversión en ingresos a ritmo de élite.",
+    "ser_normal": "Enfócate en mejorar la eficiencia de conversión de tus inversiones de crecimiento."
+  },
+  "landing": {
+    "hero": {
+      "badge": "100% Gratis • Sin registro",
+      "title": "Descubre si tu negocio está en riesgo",
+      "subtitle": "El 80% de los negocios quiebran porque no conocen sus números. CruxAnalytics te dice exactamente qué hacer para evitarlo.",
+      "cta": "Analizar mi negocio →",
+      "privacy": "Datos 100% privados",
+      "results": "Resultados en 2 min",
+      "ai": "Con IA explicativa"
+    },
+    "problem": {
+      "title": "El problema que nadie te cuenta",
+      "subtitle": "La mayoría de emprendedores toman decisiones a ciegas",
+      "stat1": "de negocios quiebran en 5 años",
+      "stat2": "no saben su punto de equilibrio",
+      "stat3": "no proyectan flujo de caja",
+      "pain1_title": "\"No sé cuánto debo vender\"",
+      "pain1_desc": "Sin conocer tu punto de equilibrio, es imposible saber si estás ganando o perdiendo.",
+      "pain2_title": "\"Se me acaba el dinero\"",
+      "pain2_desc": "Sin proyectar tu flujo de caja, los gastos inesperados te toman por sorpresa.",
+      "pain3_title": "\"¿Me conviene ese préstamo?\"",
+      "pain3_desc": "Sin analizar opciones, podrías pagar miles de dólares de más en intereses."
+    },
+    "solution": {
+      "badge": "La solución",
+      "title": "Tu analista financiero personal. Gratis y en 2 minutos.",
+      "subtitle": "CruxAnalytics analiza tu negocio y te da:",
+      "feature1": "Tu punto de equilibrio exacto",
+      "feature2": "Proyección de flujo de caja 12 meses",
+      "feature3": "Comparación con tu industria",
+      "feature4": "Recomendaciones con IA explicativa",
+      "visual_status": "TU NEGOCIO ESTÁ SALUDABLE",
+      "visual_breakeven": "Break-even",
+      "visual_margin": "↑ 23% margen",
+      "visual_runway": "Runway",
+      "visual_runway_val": "14 meses",
+      "visual_health": "Saludable"
+    },
+    "features": {
+      "title": "6 herramientas. Un solo objetivo.",
+      "subtitle": "Tomar mejores decisiones para tu negocio",
+      "f1_title": "Punto de Equilibrio",
+      "f1_desc": "Descubre cuántas ventas necesitas para cubrir costos y empezar a ganar.",
+      "f2_title": "Flujo de Caja",
+      "f2_desc": "Proyecta 12 meses de ingresos y gastos. Anticipa problemas.",
+      "f3_title": "Calculadora de Precios",
+      "f3_desc": "Calcula el precio óptimo para maximizar ganancias.",
+      "f4_title": "Evaluador de Préstamos",
+      "f4_desc": "Compara opciones de financiamiento y elige la mejor.",
+      "f5_title": "ROI de Empleados",
+      "f5_desc": "¿Vale la pena contratar? Analiza costo vs. productividad.",
+      "f6_title": "ROI de Marketing",
+      "f6_desc": "Mide qué canal te da mejor retorno por cada peso invertido."
+    },
+    "testimonials": {
+      "title": "Lo que dicen los emprendedores",
+      "t1_quote": "Descubrí que estaba perdiendo dinero en un producto. Ahora sé exactamente cuánto cobrar.",
+      "t1_author": "María García",
+      "t1_role": "Dueña de restaurante",
+      "t2_quote": "El análisis de flujo de caja me salvó. Vi que en 3 meses me quedaba sin efectivo y pude actuar a tiempo.",
+      "t2_author": "Carlos Mendoza",
+      "t2_role": "E-commerce",
+      "t3_quote": "Gratis y mejor que un consultor de $5,000. No puedo creer que esto exista.",
+      "t3_author": "Ana Rodríguez",
+      "t3_role": "Consultora independiente"
+    },
+    "cta": {
+      "title": "¿Listo para conocer la verdad sobre tu negocio?",
+      "subtitle": "En 2 minutos tendrás más claridad que en meses de intuición. Sin costo. Sin registro. Sin trucos.",
+      "button": "Comenzar análisis gratis →",
+      "privacy": "Tus datos nunca salen de tu dispositivo. 100% privado."
+    },
+    "footer": {
+      "description": "Análisis financiero para emprendedores",
+      "github": "GitHub",
+      "docs": "Documentación",
+      "contact": "Contacto",
+      "copyright": "© 2026 CruxAnalytics. Open Source & Free Forever."
+    }
   },
   "calculators": {
     "break_even": {
@@ -646,7 +774,7 @@
       "description": "Mide tu publicidad"
     }
   },
-  "calculator": {
+  "calculators": {
     "enter_data": "Ingresa tus datos",
     "results": "Resultados",
     "recommendations": "Recomendaciones",
@@ -655,6 +783,7 @@
     "units": "unidades",
     "break_even": {
       "title": "Punto de Equilibrio",
+      "description": "Calcula el volumen de ventas necesario para cubrir tus costos",
       "subtitle": "¿Cuánto debes vender para no perder dinero?",
       "fixed_costs": "Costos Fijos",
       "fixed_costs_hint": "Renta, salarios, seguros",
@@ -685,6 +814,7 @@
     },
     "cash_flow": {
       "title": "Flujo de Caja",
+      "description": "Proyecta tus entradas y salidas de efectivo",
       "subtitle": "Proyecta tus ingresos y gastos para los próximos 12 meses",
       "starting_cash": "Efectivo inicial",
       "starting_cash_hint": "Dinero disponible ahora",
@@ -718,6 +848,7 @@
     },
     "pricing": {
       "title": "Calculadora de Precios",
+      "description": "Optimiza tus precios basados en costos y márgenes",
       "subtitle": "Encuentra el precio óptimo para maximizar tus ganancias",
       "cost_per_unit": "Costo por unidad",
       "cost_per_unit_hint": "Cuánto te cuesta producir/adquirir",
@@ -752,6 +883,7 @@
     },
     "loan": {
       "title": "Evaluador de Préstamos",
+      "description": "Analiza cuotas y amortización de financiamiento",
       "subtitle": "Analiza si el financiamiento es conveniente para tu negocio",
       "loan_amount": "Monto del préstamo",
       "interest_rate": "Tasa de interés anual",
@@ -785,6 +917,7 @@
     },
     "employee_roi": {
       "title": "ROI de Empleados",
+      "description": "Mide el retorno de inversión en capital humano",
       "subtitle": "¿Vale la pena contratar a esta persona?",
       "annual_salary": "Salario anual",
       "additional_costs": "Costos adicionales (seguro, prestaciones, etc.)",
@@ -837,6 +970,7 @@
     },
     "marketing_roi": {
       "title": "ROI de Marketing",
+      "description": "Evalúa el rendimiento de tus campañas publicitarias",
       "subtitle": "Mide el retorno de tu inversión en publicidad",
       "campaign_cost": "Costo de campaña",
       "leads_generated": "Leads generados",
@@ -881,7 +1015,7 @@
       "cac_levels": {
         "better": "↓ Bajo",
         "worse": "↑ Alto",
-        "equal": "~ Normal"
+        "same": "~ Normal"
       }
     }
   }

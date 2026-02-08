@@ -124,7 +124,7 @@ function BreakEvenChart({
 
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">{t('calculator.break_even.visualization')}</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculators.break_even.visualization')}</Text>
 
             {/* Chart Bar */}
             <View className="h-8 bg-slate-800 rounded-full overflow-hidden relative">
@@ -157,16 +157,16 @@ function BreakEvenChart({
             {/* Labels */}
             <View className="flex-row justify-between mt-4">
                 <View>
-                    <Text className="text-rose-400 text-xs">🔴 {t('calculator.break_even.loss')}</Text>
-                    <Text className="text-gray-500 text-xs">0 - {breakEvenUnits.toLocaleString()} {t('calculator.units')}</Text>
+                    <Text className="text-rose-400 text-xs">🔴 {t('calculators.break_even.loss')}</Text>
+                    <Text className="text-gray-500 text-xs">0 - {breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>
                 </View>
                 <View className="items-center">
-                    <Text className="text-white text-xs font-bold">⚡ {t('calculator.break_even.break_even')}</Text>
-                    <Text className="text-gray-500 text-xs">{breakEvenUnits.toLocaleString()} {t('calculator.units')}</Text>
+                    <Text className="text-white text-xs font-bold">⚡ {t('calculators.break_even.break_even')}</Text>
+                    <Text className="text-gray-500 text-xs">{breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>
                 </View>
                 <View className="items-end">
-                    <Text className="text-emerald-400 text-xs">🟢 {t('calculator.break_even.profit')}</Text>
-                    <Text className="text-gray-500 text-xs">{breakEvenUnits.toLocaleString()}+ {t('calculator.units')}</Text>
+                    <Text className="text-emerald-400 text-xs">🟢 {t('calculators.break_even.profit')}</Text>
+                    <Text className="text-gray-500 text-xs">{breakEvenUnits.toLocaleString()}+ {t('calculators.units')}</Text>
                 </View>
             </View>
         </GlassCard>
@@ -180,7 +180,7 @@ function Recommendations({ items }: { items: string[] }) {
     const { t } = useTranslation();
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">{t('calculator.recommendations')}</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculators.recommendations')}</Text>
             <View className="gap-3">
                 {items.map((item, index) => (
                     <View key={index} className="flex-row gap-3">
@@ -237,11 +237,11 @@ export default function BreakEvenPage() {
 
         if (result.marginOfSafety !== null) {
             if (result.isAboveBreakEven) {
-                recs.push(t('calculator.break_even.recommendations.above_break_even', {
+                recs.push(t('calculators.break_even.recommendations.above_break_even', {
                     percent: Math.abs(result.marginOfSafety).toFixed(1)
                 }));
             } else {
-                recs.push(t('calculator.break_even.recommendations.below_break_even', {
+                recs.push(t('calculators.break_even.recommendations.below_break_even', {
                     units: Math.abs(result.marginOfSafetyUnits || 0).toString()
                 }));
             }
@@ -250,7 +250,7 @@ export default function BreakEvenPage() {
         // Suggest price increase if margin is low
         if (result.contributionMarginRatio < 40) {
             const suggestedIncrease = 10;
-            recs.push(t('calculator.break_even.recommendations.increase_price', {
+            recs.push(t('calculators.break_even.recommendations.increase_price', {
                 percent: suggestedIncrease.toString()
             }));
         }
@@ -259,17 +259,17 @@ export default function BreakEvenPage() {
         const currentFixed = parseFloat(fixedCosts) || 0;
         const reduction = Math.round(currentFixed * 0.1);
         if (reduction > 0) {
-            recs.push(t('calculator.break_even.recommendations.reduce_costs', {
+            recs.push(t('calculators.break_even.recommendations.reduce_costs', {
                 amount: reduction.toString()
             }));
         }
 
         // General recommendations
         if (result.contributionMarginRatio > 50) {
-            recs.push(t('calculator.break_even.recommendations.increase_volume'));
+            recs.push(t('calculators.break_even.recommendations.increase_volume'));
         }
 
-        recs.push(t('calculator.break_even.recommendations.monitor_costs'));
+        recs.push(t('calculators.break_even.recommendations.monitor_costs'));
 
         return recs;
     }, [result, fixedCosts, t]);
@@ -323,8 +323,8 @@ export default function BreakEvenPage() {
                 {/* Header Title Section */}
                 <View className="mb-6">
                     <SectionHeading
-                        title={`⚖️ ${t('calculator.break_even.title')}`}
-                        subtitle={t('calculator.break_even.subtitle')}
+                        title={`⚖️ ${t('calculators.break_even.title')}`}
+                        subtitle={t('calculators.break_even.subtitle')}
                     />
                 </View>
 
@@ -333,39 +333,39 @@ export default function BreakEvenPage() {
                     <View className="flex-1 min-w-[300px]">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">
-                                {t('calculator.enter_data')}
+                                {t('calculators.enter_data')}
                             </Text>
 
                             <InputField
-                                label={t('calculator.break_even.fixed_costs')}
+                                label={t('calculators.break_even.fixed_costs')}
                                 value={fixedCosts}
                                 onChange={setFixedCosts}
                                 prefix="$"
-                                hint={t('calculator.break_even.fixed_costs_hint')}
+                                hint={t('calculators.break_even.fixed_costs_hint')}
                             />
 
                             <InputField
-                                label={t('calculator.break_even.unit_price')}
+                                label={t('calculators.break_even.unit_price')}
                                 value={pricePerUnit}
                                 onChange={setPricePerUnit}
                                 prefix="$"
-                                hint={t('calculator.break_even.unit_price_hint')}
+                                hint={t('calculators.break_even.unit_price_hint')}
                             />
 
                             <InputField
-                                label={t('calculator.break_even.variable_cost')}
+                                label={t('calculators.break_even.variable_cost')}
                                 value={variableCost}
                                 onChange={setVariableCost}
                                 prefix="$"
-                                hint={t('calculator.break_even.variable_cost_hint')}
+                                hint={t('calculators.break_even.variable_cost_hint')}
                             />
 
                             <InputField
-                                label={t('calculator.break_even.current_sales')}
+                                label={t('calculators.break_even.current_sales')}
                                 value={currentSales}
                                 onChange={setCurrentSales}
-                                suffix={t('calculator.units')}
-                                hint={t('calculator.break_even.current_sales_hint')}
+                                suffix={t('calculators.units')}
+                                hint={t('calculators.break_even.current_sales_hint')}
                             />
                         </GlassCard>
                     </View>
@@ -377,7 +377,7 @@ export default function BreakEvenPage() {
                                 {/* Main Results */}
                                 <View className="flex-row flex-wrap gap-4">
                                     <ResultCard
-                                        label={t('calculator.break_even.break_even_units')}
+                                        label={t('calculators.break_even.break_even_units')}
                                         value={result.breakEvenUnits.toLocaleString()}
                                         icon="🎯"
                                         color="indigo"
@@ -385,14 +385,14 @@ export default function BreakEvenPage() {
                                     />
 
                                     <ResultCard
-                                        label={t('calculator.break_even.break_even_revenue')}
+                                        label={t('calculators.break_even.break_even_revenue')}
                                         value={`$${result.breakEvenRevenue.toLocaleString()}`}
                                         icon="💰"
                                         color="emerald"
                                     />
 
                                     <ResultCard
-                                        label={t('calculator.break_even.contribution_margin')}
+                                        label={t('calculators.break_even.contribution_margin')}
                                         value={result.contributionMarginPerUnit != null ? `$${result.contributionMarginPerUnit.toFixed(2)}` : '$0.00'}
                                         icon="📊"
                                         color="amber"
@@ -406,10 +406,10 @@ export default function BreakEvenPage() {
                                             <Text className="text-3xl">{result.isAboveBreakEven ? '✅' : '⚠️'}</Text>
                                             <View>
                                                 <Text className="text-white font-bold text-lg">
-                                                    {result.isAboveBreakEven ? t('calculator.break_even.above_break_even') : t('calculator.break_even.below_break_even')}
+                                                    {result.isAboveBreakEven ? t('calculators.break_even.above_break_even') : t('calculators.break_even.below_break_even')}
                                                 </Text>
                                                 <Text className={result.isAboveBreakEven ? 'text-emerald-400' : 'text-rose-400'}>
-                                                    {t('calculator.break_even.safety_margin')}: {result.marginOfSafety != null ? result.marginOfSafety.toFixed(1) : '0'}%
+                                                    {t('calculators.break_even.safety_margin')}: {result.marginOfSafety != null ? result.marginOfSafety.toFixed(1) : '0'}%
                                                 </Text>
                                             </View>
                                         </View>
@@ -434,14 +434,14 @@ export default function BreakEvenPage() {
                                     onPress={exporting ? undefined : handleExportPDF}
                                     className={exporting ? 'opacity-50' : ''}
                                 >
-                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                    📄 {exporting ? t('common.exporting') : t('calculators.export_pdf')}
                                 </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">
                                 <Ionicons name="calculator" size={48} color="#6b7280" />
                                 <Text className="text-gray-400 mt-4 text-center">
-                                    {t('calculator.no_data')}
+                                    {t('calculators.no_data')}
                                 </Text>
                             </GlassCard>
                         )}

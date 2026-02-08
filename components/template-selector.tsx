@@ -22,7 +22,7 @@ export function TemplateSelector({ onSelectTemplate }: TemplateSelectorProps) {
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat(t('common.language_code'), {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 0,

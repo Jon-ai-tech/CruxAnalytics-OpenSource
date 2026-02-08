@@ -61,7 +61,7 @@ export default function ProjectDetailsScreen() {
       const response = await generateAIInsights({
         project,
         results: project.results,
-        language: 'es', // TODO: Get from i18n context
+        language: t('common.language_code') as 'es' | 'en',
         deviceId: deviceId || undefined,
       });
 
@@ -377,13 +377,13 @@ export default function ProjectDetailsScreen() {
               </Text>
               <View className="gap-3">
                 <MetricCard
-                  title="ROI"
+                  title={t('results.roi')}
                   value={`${results.roi.toFixed(2)}%`}
                   subtitle={t('metrics.roi_description')}
                   status={results.roi > 0 ? 'positive' : 'negative'}
                 />
                 <MetricCard
-                  title="NPV"
+                  title={t('results.npv')}
                   value={`$${results.npv.toLocaleString()}`}
                   subtitle={t('metrics.npv_description')}
                   status={results.npv > 0 ? 'positive' : 'negative'}
@@ -434,14 +434,14 @@ export default function ProjectDetailsScreen() {
               <View className="flex-row gap-3">
                 <View className="flex-1">
                   <MetricCard
-                    title="ROI"
+                    title={t('results.roi')}
                     value={`${results.roiWorst.toFixed(2)}%`}
                     status="negative"
                   />
                 </View>
                 <View className="flex-1">
                   <MetricCard
-                    title="NPV"
+                    title={t('results.npv')}
                     value={`$${Math.round(results.npvWorst).toLocaleString()}`}
                     status="negative"
                   />
@@ -670,7 +670,7 @@ export default function ProjectDetailsScreen() {
                   className={`text-center font-semibold text-sm ${sensitivityMetric === 'npv' ? 'text-background' : 'text-foreground'
                     }`}
                 >
-                  NPV
+                  {t('results.npv')}
                 </Text>
               </TouchableOpacity>
 
@@ -690,7 +690,7 @@ export default function ProjectDetailsScreen() {
                   className={`text-center font-semibold text-sm ${sensitivityMetric === 'roi' ? 'text-background' : 'text-foreground'
                     }`}
                 >
-                  ROI
+                  {t('results.roi')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -749,7 +749,7 @@ export default function ProjectDetailsScreen() {
                       <Text className={
                         (results.vanguard?.ofi || 0) < 0.05 ? 'text-emerald-500' : 'text-amber-500'
                       }>
-                        {(results.vanguard?.ofi || 0) < 0.05 ? 'Optimal' : 'Caution'}
+                        {(results.vanguard?.ofi || 0) < 0.05 ? t('vanguard.optimal') : t('vanguard.caution')}
                       </Text>
                     </View>
                   </View>
@@ -760,11 +760,11 @@ export default function ProjectDetailsScreen() {
                     {t('metrics.ofi.description')}
                   </Text>
                   <View className="mt-4 pt-4 border-t border-border">
-                    <Text className="text-xs font-semibold text-muted uppercase mb-1">Recommendation</Text>
+                    <Text className="text-xs font-semibold text-muted uppercase mb-1">{t('my_projects.recommendation')}</Text>
                     <Text className="text-sm text-foreground">
                       {(results.vanguard?.ofi || 0) > 0.08
-                        ? "Alta fricción operativa detectada. Automatizar tareas manuales podría ahorrar hasta un 15% en costos."
-                        : "La eficiencia operativa está dentro de los límites objetivo. Continúa monitoreando."}
+                        ? t('vanguard.ofi_high_friction')
+                        : t('vanguard.ofi_normal')}
                     </Text>
                   </View>
                 </View>
@@ -780,7 +780,7 @@ export default function ProjectDetailsScreen() {
                       <Text className={
                         (results.vanguard?.tfdi || 0) < 0.20 ? 'text-emerald-500' : 'text-rose-500'
                       }>
-                        {(results.vanguard?.tfdi || 0) < 0.20 ? 'Saludable' : 'Crítico'}
+                        {(results.vanguard?.tfdi || 0) < 0.20 ? t('vanguard.healthy') : t('vanguard.critical')}
                       </Text>
                     </View>
                   </View>
@@ -791,11 +791,11 @@ export default function ProjectDetailsScreen() {
                     {t('metrics.tfdi.description')}
                   </Text>
                   <View className="mt-4 pt-4 border-t border-border">
-                    <Text className="text-xs font-semibold text-muted uppercase mb-1">Recommendation</Text>
+                    <Text className="text-xs font-semibold text-muted uppercase mb-1">{t('my_projects.recommendation')}</Text>
                     <Text className="text-sm text-foreground">
                       {(results.vanguard?.tfdi || 0) > 0.30
-                        ? "La deuda técnica está frenando severamente el ROI. Se recomienda refactorización estratégica."
-                        : "La infraestructura técnica es estable. Mantén la asignación actual."}
+                        ? t('vanguard.tfdi_high_debt')
+                        : t('vanguard.tfdi_normal')}
                     </Text>
                   </View>
                 </View>
@@ -811,7 +811,7 @@ export default function ProjectDetailsScreen() {
                       <Text className={
                         (results.vanguard?.ser || 0) > 1.2 ? 'text-emerald-500' : 'text-amber-500'
                       }>
-                        {(results.vanguard?.ser || 0) > 1.2 ? 'Superior' : 'Monitoreo'}
+                        {(results.vanguard?.ser || 0) > 1.2 ? t('vanguard.superior') : t('vanguard.monitoring')}
                       </Text>
                     </View>
                   </View>
@@ -822,11 +822,11 @@ export default function ProjectDetailsScreen() {
                     {t('metrics.ser.description')}
                   </Text>
                   <View className="mt-4 pt-4 border-t border-border">
-                    <Text className="text-xs font-semibold text-muted uppercase mb-1">Strategic Insight</Text>
+                    <Text className="text-xs font-semibold text-muted uppercase mb-1">{t('vanguard.strategic_insight')}</Text>
                     <Text className="text-sm text-foreground">
                       {(results.vanguard?.ser || 0) > 1.5
-                        ? "El crecimiento es altamente eficiente en capital. Estás convirtiendo inversión en ingresos a ritmo de élite."
-                        : "Enfócate en mejorar la eficiencia de conversión de tus inversiones de crecimiento."}
+                        ? t('vanguard.ser_elite')
+                        : t('vanguard.ser_normal')}
                     </Text>
                   </View>
                 </View>

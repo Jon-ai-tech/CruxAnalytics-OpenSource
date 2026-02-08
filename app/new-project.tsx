@@ -193,7 +193,7 @@ export default function NewProjectScreen() {
     const hours = parseFloat(manualHours);
     const cost = parseFloat(hourlyCost);
     if (isNaN(hours) || hours < 0 || isNaN(cost) || cost < 0) {
-      setErrors({ manual: 'Please enter valid operational numbers' });
+      setErrors({ manual: t('validations.invalid_operational_numbers') });
       return false;
     }
     setErrors({});
@@ -204,7 +204,7 @@ export default function NewProjectScreen() {
     const mHours = parseFloat(maintHours);
     const sHours = parseFloat(totalSprintHours);
     if (isNaN(mHours) || isNaN(sHours) || mHours > sHours) {
-      setErrors({ tech: 'Maintenance cannot exceed total sprint hours' });
+      setErrors({ tech: t('validations.maint_exceeds_sprint') });
       return false;
     }
     setErrors({});
@@ -215,7 +215,7 @@ export default function NewProjectScreen() {
     const rev = parseFloat(prevRevenue);
     const burn = parseFloat(prevBurnRate);
     if ((prevRevenue !== '' && isNaN(rev)) || (prevBurnRate !== '' && isNaN(burn))) {
-      setErrors({ trajectory: 'Please enter valid historic numbers or leave blank' });
+      setErrors({ trajectory: t('validations.invalid_trajectory') });
       return false;
     }
     setErrors({});
@@ -244,9 +244,9 @@ export default function NewProjectScreen() {
   ];
 
   const durationSuggestions: QuickSuggestion[] = [
-    { label: '12 meses', value: '12' },
-    { label: '24 meses', value: '24' },
-    { label: '36 meses', value: '36' },
+    { label: `12 ${t('wizard.months')}`, value: '12' },
+    { label: `24 ${t('wizard.months')}`, value: '24' },
+    { label: `36 ${t('wizard.months')}`, value: '36' },
   ];
 
   const growthSuggestions: QuickSuggestion[] = [
@@ -403,7 +403,7 @@ export default function NewProjectScreen() {
       component: (
         <View className="gap-4">
           <WizardInput
-            question={language === 'es' ? "Horas manuales / semana" : "Manual hours / week"}
+            question={t('wizard.step8.manual_hours')}
             helper={t('wizard.step8.helper')}
             value={manualHours}
             onChangeText={setManualHours}
@@ -411,8 +411,8 @@ export default function NewProjectScreen() {
             keyboardType="numeric"
           />
           <WizardInput
-            question={language === 'es' ? "Costo promedio / hora ($)" : "Average cost / hour ($)"}
-            helper={language === 'es' ? "Costo laboral promedio" : "Average labor cost"}
+            question={t('wizard.step8.cost_per_hour')}
+            helper={t('wizard.step8.labor_cost_helper')}
             value={hourlyCost}
             onChangeText={setHourlyCost}
             placeholder="45"
@@ -430,7 +430,7 @@ export default function NewProjectScreen() {
       component: (
         <View className="gap-4">
           <WizardInput
-            question={language === 'es' ? "Horas de mantenimiento / sprint" : "Maintenance hours / sprint"}
+            question={t('wizard.step9.maint_hours')}
             helper={t('wizard.step9.helper')}
             value={maintHours}
             onChangeText={setMaintHours}
@@ -438,8 +438,8 @@ export default function NewProjectScreen() {
             keyboardType="numeric"
           />
           <WizardInput
-            question={language === 'es' ? "Horas totales del equipo / sprint" : "Total team hours / sprint"}
-            helper={language === 'es' ? "Capacidad total de desarrollo" : "Total development capacity"}
+            question={t('wizard.step9.team_hours')}
+            helper={t('wizard.step9.capacity_helper')}
             value={totalSprintHours}
             onChangeText={setTotalSprintHours}
             placeholder="80"
@@ -457,7 +457,7 @@ export default function NewProjectScreen() {
       component: (
         <View className="gap-4">
           <WizardInput
-            question={language === 'es' ? "Ingresos Periodo Anterior ($)" : "Previous Period Revenue ($)"}
+            question={t('wizard.step10.prev_revenue')}
             helper={t('wizard.step10.helper')}
             value={prevRevenue}
             onChangeText={setPrevRevenue}
@@ -465,8 +465,8 @@ export default function NewProjectScreen() {
             keyboardType="numeric"
           />
           <WizardInput
-            question={language === 'es' ? "Gastos Periodo Anterior ($)" : "Previous Period Expenses ($)"}
-            helper={language === 'es' ? "Para medir 'burn rate' relativo" : "To measure relative burn rate"}
+            question={t('wizard.step10.prev_expenses')}
+            helper={t('wizard.step10.burn_rate_helper')}
             value={prevBurnRate}
             onChangeText={setPrevBurnRate}
             placeholder="40000"

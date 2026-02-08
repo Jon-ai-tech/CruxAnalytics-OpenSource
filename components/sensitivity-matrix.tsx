@@ -31,7 +31,7 @@ export function SensitivityMatrix({ project, metric }: SensitivityMatrixProps) {
   ];
 
   const getVariableLabel = (variable: SensitivityVariable): string => {
-    return language === 'es' ? getVariableNameES(variable) : t(`sensitivity.${variable}`);
+    return t(`sensitivity.${variable}`);
   };
 
   const getValue = (result: SensitivityResult): number => {
@@ -75,7 +75,7 @@ export function SensitivityMatrix({ project, metric }: SensitivityMatrixProps) {
   return (
     <View className="bg-surface rounded-xl border border-border p-4">
       <Text className="text-lg font-bold text-foreground mb-4">
-        {t('sensitivity.matrix_title')} - {metric === 'npv' ? 'NPV' : 'ROI'}
+        {t('sensitivity.matrix_title')} - {metric === 'npv' ? t('results.npv') : t('results.roi')}
       </Text>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -93,9 +93,8 @@ export function SensitivityMatrix({ project, metric }: SensitivityMatrixProps) {
                 className="w-20 items-center justify-center px-1"
               >
                 <Text
-                  className={`text-xs font-semibold ${
-                    variation === 0 ? 'text-primary' : 'text-muted'
-                  }`}
+                  className={`text-xs font-semibold ${variation === 0 ? 'text-primary' : 'text-muted'
+                    }`}
                 >
                   {variation > 0 ? '+' : ''}
                   {variation}%
@@ -121,9 +120,8 @@ export function SensitivityMatrix({ project, metric }: SensitivityMatrixProps) {
                 return (
                   <View
                     key={result.variation}
-                    className={`w-20 items-center justify-center px-1 py-2 rounded ${
-                      isBase ? 'border-2' : 'border'
-                    }`}
+                    className={`w-20 items-center justify-center px-1 py-2 rounded ${isBase ? 'border-2' : 'border'
+                      }`}
                     style={{
                       backgroundColor: bgColor,
                       borderColor: isBase ? colors.primary : colors.border,
