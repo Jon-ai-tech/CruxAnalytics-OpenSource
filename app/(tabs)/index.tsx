@@ -149,7 +149,7 @@ function ToolCard({ icon, title, description, href, color, colors }: any) {
       onPress={handlePress}
       className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-12px)] mb-4"
     >
-      <View className="bg-surface border border-border rounded-2xl p-6 h-56 lg:h-64">
+      <View className="bg-surface border border-border rounded-2xl p-6 h-40 lg:h-44">
         <View
           className="w-12 h-12 rounded-xl items-center justify-center mb-4"
           style={{ backgroundColor: getBgColor() }}
