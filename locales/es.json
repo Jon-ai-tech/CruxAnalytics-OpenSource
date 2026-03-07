@@ -40,7 +40,8 @@
     "confirm_delete": "Confirmar Eliminación",
     "confirm_delete_message": "¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.",
     "go_back": "Volver",
-    "months": "meses"
+    "months": "meses",
+    "close": "Cerrar"
   },
   "tabs": {
     "home": "Inicio",

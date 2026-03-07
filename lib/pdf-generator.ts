@@ -22,10 +22,13 @@ interface PDFGenerationOptions {
 export async function generatePDFReport(options: PDFGenerationOptions): Promise<string> {
   const { project, chartImages, language } = options;
 
-  const html = generateHTMLReport(project, chartImages, language);
+  // On web, the actual download is handled in sharePDFReport using downloadWebFile.
+  // FileSystem is unavailable on web, so we return early here.
+  if (Platform.OS === 'web') {
+    return '';
+  }
 
-  // For React Native, we'll use a simpler approach with HTML
-  // In production, you would use react-native-html-to-pdf or similar
+  const html = generateHTMLReport(project, chartImages, language);
 
   const fileName = `business-case-${project.name.replace(/\s+/g, '-')}-${Date.now()}.html`;
   const filePath = `${FileSystem.documentDirectory}${fileName}`;

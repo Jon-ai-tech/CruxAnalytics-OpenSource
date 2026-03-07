@@ -40,7 +40,8 @@
     "confirm_delete": "Confirm Deletion",
     "confirm_delete_message": "Are you sure you want to delete this project? This action cannot be undone.",
     "go_back": "Go Back",
-    "months": "months"
+    "months": "months",
+    "close": "Close"
   },
   "tabs": {
     "home": "Home",

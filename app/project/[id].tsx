@@ -524,25 +524,25 @@ export default function ProjectDetailsScreen() {
               </Text>
               <View className="bg-surface rounded-xl p-4 border border-border gap-2">
                 <View className="flex-row justify-between">
-                  <Text className="text-muted">{t('form.initial_investment')}:</Text>
+                  <Text className="text-muted">{t('project_form.initial_investment')}:</Text>
                   <Text className="text-foreground font-semibold">
                     ${project.initialInvestment.toLocaleString()}
                   </Text>
                 </View>
                 <View className="flex-row justify-between">
-                  <Text className="text-muted">{t('form.project_duration')}:</Text>
+                  <Text className="text-muted">{t('project_form.project_duration')}:</Text>
                   <Text className="text-foreground font-semibold">
                     {project.projectDuration} {t('common.months')}
                   </Text>
                 </View>
                 <View className="flex-row justify-between">
-                  <Text className="text-muted">{t('form.yearly_revenue')}:</Text>
+                  <Text className="text-muted">{t('project_form.yearly_revenue')}:</Text>
                   <Text className="text-foreground font-semibold">
                     ${project.yearlyRevenue.toLocaleString()}
                   </Text>
                 </View>
                 <View className="flex-row justify-between">
-                  <Text className="text-muted">{t('form.discount_rate')}:</Text>
+                  <Text className="text-muted">{t('project_form.discount_rate')}:</Text>
                   <Text className="text-foreground font-semibold">
                     {project.discountRate}%
                   </Text>
@@ -760,7 +760,7 @@ export default function ProjectDetailsScreen() {
                     {t('metrics.ofi.description')}
                   </Text>
                   <View className="mt-4 pt-4 border-t border-border">
-                    <Text className="text-xs font-semibold text-muted uppercase mb-1">{t('my_projects.recommendation')}</Text>
+                    <Text className="text-xs font-semibold text-muted uppercase mb-1">{t('projects_list.recommendation')}</Text>
                     <Text className="text-sm text-foreground">
                       {(results.vanguard?.ofi || 0) > 0.08
                         ? t('vanguard.ofi_high_friction')
@@ -791,7 +791,7 @@ export default function ProjectDetailsScreen() {
                     {t('metrics.tfdi.description')}
                   </Text>
                   <View className="mt-4 pt-4 border-t border-border">
-                    <Text className="text-xs font-semibold text-muted uppercase mb-1">{t('my_projects.recommendation')}</Text>
+                    <Text className="text-xs font-semibold text-muted uppercase mb-1">{t('projects_list.recommendation')}</Text>
                     <Text className="text-sm text-foreground">
                       {(results.vanguard?.tfdi || 0) > 0.30
                         ? t('vanguard.tfdi_high_debt')
