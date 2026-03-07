@@ -90,18 +90,25 @@ export class VanguardMetricsCalculator extends BaseCalculator {
     if (input.maintenanceHoursPerSprint < 0) {
       throw new Error(`${this.calculatorName}: maintenanceHoursPerSprint must be non-negative`);
     }
-    this.assertPositive(input.totalDevHoursPerSprint, 'totalDevHoursPerSprint');
-    this.assertPositive(input.devTeamAnnualCost, 'devTeamAnnualCost');
-    this.assertFinite(input.incidentCostPerMonth, 'incidentCostPerMonth');
-    if (input.incidentCostPerMonth < 0) {
-      throw new Error(`${this.calculatorName}: incidentCostPerMonth must be non-negative`);
-    }
+    this.assertFinite(input.totalDevHoursPerSprint, 'totalDevHoursPerSprint');
+    if (input.totalDevHoursPerSprint <= 0) input.totalDevHoursPerSprint = 1;
+    
+    this.assertFinite(input.devTeamAnnualCost, 'devTeamAnnualCost');
+    if (input.devTeamAnnualCost <= 0) input.devTeamAnnualCost = 1;
 
-    // SER validation
-    this.assertPositive(input.currentRevenue, 'currentRevenue');
-    this.assertPositive(input.previousRevenue, 'previousRevenue');
-    this.assertPositive(input.currentBurnRate, 'currentBurnRate');
-    this.assertPositive(input.previousBurnRate, 'previousBurnRate');
+    this.assertFinite(input.incidentCostPerMonth, 'incidentCostPerMonth');
+    if (input.incidentCostPerMonth < 0) throw new Error(`${this.calculatorName}: incidentCostPerMonth must be non-negative`);
+
+    // SER validation - Allow 0 for all fields
+    this.assertFinite(input.currentRevenue, 'currentRevenue');
+    this.assertFinite(input.previousRevenue, 'previousRevenue');
+    this.assertFinite(input.currentBurnRate, 'currentBurnRate');
+    this.assertFinite(input.previousBurnRate, 'previousBurnRate');
+    
+    if (input.currentRevenue < 0) throw new Error(`${this.calculatorName}: currentRevenue must be non-negative`);
+    if (input.previousRevenue < 0) throw new Error(`${this.calculatorName}: previousRevenue must be non-negative`);
+    if (input.currentBurnRate < 0) throw new Error(`${this.calculatorName}: currentBurnRate must be non-negative`);
+    if (input.previousBurnRate < 0) throw new Error(`${this.calculatorName}: previousBurnRate must be non-negative`);
 
     // Business logic validation
     if (input.maintenanceHoursPerSprint > input.totalDevHoursPerSprint) {

@@ -54,13 +54,19 @@ export const projectsRouter = router({
       }
 
 
-      const id = randomUUID();
-      await db.insert(projects).values({
-        id,
-        userId: ctx.user.id,
-        ...input,
-      });
-      return { id };
+      try {
+        const id = randomUUID();
+        console.log('Creating project with data:', { id, userId: ctx.user.id, ...input });
+        await db.insert(projects).values({
+          id,
+          userId: ctx.user.id,
+          ...input,
+        });
+        return { id };
+      } catch (dbError) {
+        console.error('Database error creating project:', dbError);
+        throw new Error(`Failed to save project: ${dbError instanceof Error ? dbError.message : 'Database error'}`);
+      }
     }),
 
   // Get single project
