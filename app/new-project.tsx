@@ -726,12 +726,12 @@ export default function NewProjectScreen() {
                 {/* Project Name */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.project_name')} *
+                    {t('project_form.project_name')} *
                   </Text>
                   <TextInput
                     value={name}
                     onChangeText={setName}
-                    placeholder={t('form.project_name_placeholder')}
+                    placeholder={t('project_form.project_name_placeholder')}
                     placeholderTextColor="#9CA3AF"
                     className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
                   />
@@ -740,7 +740,7 @@ export default function NewProjectScreen() {
                 {/* Initial Investment */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.initial_investment')} * ($)
+                    {t('project_form.initial_investment')} * ($)
                   </Text>
                   <TextInput
                     value={initialInvestment}
@@ -755,7 +755,7 @@ export default function NewProjectScreen() {
                 {/* Project Duration */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.project_duration')} ({t('common.months')})
+                    {t('project_form.project_duration')} ({t('common.months')})
                   </Text>
                   <TextInput
                     value={projectDuration}
@@ -770,7 +770,7 @@ export default function NewProjectScreen() {
                 {/* Yearly Revenue */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.yearly_revenue')} * ($)
+                    {t('project_form.yearly_revenue')} * ($)
                   </Text>
                   <TextInput
                     value={yearlyRevenue}
@@ -785,7 +785,7 @@ export default function NewProjectScreen() {
                 {/* Revenue Growth */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.revenue_growth')} (%)
+                    {t('project_form.revenue_growth')} (%)
                   </Text>
                   <TextInput
                     value={revenueGrowth}
@@ -800,7 +800,7 @@ export default function NewProjectScreen() {
                 {/* Operating Costs */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.operating_costs')} ($)
+                    {t('project_form.operating_costs')} ($)
                   </Text>
                   <TextInput
                     value={operatingCosts}
@@ -815,7 +815,7 @@ export default function NewProjectScreen() {
                 {/* Maintenance Costs */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.maintenance_costs')} ($)
+                    {t('project_form.maintenance_costs')} ($)
                   </Text>
                   <TextInput
                     value={maintenanceCosts}
@@ -830,7 +830,7 @@ export default function NewProjectScreen() {
                 {/* Discount Rate */}
                 <View>
                   <Text className="text-sm font-semibold text-foreground mb-2">
-                    {t('form.discount_rate')} (%)
+                    {t('project_form.discount_rate')} (%)
                   </Text>
                   <TextInput
                     value={discountRate}

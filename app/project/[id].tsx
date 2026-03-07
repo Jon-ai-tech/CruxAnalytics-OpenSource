@@ -389,13 +389,13 @@ export default function ProjectDetailsScreen() {
                   status={results.npv > 0 ? 'positive' : 'negative'}
                 />
                 <MetricCard
-                  title={t('metrics.irr')}
+                  title={t('metrics.irr.label')}
                   value={`${results.irr.toFixed(2)}%`}
                   subtitle={t('metrics.irr_description')}
                   status={results.irr > project.discountRate ? 'positive' : 'neutral'}
                 />
                 <MetricCard
-                  title={t('metrics.payback')}
+                  title={t('metrics.payback.label')}
                   value={`${results.paybackPeriod.toFixed(1)} ${t('common.months')}`}
                   subtitle={t('metrics.payback_description')}
                   status="neutral"

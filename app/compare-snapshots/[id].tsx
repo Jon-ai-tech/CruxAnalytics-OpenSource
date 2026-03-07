@@ -19,7 +19,7 @@ import type { ProjectData, ScenarioSnapshot } from '@/types/project';
 export default function CompareSnapshotsScreen() {
   const { t } = useTranslation();
   const { id, a, b } = useLocalSearchParams<{ id: string; a: string; b: string }>();
-  
+
   const [project, setProject] = useState<ProjectData | null>(null);
   const [snapshotA, setSnapshotA] = useState<ScenarioSnapshot | null>(null);
   const [snapshotB, setSnapshotB] = useState<ScenarioSnapshot | null>(null);
@@ -36,16 +36,16 @@ export default function CompareSnapshotsScreen() {
       if (loadedProject) {
         setProject(loadedProject);
         const scenarios = await getAllScenarios(id);
-        
+
         const foundA = scenarios.find(s => s.id === a);
         const foundB = scenarios.find(s => s.id === b);
-        
+
         if (!foundA || !foundB) {
           Alert.alert(t('validations.error'), t('snapshots.not_found'));
           router.back();
           return;
         }
-        
+
         setSnapshotA(foundA);
         setSnapshotB(foundB);
       } else {
@@ -62,7 +62,7 @@ export default function CompareSnapshotsScreen() {
 
   const differences = useMemo(() => {
     if (!snapshotA || !snapshotB) return null;
-    
+
     return {
       roiDiff: snapshotB.results.roi - snapshotA.results.roi,
       npvDiff: snapshotB.results.npv - snapshotA.results.npv,
@@ -127,7 +127,7 @@ export default function CompareSnapshotsScreen() {
           >
             <Text className="text-primary font-semibold">← {t('common.go_back')}</Text>
           </TouchableOpacity>
-          
+
           <Text className="text-3xl font-bold text-foreground mb-2">
             {t('snapshots.compare_snapshots')}
           </Text>
@@ -242,7 +242,7 @@ export default function CompareSnapshotsScreen() {
           {/* IRR Comparison */}
           <View className="mb-4">
             <Text className="text-sm font-semibold text-muted mb-2">
-              {t('metrics.irr')}
+              {t('metrics.irr.label')}
             </Text>
             <View className="flex-row gap-3">
               <View className="flex-1">
@@ -265,7 +265,7 @@ export default function CompareSnapshotsScreen() {
 
           {/* Payback Comparison */}
           <View className="mb-4">
-            <Text className="text-sm font-semibold text-muted mb-2">{t('metrics.payback')}</Text>
+            <Text className="text-sm font-semibold text-muted mb-2">{t('metrics.payback.label')}</Text>
             <View className="flex-row gap-3">
               <View className="flex-1">
                 <MetricCard

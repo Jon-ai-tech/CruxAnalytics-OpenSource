@@ -343,7 +343,7 @@ export default function CompareScenarioScreen() {
           {/* IRR Comparison */}
           <View className="mb-4">
             <Text className="text-sm font-semibold text-muted mb-2">
-              {t('metrics.irr')}
+              {t('metrics.irr.label')}
             </Text>
             <View className="flex-row gap-3">
               <View className="flex-1">
@@ -366,7 +366,7 @@ export default function CompareScenarioScreen() {
 
           {/* Payback Comparison */}
           <View className="mb-4">
-            <Text className="text-sm font-semibold text-muted mb-2">{t('metrics.payback')}</Text>
+            <Text className="text-sm font-semibold text-muted mb-2">{t('metrics.payback.label')}</Text>
             <View className="flex-row gap-3">
               <View className="flex-1">
                 <MetricCard

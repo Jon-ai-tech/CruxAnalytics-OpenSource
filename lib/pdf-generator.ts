@@ -46,8 +46,27 @@ export async function generatePDFReport(options: PDFGenerationOptions): Promise<
 export async function sharePDFReport(filePath: string, project: ProjectData, language: 'es' | 'en'): Promise<void> {
   if (Platform.OS === 'web') {
     const html = generateHTMLReport(project, {}, language);
-    const fileName = `business-case-${project.name.replace(/\s+/g, '-')}.html`;
-    downloadWebFile(html, fileName);
+    const fileName = `business-case-${project.name.replace(/\s+/g, '-')}`;
+
+    try {
+      const html2pdf = (await import('html2pdf.js')).default;
+      const element = document.createElement('div');
+      element.innerHTML = html;
+
+      const opt = {
+        margin: 10,
+        filename: `${fileName}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().from(element).set(opt).save();
+    } catch (error) {
+      console.error('Error generating PDF on web:', error);
+      // Fallback
+      downloadWebFile(html, `${fileName}.html`);
+    }
     return;
   }
 

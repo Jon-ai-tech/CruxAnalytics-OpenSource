@@ -160,7 +160,7 @@ export default function SharedProjectScreen() {
               </View>
               <View className="flex-1 min-w-[45%]">
                 <MetricCard
-                  title={t('metrics.payback_period')}
+                  title={t('metrics.payback.label')}
                   value={`${results.paybackPeriod.toFixed(1)}`}
                   subtitle={t('common.months')}
                   status="neutral"
@@ -168,7 +168,7 @@ export default function SharedProjectScreen() {
               </View>
               <View className="flex-1 min-w-[45%]">
                 <MetricCard
-                  title={t('metrics.irr')}
+                  title={t('metrics.irr.label')}
                   value={`${results.irr.toFixed(1)}%`}
                   subtitle={t('metrics.internal_rate')}
                   status={results.irr > project.discountRate ? 'positive' : 'negative'}
@@ -229,31 +229,31 @@ export default function SharedProjectScreen() {
           </Text>
           <View className="bg-surface rounded-xl p-4 gap-3">
             <View className="flex-row justify-between">
-              <Text className="text-sm text-muted">{t('form.initial_investment')}</Text>
+              <Text className="text-sm text-muted">{t('project_form.initial_investment')}</Text>
               <Text className="text-sm font-semibold text-foreground">
                 ${project.initialInvestment.toLocaleString()}
               </Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-sm text-muted">{t('form.yearly_revenue')}</Text>
+              <Text className="text-sm text-muted">{t('project_form.yearly_revenue')}</Text>
               <Text className="text-sm font-semibold text-foreground">
                 ${project.yearlyRevenue.toLocaleString()}
               </Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-sm text-muted">{t('form.operating_costs')}</Text>
+              <Text className="text-sm text-muted">{t('project_form.operating_costs')}</Text>
               <Text className="text-sm font-semibold text-foreground">
                 ${project.operatingCosts.toLocaleString()}
               </Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-sm text-muted">{t('form.project_duration')}</Text>
+              <Text className="text-sm text-muted">{t('project_form.project_duration')}</Text>
               <Text className="text-sm font-semibold text-foreground">
                 {project.projectDuration} {t('common.months')}
               </Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-sm text-muted">{t('form.discount_rate')}</Text>
+              <Text className="text-sm text-muted">{t('project_form.discount_rate')}</Text>
               <Text className="text-sm font-semibold text-foreground">
                 {project.discountRate}%
               </Text>

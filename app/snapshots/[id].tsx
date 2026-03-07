@@ -250,8 +250,8 @@ export default function SnapshotsHistoryScreen() {
                 disabled={!compareMode}
                 activeOpacity={compareMode ? 0.7 : 1}
                 className={`bg-surface rounded-xl p-4 border ${compareMode && selectedSnapshots.includes(scenario.id)
-                    ? 'border-primary border-2'
-                    : 'border-border'
+                  ? 'border-primary border-2'
+                  : 'border-border'
                   }`}
               >
                 {/* Scenario Header */}
@@ -323,14 +323,14 @@ export default function SnapshotsHistoryScreen() {
                   <View className="flex-row gap-2">
                     <View className="flex-1">
                       <MetricCard
-                        title={t('metrics.irr')}
+                        title={t('metrics.irr.label')}
                         value={`${scenario.results.irr.toFixed(2)}%`}
                         status="neutral"
                       />
                     </View>
                     <View className="flex-1">
                       <MetricCard
-                        title={t('metrics.payback')}
+                        title={t('metrics.payback.label')}
                         value={`${scenario.results.paybackPeriod.toFixed(1)} ${t('common.months')}`}
                         status="neutral"
                       />

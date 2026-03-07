@@ -85,6 +85,7 @@
     "revenue_growth_placeholder": "5",
     "operating_costs": "Costos Operativos Anuales ($)",
     "operating_costs_placeholder": "20000",
+    "monthly_costs": "Costos Mensuales ($)",
     "maintenance_costs": "Costos de Mantenimiento Anuales ($)",
     "maintenance_costs_placeholder": "5000",
     "best_case_multiplier": "Multiplicador Mejor Caso",

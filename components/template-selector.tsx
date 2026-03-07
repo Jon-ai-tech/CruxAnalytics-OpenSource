@@ -71,7 +71,7 @@ export function TemplateSelector({ onSelectTemplate }: TemplateSelectorProps) {
                   <View className="flex-row flex-wrap gap-3">
                     <View className="flex-1 min-w-[45%]">
                       <Text className="text-xs text-muted mb-1">
-                        {t('form.initial_investment')}
+                        {t('project_form.initial_investment')}
                       </Text>
                       <Text className="text-sm font-semibold text-foreground">
                         {formatCurrency(template.data.initialInvestment)}
@@ -79,7 +79,7 @@ export function TemplateSelector({ onSelectTemplate }: TemplateSelectorProps) {
                     </View>
                     <View className="flex-1 min-w-[45%]">
                       <Text className="text-xs text-muted mb-1">
-                        {t('form.yearly_revenue')}
+                        {t('project_form.yearly_revenue')}
                       </Text>
                       <Text className="text-sm font-semibold text-foreground">
                         {formatCurrency(template.data.yearlyRevenue)}
@@ -87,7 +87,7 @@ export function TemplateSelector({ onSelectTemplate }: TemplateSelectorProps) {
                     </View>
                     <View className="flex-1 min-w-[45%]">
                       <Text className="text-xs text-muted mb-1">
-                        {t('form.monthly_costs')}
+                        {t('project_form.monthly_costs')}
                       </Text>
                       <Text className="text-sm font-semibold text-foreground">
                         {formatCurrency(template.data.monthlyCosts)}
@@ -95,7 +95,7 @@ export function TemplateSelector({ onSelectTemplate }: TemplateSelectorProps) {
                     </View>
                     <View className="flex-1 min-w-[45%]">
                       <Text className="text-xs text-muted mb-1">
-                        {t('form.project_duration')}
+                        {t('project_form.project_duration')}
                       </Text>
                       <Text className="text-sm font-semibold text-foreground">
                         {template.data.projectDuration} {t('common.months')}

@@ -47,7 +47,7 @@ export default function EditProjectScreen() {
     try {
       setLoading(true);
       const loadedProject = await getProject(id);
-      
+
       if (!loadedProject) {
         Alert.alert(t('validations.error'), t('errors.project_not_found'));
         router.back();
@@ -55,7 +55,7 @@ export default function EditProjectScreen() {
       }
 
       setProject(loadedProject);
-      
+
       // Populate form
       setName(loadedProject.name);
       setInitialInvestment(loadedProject.initialInvestment.toString());
@@ -126,7 +126,7 @@ export default function EditProjectScreen() {
 
     try {
       setSaving(true);
-      
+
       if (Platform.OS !== 'web') {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
@@ -205,7 +205,7 @@ export default function EditProjectScreen() {
 
       Alert.alert(
         t('common.success'),
-        t('form.project_updated'),
+        t('project_form.project_updated'),
         [
           {
             text: t('common.ok'),
@@ -227,8 +227,8 @@ export default function EditProjectScreen() {
     }
 
     Alert.alert(
-      t('form.discard_changes'),
-      t('form.discard_changes_confirm'),
+      t('project_form.discard_changes'),
+      t('project_form.discard_changes_confirm'),
       [
         {
           text: t('common.cancel'),
@@ -258,10 +258,10 @@ export default function EditProjectScreen() {
         {/* Header */}
         <View className="mb-6">
           <Text className="text-3xl font-bold text-foreground mb-2">
-            {t('form.edit_project')}
+            {t('project_form.edit_project')}
           </Text>
           <Text className="text-sm text-muted">
-            {t('form.edit_project_desc')}
+            {t('project_form.edit_project_desc')}
           </Text>
         </View>
 
@@ -270,12 +270,12 @@ export default function EditProjectScreen() {
           {/* Project Name */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.project_name')} *
+              {t('project_form.project_name')} *
             </Text>
             <TextInput
               value={name}
               onChangeText={setName}
-              placeholder={t('form.project_name_placeholder')}
+              placeholder={t('project_form.project_name_placeholder')}
               placeholderTextColor={colors.muted}
               className="bg-surface border border-border rounded-xl px-4 py-3 text-foreground"
             />
@@ -284,7 +284,7 @@ export default function EditProjectScreen() {
           {/* Initial Investment */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.initial_investment')} *
+              {t('project_form.initial_investment')} *
             </Text>
             <TextInput
               value={initialInvestment}
@@ -299,7 +299,7 @@ export default function EditProjectScreen() {
           {/* Discount Rate */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.discount_rate')} (%)
+              {t('project_form.discount_rate')} (%)
             </Text>
             <TextInput
               value={discountRate}
@@ -314,7 +314,7 @@ export default function EditProjectScreen() {
           {/* Project Duration */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.project_duration')} ({t('common.months')})
+              {t('project_form.project_duration')} ({t('common.months')})
             </Text>
             <TextInput
               value={projectDuration}
@@ -329,7 +329,7 @@ export default function EditProjectScreen() {
           {/* Yearly Revenue */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.yearly_revenue')}
+              {t('project_form.yearly_revenue')}
             </Text>
             <TextInput
               value={yearlyRevenue}
@@ -344,7 +344,7 @@ export default function EditProjectScreen() {
           {/* Revenue Growth */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.revenue_growth')} (%)
+              {t('project_form.revenue_growth')} (%)
             </Text>
             <TextInput
               value={revenueGrowth}
@@ -359,7 +359,7 @@ export default function EditProjectScreen() {
           {/* Operating Costs */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.operating_costs')}
+              {t('project_form.operating_costs')}
             </Text>
             <TextInput
               value={operatingCosts}
@@ -374,7 +374,7 @@ export default function EditProjectScreen() {
           {/* Maintenance Costs */}
           <View>
             <Text className="text-sm font-semibold text-foreground mb-2">
-              {t('form.maintenance_costs')}
+              {t('project_form.maintenance_costs')}
             </Text>
             <TextInput
               value={maintenanceCosts}
