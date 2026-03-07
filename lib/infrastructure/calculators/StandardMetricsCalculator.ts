@@ -116,13 +116,22 @@ export class StandardMetricsCalculator extends BaseCalculator {
   protected override validate(input: FinancialCalculationInput): void {
     super.validate(input);
 
-    this.assertPositive(input.initialInvestment, 'initialInvestment');
+    this.assertFinite(input.initialInvestment, 'initialInvestment');
+    if (input.initialInvestment < 0) throw new Error(`${this.calculatorName}: initialInvestment must be non-negative`);
+    
     this.assertRange(input.discountRate, 0, 100, 'discountRate');
     this.assertRange(input.projectDuration, 1, 600, 'projectDuration');
-    this.assertPositive(input.yearlyRevenue, 'yearlyRevenue');
+    
+    this.assertFinite(input.yearlyRevenue, 'yearlyRevenue');
+    if (input.yearlyRevenue < 0) throw new Error(`${this.calculatorName}: yearlyRevenue must be non-negative`);
+    
     this.assertRange(input.revenueGrowth, -100, 1000, 'revenueGrowth');
-    this.assertPositive(input.operatingCosts, 'operatingCosts');
-    this.assertPositive(input.maintenanceCosts, 'maintenanceCosts');
+    
+    this.assertFinite(input.operatingCosts, 'operatingCosts');
+    if (input.operatingCosts < 0) throw new Error(`${this.calculatorName}: operatingCosts must be non-negative`);
+    
+    this.assertFinite(input.maintenanceCosts, 'maintenanceCosts');
+    if (input.maintenanceCosts < 0) throw new Error(`${this.calculatorName}: maintenanceCosts must be non-negative`);
   }
 
   /**
