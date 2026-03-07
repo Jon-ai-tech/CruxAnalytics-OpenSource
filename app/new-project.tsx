@@ -528,12 +528,12 @@ export default function NewProjectScreen() {
     const opCosts = parseFloat(operatingCosts);
     const maintCosts = parseFloat(maintenanceCosts);
 
-    if (isNaN(investment) || investment <= 0) {
+    if (isNaN(investment) || investment < 0) {
       Alert.alert(t('validations.error'), t('validations.invalid_investment'));
       return;
     }
 
-    if (isNaN(revenue) || revenue <= 0) {
+    if (isNaN(revenue) || revenue < 0) {
       Alert.alert(t('validations.error'), t('validations.invalid_revenue'));
       return;
     }
