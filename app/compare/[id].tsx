@@ -22,10 +22,10 @@ import type { ProjectData, FinancialCalculationResult } from '@/types/project';
 export default function CompareScenarioScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  
+
   const [project, setProject] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   // Adjustment sliders state
   const [salesAdjustment, setSalesAdjustment] = useState(0);
   const [costsAdjustment, setCostsAdjustment] = useState(0);
@@ -217,6 +217,13 @@ export default function CompareScenarioScreen() {
       <ScrollView className="flex-1 p-6">
         {/* Header */}
         <View className="mb-6">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="mb-4 active:opacity-70"
+          >
+            <Text className="text-primary font-semibold">← {t('common.go_back')}</Text>
+          </TouchableOpacity>
+
           <Text className="text-3xl font-bold text-foreground mb-2">
             {t('compare.title')}
           </Text>

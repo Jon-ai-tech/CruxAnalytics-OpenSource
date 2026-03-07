@@ -12,7 +12,6 @@ import * as Haptics from 'expo-haptics';
 
 import { ScreenContainer } from '@/components/screen-container';
 import { MetricCard } from '@/components/business/metric-card';
-import { SkeletonSnapshotList } from '@/components/business/skeleton-snapshot-card';
 import { useTranslation } from '@/lib/i18n-context';
 import {
   getProject,
@@ -25,7 +24,7 @@ import type { ProjectData, ScenarioSnapshot } from '@/types/project';
 export default function SnapshotsHistoryScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  
+
   const [project, setProject] = useState<ProjectData | null>(null);
   const [scenarios, setScenarios] = useState<ScenarioSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +57,7 @@ export default function SnapshotsHistoryScreen() {
 
   const handleDeleteScenario = async (scenarioId: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    
+
     Alert.alert(
       t('snapshots.delete_title'),
       t('snapshots.delete_description'),
@@ -94,7 +93,7 @@ export default function SnapshotsHistoryScreen() {
 
   const handleSelectSnapshot = (scenarioId: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    
+
     if (selectedSnapshots.includes(scenarioId)) {
       setSelectedSnapshots(selectedSnapshots.filter(id => id !== scenarioId));
     } else if (selectedSnapshots.length < 2) {
@@ -114,7 +113,7 @@ export default function SnapshotsHistoryScreen() {
 
   const handleRestoreScenario = async (scenarioId: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    
+
     Alert.alert(
       t('snapshots.restore_title'),
       t('snapshots.restore_description'),
@@ -176,7 +175,7 @@ export default function SnapshotsHistoryScreen() {
           >
             <Text className="text-primary font-semibold">← {t('common.go_back')}</Text>
           </TouchableOpacity>
-          
+
           <Text className="text-3xl font-bold text-foreground mb-2">
             {t('snapshots.title')}
           </Text>
@@ -191,17 +190,15 @@ export default function SnapshotsHistoryScreen() {
             <View className="flex-row gap-3">
               <TouchableOpacity
                 onPress={handleToggleCompareMode}
-                className={`flex-1 py-3 rounded-xl active:opacity-70 ${
-                  compareMode ? 'bg-primary' : 'bg-surface border border-primary'
-                }`}
+                className={`flex-1 py-3 rounded-xl active:opacity-70 ${compareMode ? 'bg-primary' : 'bg-surface border border-primary'
+                  }`}
               >
-                <Text className={`text-center font-semibold ${
-                  compareMode ? 'text-white' : 'text-primary'
-                }`}>
+                <Text className={`text-center font-semibold ${compareMode ? 'text-white' : 'text-primary'
+                  }`}>
                   {compareMode ? t('common.cancel') : t('snapshots.compare_snapshots')}
                 </Text>
               </TouchableOpacity>
-              
+
               {compareMode && selectedSnapshots.length === 2 && (
                 <TouchableOpacity
                   onPress={handleCompareSnapshots}
@@ -213,7 +210,7 @@ export default function SnapshotsHistoryScreen() {
                 </TouchableOpacity>
               )}
             </View>
-            
+
             {compareMode && (
               <Text className="text-sm text-muted text-center mt-2">
                 {t('snapshots.select_two')} ({selectedSnapshots.length}/2)
@@ -224,7 +221,10 @@ export default function SnapshotsHistoryScreen() {
 
         {/* Scenarios List */}
         {loading ? (
-          <SkeletonSnapshotList count={2} />
+          <View className="flex-1 justify-center items-center py-12">
+            <ActivityIndicator size="large" />
+            <Text className="mt-4 text-muted">{t('common.loading')}</Text>
+          </View>
         ) : scenarios.length === 0 ? (
           <View className="flex-1 justify-center items-center py-12">
             <Text className="text-6xl mb-4">📊</Text>
@@ -249,11 +249,10 @@ export default function SnapshotsHistoryScreen() {
                 onPress={() => compareMode && handleSelectSnapshot(scenario.id)}
                 disabled={!compareMode}
                 activeOpacity={compareMode ? 0.7 : 1}
-                className={`bg-surface rounded-xl p-4 border ${
-                  compareMode && selectedSnapshots.includes(scenario.id)
+                className={`bg-surface rounded-xl p-4 border ${compareMode && selectedSnapshots.includes(scenario.id)
                     ? 'border-primary border-2'
                     : 'border-border'
-                }`}
+                  }`}
               >
                 {/* Scenario Header */}
                 <View className="flex-row justify-between items-start mb-3">

@@ -30,7 +30,7 @@ export function TornadoChart({ project }: TornadoChartProps) {
   };
 
   const getBarWidth = (value: number): number => {
-    return (Math.abs(value) / maxAbsValue) * 100;
+    return (Math.abs(value) / maxAbsValue) * 70;
   };
 
   const variableColors = [

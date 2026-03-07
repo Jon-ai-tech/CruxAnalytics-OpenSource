@@ -71,7 +71,7 @@ export function AIInsightCard({
             <Text className="text-sm text-error font-medium mb-2">
               {t('ai.error_title')}
             </Text>
-            <Text className="text-xs text-error/80">{error}</Text>
+            <Text className="text-xs text-error font-medium">{error}</Text>
           </View>
           {onRegenerate && (
             <TouchableOpacity
