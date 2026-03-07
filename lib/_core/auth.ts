@@ -30,7 +30,7 @@ export async function getGuestId(): Promise<string> {
     return generateGuestId();
   }
 }
-import { SESSION_TOKEN_KEY, USER_INFO_KEY } from "@/constants/oauth";
+
 
 export type User = {
   id: number;
