@@ -14,6 +14,7 @@ import type { ProjectData } from '@/types/project';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColors } from '@/hooks/use-colors';
 import { useProjectFilters } from '@/hooks/use-project-filters';
+import { OnboardingTutorial } from '@/components/onboarding-tutorial';
 
 // ============================================
 // HEALTH SCORE HELPERS
