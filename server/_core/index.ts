@@ -74,13 +74,13 @@ async function startServer() {
   });
 
   // Serve static files from the 'web' directory
-  const webPath = path.join(__dirname, "..", "web");
+  const webPath = path.join(__dirname, "web");
   app.use(express.static(webPath));
 
   // API documentation (Swagger UI)
   // In production the files land in dist/web (via `expo export`).
   // In development they live in public/.
-  const publicPath = path.join(__dirname, "..", "..", "public");
+  const publicPath = path.join(__dirname, "..", "public");
   const resolveDocs = (file: string) => {
     const fromBuild = path.join(webPath, file);
     return fs.existsSync(fromBuild) ? fromBuild : path.join(publicPath, file);
