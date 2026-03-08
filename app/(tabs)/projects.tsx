@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, Text, View, RefreshControl } from 'react-native';
+import { ScrollView, Text, View, RefreshControl, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 
@@ -11,17 +11,19 @@ import { FilterChips } from '@/components/filter-chips';
 import { useTranslation } from '@/lib/i18n-context';
 import { getAllProjects } from '@/lib/project-storage';
 import { eventEmitter, Events } from '@/lib/event-emitter';
+import { loadDemoProjects } from '@/lib/demo-projects';
 import type { ProjectData } from '@/types/project';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColors } from '@/hooks/use-colors';
 import { useProjectFilters } from '@/hooks/use-project-filters';
 
 export default function ProjectsScreen() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const colors = useColors();
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadingDemo, setLoadingDemo] = useState(false);
 
   const {
     filteredProjects,
@@ -83,6 +85,33 @@ export default function ProjectsScreen() {
     router.push(`/project/${project.id}`);
   };
 
+  const handleLoadDemo = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Alert.alert(
+      t('demo.confirm_title'),
+      t('demo.confirm_message'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('demo.load_demo'),
+          onPress: async () => {
+            setLoadingDemo(true);
+            try {
+              const count = await loadDemoProjects(language as 'es' | 'en');
+              await loadProjects();
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              Alert.alert(t('common.success'), t('demo.loaded').replace('{{count}}', String(count)));
+            } catch (e) {
+              Alert.alert(t('validations.error'), t('errors.generic'));
+            } finally {
+              setLoadingDemo(false);
+            }
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <ScreenContainer className="p-6">
       <ScrollView
@@ -129,6 +158,18 @@ export default function ProjectsScreen() {
                 <Text className="text-base font-body text-muted text-center max-w-sm">
                   {t('home.create_first')}
                 </Text>
+                <TouchableOpacity
+                  onPress={handleLoadDemo}
+                  disabled={loadingDemo}
+                  className="mt-2 px-6 py-3 bg-primary/10 border border-primary/30 rounded-xl active:opacity-70"
+                >
+                  <Text className="text-primary font-semibold text-base text-center">
+                    {loadingDemo ? t('demo.loading') : `✨ ${t('demo.load_demo')}`}
+                  </Text>
+                  <Text className="text-xs text-muted text-center mt-0.5">
+                    {t('demo.load_demo_desc')}
+                  </Text>
+                </TouchableOpacity>
               </View>
             ) : filteredProjects.length === 0 ? (
               <View className="bg-surface border border-border rounded-2xl p-8 items-center gap-4">

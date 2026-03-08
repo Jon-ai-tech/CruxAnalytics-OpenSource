@@ -315,6 +315,15 @@
   },
   "settings": {
     "title": "Settings",
+    "account": "Account",
+    "signed_in_as": "Signed in as",
+    "guest_mode": "Guest Mode",
+    "guest_mode_desc": "Your data is stored locally. Sign in to sync across devices.",
+    "sign_in": "Sign In",
+    "sign_out": "Sign Out",
+    "sign_out_confirm": "Are you sure you want to sign out?",
+    "api_docs": "API Documentation",
+    "api_docs_desc": "View public REST API docs",
     "appearance": "Appearance",
     "theme": "Theme",
     "theme_system": "System",
@@ -389,6 +398,7 @@
     "title": "Scenario Comparison",
     "compare_scenarios": "Compare Scenarios",
     "adjustments": "Variable Adjustments",
+    "radar_title": "Financial Radar",
     "reset": "Reset",
     "sales_adjustment": "Sales Adjustment",
     "sales_description": "Modify projected revenue",
@@ -547,6 +557,14 @@
       "copyright": "© 2026 CruxAnalytics. Open Source & Free Forever."
     }
   },
+  "demo": {
+    "load_demo": "Load Demo Projects",
+    "load_demo_desc": "3 real-industry examples to explore",
+    "loading": "Loading...",
+    "confirm_title": "Load Demo Projects?",
+    "confirm_message": "This will add 3 example projects (SaaS, E-commerce, Manufacturing) to your list so you can explore the app.",
+    "loaded": "{{count}} demo projects added"
+  },
   "errors": {
     "generic": "An unexpected error occurred",
     "network": "Connection error. Check your internet.",
@@ -679,6 +697,8 @@
   "notifications": {
     "title": "Notifications",
     "enable_reminders": "Enable Reminders",
+    "stale_title": "Project Update Reminder",
+    "stale_body": "\"{{name}}\" hasn't been updated in {{days}} days. Time to review your numbers?",
     "enable_reminders_desc": "Receive notifications to review your projects periodically",
     "default_frequency": "Default Frequency",
     "reminder_frequency": "Reminder Frequency",

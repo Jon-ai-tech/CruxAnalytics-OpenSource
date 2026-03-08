@@ -31,6 +31,9 @@ import * as DocumentPicker from 'expo-document-picker';
 import { useColors } from '@/hooks/use-colors';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useThemeContext } from '@/lib/theme-provider';
+import * as Auth from '@/lib/_core/auth';
+import * as Api from '@/lib/_core/api';
+import { getLoginUrl } from '@/constants/oauth';
 
 type ThemeMode = 'light' | 'dark' | 'auto';
 
@@ -42,6 +45,7 @@ export default function SettingsScreen() {
   const [notificationsEnabled, setNotificationsEnabledState] = useState(false);
   const [defaultFrequency, setDefaultFrequency] = useState<ReminderFrequency>('monthly');
   const [showFrequencyPicker, setShowFrequencyPicker] = useState(false);
+  const [currentUser, setCurrentUser] = useState<Auth.User | null>(null);
 
   const handleLanguageChange = async (newLanguage: 'es' | 'en') => {
     if (Platform.OS !== 'web') {
@@ -56,6 +60,51 @@ export default function SettingsScreen() {
     }
     
     setGlobalThemeMode(mode);
+  };
+
+  // Load current user
+  useEffect(() => {
+    Auth.getUserInfo().then((user) => {
+      if (user) setCurrentUser(user);
+    });
+    Api.getMe().then((user) => {
+      if (user) setCurrentUser(user as Auth.User);
+    }).catch(() => {});
+  }, []);
+
+  const handleLogin = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+    const url = getLoginUrl();
+    if (url) {
+      Linking.openURL(url);
+    }
+  };
+
+  const handleLogout = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+    Alert.alert(
+      t('settings.sign_out'),
+      t('settings.sign_out_confirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('settings.sign_out'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await Api.logout();
+            } catch (_) {}
+            await Auth.clearUserInfo();
+            await Auth.removeSessionToken();
+            setCurrentUser(null);
+          },
+        },
+      ],
+    );
   };
 
   // Load notification settings
@@ -268,6 +317,61 @@ export default function SettingsScreen() {
           <Text className="text-3xl font-bold text-foreground">
             {t('settings.title')}
           </Text>
+        </View>
+
+        {/* Account Section */}
+        <View className="mb-6">
+          <Text className="text-sm font-semibold text-muted mb-3">
+            {t('settings.account')}
+          </Text>
+          <View className="bg-surface rounded-xl border border-border overflow-hidden">
+            {currentUser && currentUser.loginMethod !== 'open-source' ? (
+              <>
+                <View className="p-4 border-b border-border">
+                  <Text className="text-xs text-muted mb-1">{t('settings.signed_in_as')}</Text>
+                  <Text className="text-base font-semibold text-foreground">
+                    {currentUser.name || currentUser.email || currentUser.openId}
+                  </Text>
+                  {currentUser.email && currentUser.name && (
+                    <Text className="text-xs text-muted mt-0.5">{currentUser.email}</Text>
+                  )}
+                </View>
+                <TouchableOpacity
+                  onPress={handleLogout}
+                  className="flex-row items-center justify-between p-4"
+                >
+                  <View className="flex-row items-center gap-3">
+                    <Text className="text-2xl">🚪</Text>
+                    <Text className="text-base text-error font-medium">
+                      {t('settings.sign_out')}
+                    </Text>
+                  </View>
+                  <Text className="text-error font-semibold">›</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <View className="p-4 border-b border-border">
+                  <Text className="text-base font-semibold text-foreground mb-1">
+                    {t('settings.guest_mode')}
+                  </Text>
+                  <Text className="text-xs text-muted">{t('settings.guest_mode_desc')}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={handleLogin}
+                  className="flex-row items-center justify-between p-4"
+                >
+                  <View className="flex-row items-center gap-3">
+                    <Text className="text-2xl">🔑</Text>
+                    <Text className="text-base text-primary font-medium">
+                      {t('settings.sign_in')}
+                    </Text>
+                  </View>
+                  <Text className="text-primary font-semibold">›</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
         </View>
 
         {/* Language Section */}
@@ -561,6 +665,19 @@ export default function SettingsScreen() {
                 <Text className="text-sm text-foreground font-medium">
                   {t('settings.view_tutorial')}
                 </Text>
+                <Text className="text-primary">›</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => handleOpenLink('/api/docs')}
+                className="flex-row items-center justify-between p-3 bg-background/50 rounded-lg"
+              >
+                <View>
+                  <Text className="text-sm text-foreground font-medium">
+                    {t('settings.api_docs')}
+                  </Text>
+                  <Text className="text-xs text-muted">{t('settings.api_docs_desc')}</Text>
+                </View>
                 <Text className="text-primary">›</Text>
               </TouchableOpacity>
             </View>

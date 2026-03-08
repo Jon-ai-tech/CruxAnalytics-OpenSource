@@ -8,6 +8,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { Platform } from "react-native";
 import "@/lib/_core/nativewind-pressable";
+import { getAllProjects } from "@/lib/project-storage";
+import { checkStaleProjects } from "@/lib/notification-manager";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { I18nProvider } from "@/providers/i18n-provider";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
@@ -42,6 +44,34 @@ export default function RootLayout() {
   // Initialize Manus runtime for cookie injection from parent container
   useEffect(() => {
     initManusRuntime();
+  }, []);
+
+  // Register service worker for PWA offline support (web only)
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then((reg) => console.log('[SW] Registered:', reg.scope))
+        .catch((err) => console.warn('[SW] Registration failed:', err));
+    }
+  }, []);
+
+  // Check for stale projects and send reminder notifications (mobile only)
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    const run = async () => {
+      try {
+        const projects = await getAllProjects();
+        await checkStaleProjects(
+          projects.map((p) => ({ id: p.id, name: p.name, updatedAt: p.updatedAt })),
+          30,
+        );
+      } catch (e) {
+        // Non-critical – ignore errors
+      }
+    };
+    run();
   }, []);
 
   // Load custom fonts

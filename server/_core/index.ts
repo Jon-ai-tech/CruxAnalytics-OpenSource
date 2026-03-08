@@ -72,6 +72,19 @@ async function startServer() {
     res.json({ ok: true, timestamp: Date.now(), version: "4.5.0" });
   });
 
+  // API documentation (Swagger UI)
+  // In production the files land in dist/web (via `expo export`).
+  // In development they live in public/.
+  const publicPath = path.join(__dirname, "..", "..", "public");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const fsSync = require("fs") as typeof import("fs");
+  const resolveDocs = (file: string) => {
+    const fromBuild = path.join(webPath, file);
+    return fsSync.existsSync(fromBuild) ? fromBuild : path.join(publicPath, file);
+  };
+  app.get("/api/docs", (_req, res) => res.sendFile(resolveDocs("api-docs.html")));
+  app.get("/api/openapi.json", (_req, res) => res.sendFile(resolveDocs("openapi.json")));
+
   // Register API routes
   const aiRoutes = await import("../routes/ai");
   const subscriptionRoutes = await import("../routes/subscription");

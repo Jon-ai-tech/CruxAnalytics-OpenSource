@@ -313,6 +313,15 @@
   },
   "settings": {
     "title": "Configuración",
+    "account": "Cuenta",
+    "signed_in_as": "Sesión iniciada como",
+    "guest_mode": "Modo Invitado",
+    "guest_mode_desc": "Tus datos se guardan localmente. Inicia sesión para sincronizar entre dispositivos.",
+    "sign_in": "Iniciar Sesión",
+    "sign_out": "Cerrar Sesión",
+    "sign_out_confirm": "¿Estás seguro de que deseas cerrar sesión?",
+    "api_docs": "Documentación de API",
+    "api_docs_desc": "Ver documentación pública de la API REST",
     "appearance": "Apariencia",
     "theme": "Tema",
     "theme_system": "Sistema",
@@ -386,6 +395,7 @@
     "title": "Comparación de Escenarios",
     "compare_scenarios": "Comparar Escenarios",
     "adjustments": "Ajustes de Variables",
+    "radar_title": "Radar Financiero",
     "reset": "Restablecer",
     "sales_adjustment": "Ajuste de Ventas",
     "sales_description": "Modifica los ingresos proyectados",
@@ -424,6 +434,14 @@
     "recommendations": "Recomendaciones",
     "generated_on": "Generado el",
     "page": "Página"
+  },
+  "demo": {
+    "load_demo": "Cargar Proyectos Demo",
+    "load_demo_desc": "3 ejemplos reales para explorar la app",
+    "loading": "Cargando...",
+    "confirm_title": "¿Cargar proyectos demo?",
+    "confirm_message": "Se agregarán 3 proyectos de ejemplo (SaaS, E-commerce, Manufactura) para que puedas explorar la app.",
+    "loaded": "{{count}} proyectos demo agregados"
   },
   "errors": {
     "generic": "Ocurrió un error inesperado",
@@ -544,7 +562,9 @@
     "reminder_frequency": "Frecuencia de Recordatorio",
     "reminder_frequency_desc": "Recibirás una notificación para revisar este proyecto",
     "permission_denied_title": "Permisos Denegados",
-    "permission_denied_message": "Por favor, habilita las notificaciones en la configuración de tu dispositivo para usar esta funcionalidad"
+    "permission_denied_message": "Por favor, habilita las notificaciones en la configuración de tu dispositivo para usar esta funcionalidad",
+    "stale_title": "Recordatorio de Proyecto",
+    "stale_body": "\"{{name}}\" no ha sido actualizado en {{days}} días. ¿Es momento de revisar tus números?"
   },
   "onboarding": {
     "welcome_title": "¡Bienvenido a Business Case Analyzer Pro!",
