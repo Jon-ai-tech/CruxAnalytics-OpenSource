@@ -123,11 +123,11 @@ function BreakEvenChart({
     const currentPercent = currentUnits ? (currentUnits / maxUnits) * 100 : null;
 
     return (
-        <GlassCard>
-            <Text className="text-white font-semibold mb-4">{t('calculators.break_even.visualization')}</Text>
+        <GlassCard className="p-4">
+            <Text className="text-white font-semibold mb-3">{t('calculators.break_even.visualization')}</Text>
 
             {/* Chart Bar */}
-            <View className="h-8 bg-slate-800 rounded-full overflow-hidden relative">
+            <View className="h-5 bg-slate-800 rounded-full overflow-hidden relative">
                 {/* Loss zone */}
                 <View
                     className="absolute left-0 top-0 bottom-0 bg-[#FB923C]/30"
@@ -155,7 +155,7 @@ function BreakEvenChart({
             </View>
 
             {/* Labels */}
-            <View className="flex-row justify-between mt-4">
+            <View className="flex-row justify-between mt-2">
                 <View>
                     <Text className="text-rose-400 text-xs">🔴 {t('calculators.break_even.loss')}</Text>
                     <Text className="text-gray-500 text-xs">0 - {breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>

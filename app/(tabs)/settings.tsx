@@ -351,24 +351,12 @@ export default function SettingsScreen() {
               </>
             ) : (
               <>
-                <View className="p-4 border-b border-border">
+                <View className="p-4">
                   <Text className="text-base font-semibold text-foreground mb-1">
                     {t('settings.guest_mode')}
                   </Text>
                   <Text className="text-xs text-muted">{t('settings.guest_mode_desc')}</Text>
                 </View>
-                <TouchableOpacity
-                  onPress={handleLogin}
-                  className="flex-row items-center justify-between p-4"
-                >
-                  <View className="flex-row items-center gap-3">
-                    <Text className="text-2xl">🔑</Text>
-                    <Text className="text-base text-primary font-medium">
-                      {t('settings.sign_in')}
-                    </Text>
-                  </View>
-                  <Text className="text-primary font-semibold">›</Text>
-                </TouchableOpacity>
               </>
             )}
           </View>
@@ -550,7 +538,8 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        {/* Notifications Section */}
+        {/* Notifications Section - mobile only */}
+        {Platform.OS !== 'web' && (
         <View className="mb-6">
           <Text className="text-sm font-semibold text-muted mb-3">
             {t('notifications.title')}
@@ -626,6 +615,7 @@ export default function SettingsScreen() {
             )}
           </View>
         </View>
+        )}
 
         {/* About Section */}
         <View className="mb-6">
