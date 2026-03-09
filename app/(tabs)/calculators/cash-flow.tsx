@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -64,9 +64,12 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
                         const isPositive = forecast.balance >= 0;
 
                         return (
-                            <View key={index} className="items-center w-12">
+                            <View key={index} className="items-center" style={Platform.select({ web: { width: 64 }, default: { width: 48 } })}>
                                 {/* Bar */}
-                                <View className="h-14 w-5 justify-end bg-slate-800 rounded-lg overflow-hidden">
+                                <View
+                                    className="justify-end bg-slate-800 rounded-lg overflow-hidden"
+                                    style={Platform.select({ web: { height: 128, width: 32 }, default: { height: 56, width: 20 } })}
+                                >
                                     <View
                                         className={`w-full rounded-t-lg ${isPositive ? 'bg-[#86EFAC]' : 'bg-[#FB923C]'}`}
                                         style={{ height: `${Math.max(height, 10)}%` }}
