@@ -85,14 +85,14 @@ function ROIGauge({ roi }: { roi: number }) {
 
     return (
         <View className="items-center">
-            <View className="w-48 h-48 rounded-full border-8 border-white/10 items-center justify-center relative overflow-hidden">
+            <View className="w-32 h-32 rounded-full border-8 border-white/10 items-center justify-center relative overflow-hidden">
                 <View
                     className={`absolute bottom-0 left-0 right-0 ${colors.bg} opacity-20`}
                     style={{ height: `${fillPercent}%` }}
                 />
                 <View className="items-center">
-                    <Text className={`text-5xl font-bold ${colors.text}`}>{roi != null ? roi.toFixed(0) : '0'}%</Text>
-                    <Text className="text-gray-400 text-sm">ROI</Text>
+                    <Text className={`text-3xl font-bold ${colors.text}`}>{roi != null ? roi.toFixed(0) : '0'}%</Text>
+                    <Text className="text-gray-400 text-xs">ROI</Text>
                 </View>
             </View>
         </View>

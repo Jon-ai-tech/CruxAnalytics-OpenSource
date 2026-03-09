@@ -64,9 +64,9 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
                         const isPositive = forecast.balance >= 0;
 
                         return (
-                            <View key={index} className="items-center w-16">
+                            <View key={index} className="items-center w-12">
                                 {/* Bar */}
-                                <View className="h-20 w-6 justify-end bg-slate-800 rounded-lg overflow-hidden">
+                                <View className="h-14 w-5 justify-end bg-slate-800 rounded-lg overflow-hidden">
                                     <View
                                         className={`w-full rounded-t-lg ${isPositive ? 'bg-[#86EFAC]' : 'bg-[#FB923C]'}`}
                                         style={{ height: `${Math.max(height, 10)}%` }}

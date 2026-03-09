@@ -90,7 +90,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
                             <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.impressions')}</Text>
                             <Text className="text-white">{impressions.toLocaleString()}</Text>
                         </View>
-                        <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
+                        <View className="h-3 bg-slate-700 rounded-full overflow-hidden">
                             <View className="h-full bg-blue-500 rounded-full" style={{ width: '100%' }} />
                         </View>
                     </View>
@@ -102,7 +102,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
                             <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.clicks')}</Text>
                             <Text className="text-white">{clicks.toLocaleString()}</Text>
                         </View>
-                        <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
+                        <View className="h-3 bg-slate-700 rounded-full overflow-hidden">
                             <View
                                 className="h-full bg-[#14B8A6] rounded-full"
                                 style={{ width: `${clicksWidth}%` }}
@@ -116,7 +116,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
                         <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.conversions')}</Text>
                         <Text className="text-emerald-400 font-bold">{conversions.toLocaleString()}</Text>
                     </View>
-                    <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
+                    <View className="h-3 bg-slate-700 rounded-full overflow-hidden">
                         <View
                             className="h-full bg-[#86EFAC] rounded-full"
                             style={{ width: `${Math.max(conversionsWidth, 5)}%` }}
