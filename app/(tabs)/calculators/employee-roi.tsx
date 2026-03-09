@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -82,16 +82,22 @@ function ROIGauge({ roi }: { roi: number }) {
 
     const colors = getColor();
     const fillPercent = Math.min(Math.max((roi + 100) / 2, 0), 100);
+    const small = Dimensions.get('window').width < 600;
 
     return (
         <View className="items-center">
-            <View className="w-48 h-48 rounded-full border-8 border-white/10 items-center justify-center relative overflow-hidden">
+            <View
+                className="rounded-full border-8 border-white/10 items-center justify-center relative overflow-hidden"
+                style={{ width: small ? 112 : 192, height: small ? 112 : 192 }}
+            >
                 <View
                     className={`absolute bottom-0 left-0 right-0 ${colors.bg} opacity-20`}
                     style={{ height: `${fillPercent}%` }}
                 />
                 <View className="items-center">
-                    <Text className={`text-5xl font-bold ${colors.text}`}>{roi != null ? roi.toFixed(0) : '0'}%</Text>
+                    <Text className={`font-bold ${colors.text}`} style={{ fontSize: small ? 28 : 48 }}>
+                        {roi != null ? roi.toFixed(0) : '0'}%
+                    </Text>
                     <Text className="text-gray-400 text-sm">ROI</Text>
                 </View>
             </View>
@@ -211,9 +217,9 @@ export default function EmployeeROIPage() {
                     />
                 </View>
 
-                <View className="flex-row flex-wrap gap-6">
+                <View className="gap-6">
                     {/* Form */}
-                    <View className="flex-1 min-w-[300px]">
+                    <View className="w-full">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">
                                 {t('calculators.enter_data')}
@@ -260,7 +266,7 @@ export default function EmployeeROIPage() {
                     </View>
 
                     {/* Results */}
-                    <View className="flex-1 min-w-[300px] gap-4">
+                    <View className="w-full gap-4">
                         {result ? (
                             <>
                                 {/* Main Result */}

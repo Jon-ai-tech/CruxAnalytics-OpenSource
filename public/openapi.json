@@ -1,0 +1,354 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CruxAnalytics API",
+    "version": "1.0.0",
+    "description": "Public REST API for CruxAnalytics – enterprise-grade financial diagnostic platform.\n\nAll tRPC endpoints are also accessible as HTTP POST requests at `/api/trpc/<procedure>`.",
+    "contact": {
+      "name": "CruxAnalytics",
+      "url": "https://github.com/Jon-human-in-the-loop/CruxAnalytics"
+    },
+    "license": { "name": "MIT" }
+  },
+  "servers": [
+    { "url": "/", "description": "Current host" }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Authentication and session management" },
+    { "name": "Projects", "description": "Business project CRUD operations" },
+    { "name": "Scenarios", "description": "Scenario snapshot management" },
+    { "name": "AI", "description": "AI-powered financial insights" },
+    { "name": "System", "description": "Health and system info" }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Health check",
+        "description": "Returns server health status and version.",
+        "responses": {
+          "200": {
+            "description": "Server is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "example": true },
+                    "timestamp": { "type": "integer", "example": 1700000000000 },
+                    "version": { "type": "string", "example": "4.5.0" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "description": "Returns the currently authenticated user. Uses cookie-based auth on web or Bearer token on mobile.",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Authenticated user info",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
+          "401": { "description": "Not authenticated" }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Sign out",
+        "description": "Clears the session cookie and signs out the user.",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Logged out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "success": { "type": "boolean" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trpc/projects.list": {
+      "get": {
+        "tags": ["Projects"],
+        "summary": "List all projects",
+        "description": "Returns all projects belonging to the authenticated user, ordered by creation date descending.",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Array of projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/Project" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trpc/projects.create": {
+      "post": {
+        "tags": ["Projects"],
+        "summary": "Create a project",
+        "description": "Creates a new financial analysis project.",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProjectInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created project ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": { "data": { "type": "object", "properties": { "id": { "type": "string", "format": "uuid" } } } }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trpc/projects.get": {
+      "get": {
+        "tags": ["Projects"],
+        "summary": "Get a single project",
+        "description": "Returns a project by ID. Must belong to the authenticated user.",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "input",
+            "in": "query",
+            "description": "JSON-encoded input: `{\"id\": \"<uuid>\"}`",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Project object", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Project" } } } },
+          "404": { "description": "Project not found" }
+        }
+      }
+    },
+    "/api/trpc/projects.update": {
+      "post": {
+        "tags": ["Projects"],
+        "summary": "Update a project",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "format": "uuid" },
+                  "data": { "$ref": "#/components/schemas/ProjectInput" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/api/trpc/projects.delete": {
+      "post": {
+        "tags": ["Projects"],
+        "summary": "Delete a project",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "properties": { "id": { "type": "string", "format": "uuid" } } }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/api/trpc/projects.duplicate": {
+      "post": {
+        "tags": ["Projects"],
+        "summary": "Duplicate a project",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "properties": { "id": { "type": "string", "format": "uuid" } } }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New project ID",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "id": { "type": "string", "format": "uuid" } } } } }
+          }
+        }
+      }
+    },
+    "/api/trpc/projects.scenarios.list": {
+      "get": {
+        "tags": ["Scenarios"],
+        "summary": "List project scenarios",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "parameters": [
+          { "name": "input", "in": "query", "description": "JSON-encoded: `{\"projectId\": \"<uuid>\"}`", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Array of scenarios" } }
+      }
+    },
+    "/api/trpc/projects.scenarios.create": {
+      "post": {
+        "tags": ["Scenarios"],
+        "summary": "Save a scenario snapshot",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "responses": { "200": { "description": "Created scenario ID" } }
+      }
+    },
+    "/api/ai/insights": {
+      "post": {
+        "tags": ["AI"],
+        "summary": "Generate AI financial insights",
+        "description": "Uses OpenAI (GPT-4o-mini) to generate a viability diagnosis for a project.",
+        "security": [{ "cookieAuth": [] }, { "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "projectData": { "$ref": "#/components/schemas/ProjectInput" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "AI-generated insights",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insights": { "type": "string" },
+                    "generatedAt": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": { "type": "apiKey", "in": "cookie", "name": "app_session" },
+      "bearerAuth": { "type": "http", "scheme": "bearer" }
+    },
+    "schemas": {
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "openId": { "type": "string" },
+              "name": { "type": "string", "nullable": true },
+              "email": { "type": "string", "nullable": true },
+              "loginMethod": { "type": "string", "nullable": true },
+              "lastSignedIn": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "userId": { "type": "integer" },
+          "name": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "initialInvestment": { "type": "number" },
+          "yearlyRevenue": { "type": "number" },
+          "operatingCosts": { "type": "number" },
+          "maintenanceCosts": { "type": "number" },
+          "projectDuration": { "type": "integer" },
+          "discountRate": { "type": "number" },
+          "revenueGrowth": { "type": "number" },
+          "bestCaseMultiplier": { "type": "number" },
+          "worstCaseMultiplier": { "type": "number" },
+          "businessModel": { "type": "string", "enum": ["standard", "saas", "ecommerce", "manufacturing"], "nullable": true },
+          "results": { "type": "object", "nullable": true, "description": "Calculated financial metrics (ROI, NPV, IRR, Payback, cash flows)" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ProjectInput": {
+        "type": "object",
+        "required": ["name", "initialInvestment", "yearlyRevenue", "operatingCosts", "maintenanceCosts", "projectDuration", "discountRate", "revenueGrowth", "bestCaseMultiplier", "worstCaseMultiplier"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 255 },
+          "description": { "type": "string" },
+          "initialInvestment": { "type": "number", "minimum": 0 },
+          "yearlyRevenue": { "type": "number", "minimum": 0 },
+          "operatingCosts": { "type": "number", "minimum": 0 },
+          "maintenanceCosts": { "type": "number", "minimum": 0 },
+          "projectDuration": { "type": "integer", "minimum": 1 },
+          "discountRate": { "type": "number", "minimum": 0 },
+          "revenueGrowth": { "type": "number" },
+          "bestCaseMultiplier": { "type": "number", "minimum": 0 },
+          "worstCaseMultiplier": { "type": "number", "minimum": 0 },
+          "businessModel": { "type": "string", "enum": ["standard", "saas", "ecommerce", "manufacturing"] }
+        }
+      }
+    }
+  }
+}

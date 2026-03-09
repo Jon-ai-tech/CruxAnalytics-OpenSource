@@ -23,12 +23,14 @@ function InputField({
     value,
     onChange,
     prefix,
+    suffix,
     hint,
 }: {
     label: string;
     value: string;
     onChange: (val: string) => void;
     prefix?: string;
+    suffix?: string;
     hint?: string;
 }) {
     return (
@@ -43,6 +45,7 @@ function InputField({
                     placeholderTextColor="#6b7280"
                     keyboardType="numeric"
                 />
+                {suffix && <Text className="text-gray-500 pr-4">{suffix}</Text>}
             </View>
             {hint && <Text className="text-gray-500 text-xs mt-1">{hint}</Text>}
         </View>
@@ -58,22 +61,25 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
             <Text className="text-white font-semibold mb-4">{t('calculators.cash_flow.projection_12_months')}</Text>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View className="flex-row gap-2 pb-4">
+                <View className="flex-row gap-2 pb-2">
                     {forecasts.map((forecast, index) => {
                         const height = Math.abs(forecast.balance) / maxBalance * 100;
                         const isPositive = forecast.balance >= 0;
 
                         return (
-                            <View key={index} className="items-center w-16">
+                            <View key={index} className="items-center" style={{ width: 44 }}>
                                 {/* Bar */}
-                                <View className="h-32 w-8 justify-end bg-slate-800 rounded-lg overflow-hidden">
+                                <View
+                                    className="justify-end bg-slate-800 rounded-lg overflow-hidden"
+                                    style={{ height: 48, width: 18 }}
+                                >
                                     <View
                                         className={`w-full rounded-t-lg ${isPositive ? 'bg-[#86EFAC]' : 'bg-[#FB923C]'}`}
                                         style={{ height: `${Math.max(height, 10)}%` }}
                                     />
                                 </View>
                                 {/* Month label */}
-                                <Text className="text-gray-400 text-xs mt-2">{t('calculators.cash_flow.month')} {forecast.month}</Text>
+                                <Text className="text-gray-400 text-xs mt-1">{forecast.month}</Text>
                                 {/* Value */}
                                 <Text className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
                                     ${forecast.balance != null ? (forecast.balance / 1000).toFixed(0) : '0'}k
@@ -233,9 +239,9 @@ export default function CashFlowPage() {
                     />
                 </View>
 
-                <View className="flex-row flex-wrap gap-6">
+                <View className="gap-6">
                     {/* Input Form */}
-                    <View className="flex-1 min-w-[300px]">
+                    <View className="w-full">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">{t('calculators.enter_data')}</Text>
 
@@ -267,14 +273,14 @@ export default function CashFlowPage() {
                                 label={t('calculators.cash_flow.expected_growth')}
                                 value={expectedGrowth}
                                 onChange={setExpectedGrowth}
-                                prefix="%"
+                                suffix="%"
                                 hint={t('calculators.cash_flow.expected_growth_hint')}
                             />
                         </GlassCard>
                     </View>
 
                     {/* Results */}
-                    <View className="flex-1 min-w-[300px] gap-4">
+                    <View className="w-full gap-4">
                         {result ? (
                             <>
                                 {/* Summary Cards */}

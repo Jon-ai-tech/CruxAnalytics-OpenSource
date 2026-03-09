@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -79,20 +79,20 @@ function ResultCard({
     color: 'indigo' | 'emerald' | 'amber' | 'rose';
     large?: boolean;
 }) {
-    const colorMap = {
-        indigo: 'from-[#14B8A6] to-[#86EFAC]',
-        emerald: 'from-[#86EFAC] to-[#14B8A6]',
-        amber: 'from-[#FB923C] to-orange-500',
-        rose: 'from-[#FB923C] to-pink-500',
+    const bgColorMap = {
+        indigo: 'bg-[#14B8A6]',
+        emerald: 'bg-[#86EFAC]',
+        amber: 'bg-[#FB923C]',
+        rose: 'bg-rose-500',
     };
 
     return (
-        <GlassCard className={`${large ? 'col-span-2' : ''}`}>
+        <GlassCard className={large ? 'w-full' : 'flex-1 min-w-[140px]'}>
             <View className="flex-row items-center gap-3 mb-2">
-                <View className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorMap[color]} items-center justify-center`}>
+                <View className={`w-10 h-10 rounded-lg ${bgColorMap[color]} items-center justify-center`}>
                     <Text className="text-xl">{icon}</Text>
                 </View>
-                <Text className="text-gray-400 text-sm">{label}</Text>
+                <Text className="text-gray-400 text-sm flex-1">{label}</Text>
             </View>
             <Text className={`text-white font-bold ${large ? 'text-3xl' : 'text-2xl'}`}>
                 {value}
@@ -121,13 +121,14 @@ function BreakEvenChart({
     const maxUnits = Math.max(breakEvenUnits * 1.5, currentUnits || 0);
     const breakEvenPercent = (breakEvenUnits / maxUnits) * 100;
     const currentPercent = currentUnits ? (currentUnits / maxUnits) * 100 : null;
+    const barHeight = Dimensions.get('window').width < 600 ? 20 : 32;
 
     return (
-        <GlassCard>
-            <Text className="text-white font-semibold mb-4">{t('calculators.break_even.visualization')}</Text>
+        <GlassCard className="p-4">
+            <Text className="text-white font-semibold mb-3">{t('calculators.break_even.visualization')}</Text>
 
             {/* Chart Bar */}
-            <View className="h-8 bg-slate-800 rounded-full overflow-hidden relative">
+            <View className="bg-slate-800 rounded-full overflow-hidden relative" style={{ height: barHeight }}>
                 {/* Loss zone */}
                 <View
                     className="absolute left-0 top-0 bottom-0 bg-[#FB923C]/30"
@@ -155,7 +156,7 @@ function BreakEvenChart({
             </View>
 
             {/* Labels */}
-            <View className="flex-row justify-between mt-4">
+            <View className="flex-row justify-between mt-2">
                 <View>
                     <Text className="text-rose-400 text-xs">🔴 {t('calculators.break_even.loss')}</Text>
                     <Text className="text-gray-500 text-xs">0 - {breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>
@@ -328,9 +329,9 @@ export default function BreakEvenPage() {
                     />
                 </View>
 
-                <View className="flex-row flex-wrap gap-6">
+                <View className="gap-6">
                     {/* Input Form */}
-                    <View className="flex-1 min-w-[300px]">
+                    <View className="w-full">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">
                                 {t('calculators.enter_data')}
@@ -371,7 +372,7 @@ export default function BreakEvenPage() {
                     </View>
 
                     {/* Results */}
-                    <View className="flex-1 min-w-[300px] gap-4">
+                    <View className="w-full gap-4">
                         {result ? (
                             <>
                                 {/* Main Results */}

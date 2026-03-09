@@ -169,9 +169,9 @@ export default function PricingPage() {
                     />
                 </View>
 
-                <View className="flex-row flex-wrap gap-6">
+                <View className="gap-6">
                     {/* Form */}
-                    <View className="flex-1 min-w-[300px]">
+                    <View className="w-full">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">
                                 {t('calculators.enter_data')}
@@ -204,7 +204,7 @@ export default function PricingPage() {
                     </View>
 
                     {/* Results */}
-                    <View className="flex-1 min-w-[300px] gap-4">
+                    <View className="w-full gap-4">
                         {result ? (
                             <>
                                 {/* Main Price */}

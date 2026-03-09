@@ -282,6 +282,83 @@ export function addNotificationResponseListener(
 }
 
 /**
+ * Check all projects and schedule one-time notifications for those
+ * that haven't been updated in `staleDays` days.
+ * Safe to call on every app launch – it skips projects that already have
+ * a pending stale notification stored under STALE_NOTIF_KEY.
+ */
+const STALE_NOTIF_KEY = '@stale_project_notifications';
+
+export async function checkStaleProjects(
+  projects: Array<{ id: string; name: string; updatedAt?: string | null }>,
+  staleDays = 30,
+): Promise<void> {
+  try {
+    const enabled = await areNotificationsEnabled();
+    if (!enabled) return;
+
+    const nowMs = Date.now();
+    const thresholdMs = staleDays * 24 * 60 * 60 * 1000;
+
+    // Load already-scheduled stale notif ids to avoid duplicates
+    const storedRaw = await AsyncStorage.getItem(STALE_NOTIF_KEY);
+    const scheduledIds: Record<string, number> = storedRaw ? JSON.parse(storedRaw) : {};
+
+    const updatedScheduled = { ...scheduledIds };
+    let changed = false;
+
+    for (const project of projects) {
+      if (!project.updatedAt) continue;
+
+      const lastUpdatedMs = new Date(project.updatedAt).getTime();
+      const ageMs = nowMs - lastUpdatedMs;
+
+      if (ageMs < thresholdMs) continue; // project is recent, skip
+
+      // Check if we already have a pending notification for this project
+      const existingNotifId = scheduledIds[project.id];
+      if (existingNotifId) {
+        const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+        const stillPending = scheduled.some(
+          (n) => (n as any).identifier === String(existingNotifId),
+        );
+        if (stillPending) continue; // already scheduled
+      }
+
+      const days = Math.floor(ageMs / (24 * 60 * 60 * 1000));
+      const body = `"${project.name}" no ha sido actualizado en ${days} días. ¿Es momento de revisar tus números?`;
+
+      // Schedule for 10 seconds from now (one-shot) so it fires soon but
+      // doesn't interrupt the current session immediately.
+      const notifId = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: '📊 Recordatorio de Proyecto',
+          body,
+          data: { projectId: project.id, type: 'stale_reminder' },
+          sound: true,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 10,
+          repeats: false,
+        },
+      });
+
+      updatedScheduled[project.id] = Date.now();
+      changed = true;
+
+      console.log(`[Notifications] Stale reminder scheduled for "${project.name}" (${days}d)`);
+    }
+
+    if (changed) {
+      await AsyncStorage.setItem(STALE_NOTIF_KEY, JSON.stringify(updatedScheduled));
+    }
+  } catch (error) {
+    console.error('Error checking stale projects:', error);
+  }
+}
+
+/**
  * Get frequency display name
  */
 export function getFrequencyDisplayName(

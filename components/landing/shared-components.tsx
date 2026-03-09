@@ -21,6 +21,7 @@ export function GlassCard({
 }) {
     return (
         <View
+            style={{ borderRadius: 16 }}
             className={`
         rounded-2xl p-6
         bg-white/5 backdrop-blur-xl
@@ -67,6 +68,7 @@ export function GradientButton({
     return (
         <Pressable
             onPress={onPress}
+            style={{ borderRadius: 16, overflow: 'hidden' }}
             className={`
         rounded-2xl overflow-hidden
         active:scale-95 transition-transform
@@ -177,15 +179,15 @@ export function SectionHeading({
     centered?: boolean;
 }) {
     return (
-        <View className={`mb-8 ${centered ? 'items-center' : ''}`}>
+        <View className={`mb-8 w-full ${centered ? 'items-center' : ''}`}>
             <Text
-                className={`text-3xl md:text-4xl font-bold text-white ${centered ? 'text-center' : ''}`}
+                className={`text-3xl font-bold text-white ${centered ? 'text-center' : ''}`}
             >
                 {title}
             </Text>
             {subtitle && (
                 <Text
-                    className={`text-gray-400 text-lg mt-2 max-w-xl ${centered ? 'text-center' : ''}`}
+                    className={`text-gray-400 text-base mt-2 ${centered ? 'text-center' : ''}`}
                 >
                     {subtitle}
                 </Text>
@@ -215,6 +217,7 @@ export function Badge({
 
     return (
         <View
+            style={{ borderRadius: 8 }}
             className={`px-3 py-1 rounded-lg border ${variantClasses[variant]} ${className}`}
         >
             <Text className="text-xs font-medium">{children}</Text>

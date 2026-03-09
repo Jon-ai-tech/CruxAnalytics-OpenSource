@@ -14,6 +14,7 @@ import { ScreenContainer } from '@/components/screen-container';
 import { ScenarioSlider } from '@/components/business/scenario-slider';
 import { MetricCard } from '@/components/business/metric-card';
 import { ComparisonChart } from '@/components/business/comparison-chart';
+import { RadarChart } from '@/components/business/radar-chart';
 import { useTranslation } from '@/lib/i18n-context';
 import { getProject, saveScenarioSnapshot } from '@/lib/project-storage';
 import { calculateFinancialMetrics } from '@/lib/financial-calculator';
@@ -384,6 +385,46 @@ export default function CompareScenarioScreen() {
                 />
               </View>
             </View>
+          </View>
+        </View>
+
+        {/* Radar Chart – visual overview */}
+        <View className="mb-6">
+          <Text className="text-xl font-bold text-foreground mb-4">
+            {t('compare.radar_title')}
+          </Text>
+          <View className="bg-surface rounded-xl border border-border p-4 items-center">
+            <RadarChart
+              size={220}
+              baseLabel={t('compare.base')}
+              dynamicLabel={t('compare.dynamic')}
+              axes={[
+                {
+                  label: 'ROI',
+                  baseValue: baseScenario.roi,
+                  dynamicValue: dynamicScenario.roi,
+                  higherIsBetter: true,
+                },
+                {
+                  label: 'NPV',
+                  baseValue: baseScenario.npv,
+                  dynamicValue: dynamicScenario.npv,
+                  higherIsBetter: true,
+                },
+                {
+                  label: 'IRR',
+                  baseValue: baseScenario.irr,
+                  dynamicValue: dynamicScenario.irr,
+                  higherIsBetter: true,
+                },
+                {
+                  label: t('metrics.payback.label'),
+                  baseValue: baseScenario.paybackPeriod,
+                  dynamicValue: dynamicScenario.paybackPeriod,
+                  higherIsBetter: false,
+                },
+              ]}
+            />
           </View>
         </View>
 

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -78,6 +78,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
     const maxWidth = 100;
     const clicksWidth = impressions && clicks ? (clicks / impressions) * maxWidth : maxWidth;
     const conversionsWidth = clicks ? (conversions / clicks) * clicksWidth : maxWidth * 0.5;
+    const barHeight = Dimensions.get('window').width < 600 ? 12 : 24;
 
     return (
         <GlassCard>
@@ -90,7 +91,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
                             <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.impressions')}</Text>
                             <Text className="text-white">{impressions.toLocaleString()}</Text>
                         </View>
-                        <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
+                        <View style={{ height: barHeight }} className="bg-slate-700 rounded-full overflow-hidden">
                             <View className="h-full bg-blue-500 rounded-full" style={{ width: '100%' }} />
                         </View>
                     </View>
@@ -102,7 +103,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
                             <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.clicks')}</Text>
                             <Text className="text-white">{clicks.toLocaleString()}</Text>
                         </View>
-                        <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
+                        <View style={{ height: barHeight }} className="bg-slate-700 rounded-full overflow-hidden">
                             <View
                                 className="h-full bg-[#14B8A6] rounded-full"
                                 style={{ width: `${clicksWidth}%` }}
@@ -116,7 +117,7 @@ function FunnelVisual({ impressions, clicks, conversions, t }: { impressions?: n
                         <Text className="text-gray-400 text-sm">{t('calculators.marketing_roi.conversions')}</Text>
                         <Text className="text-emerald-400 font-bold">{conversions.toLocaleString()}</Text>
                     </View>
-                    <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
+                    <View style={{ height: barHeight }} className="bg-slate-700 rounded-full overflow-hidden">
                         <View
                             className="h-full bg-[#86EFAC] rounded-full"
                             style={{ width: `${Math.max(conversionsWidth, 5)}%` }}
@@ -238,9 +239,9 @@ export default function MarketingPage() {
                     />
                 </View>
 
-                <View className="flex-row flex-wrap gap-6">
+                <View className="gap-6">
                     {/* Form */}
-                    <View className="flex-1 min-w-[300px]">
+                    <View className="w-full">
                         <GlassCard>
                             <Text className="text-white font-semibold text-lg mb-6">
                                 {t('calculators.enter_data')}
@@ -286,7 +287,7 @@ export default function MarketingPage() {
                     </View>
 
                     {/* Results */}
-                    <View className="flex-1 min-w-[300px] gap-4">
+                    <View className="w-full gap-4">
                         {result ? (
                             <>
                                 {/* Main Metrics */}

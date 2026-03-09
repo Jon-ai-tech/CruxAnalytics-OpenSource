@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -72,6 +73,21 @@ async function startServer() {
     res.json({ ok: true, timestamp: Date.now(), version: "4.5.0" });
   });
 
+  // Serve static files from the 'web' directory
+  const webPath = path.join(__dirname, "web");
+  app.use(express.static(webPath));
+
+  // API documentation (Swagger UI)
+  // In production the files land in dist/web (via `expo export`).
+  // In development they live in public/.
+  const publicPath = path.join(__dirname, "..", "public");
+  const resolveDocs = (file: string) => {
+    const fromBuild = path.join(webPath, file);
+    return fs.existsSync(fromBuild) ? fromBuild : path.join(publicPath, file);
+  };
+  app.get("/api/docs", (_req, res) => res.sendFile(resolveDocs("api-docs.html")));
+  app.get("/api/openapi.json", (_req, res) => res.sendFile(resolveDocs("openapi.json")));
+
   // Register API routes
   const aiRoutes = await import("../routes/ai");
   const subscriptionRoutes = await import("../routes/subscription");
@@ -85,10 +101,6 @@ async function startServer() {
       createContext,
     }),
   );
-
-  // Serve static files from the 'web' directory
-  const webPath = path.join(__dirname, "web");
-  app.use(express.static(webPath));
 
   // Wildcard route to serve index.html for client-side routing
   app.get("*", (req, res, next) => {

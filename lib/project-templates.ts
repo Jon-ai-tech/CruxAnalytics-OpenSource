@@ -1,3 +1,18 @@
+export interface IndustryBenchmark {
+  /** Typical gross margin (%) */
+  grossMarginPct: number;
+  /** Typical net margin (%) */
+  netMarginPct: number;
+  /** Average payback in months */
+  avgPaybackMonths: number;
+  /** Typical annual revenue growth (%) */
+  revenueGrowthPct: number;
+  /** Source label shown to users */
+  source: string;
+  /** Extra industry-specific note */
+  note?: string;
+}
+
 export interface ProjectTemplate {
   id: string;
   icon: string;
@@ -11,6 +26,8 @@ export interface ProjectTemplate {
     projectDuration: number;
     discountRate: number;
   };
+  /** Typical industry benchmarks for reference */
+  benchmarks?: IndustryBenchmark;
 }
 
 /**
@@ -42,16 +59,19 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     descriptionKey: 'templates.saas_description',
     category: 'tech',
     data: {
-      // Typical SaaS: $50K initial (dev, infrastructure, marketing)
       initialInvestment: 50000,
-      // $120K ARR ($10K MRR) - realistic for early SaaS
       yearlyRevenue: 120000,
-      // $5K/month (hosting, salaries, marketing, support)
       monthlyCosts: 5000,
-      // 24 months to reach profitability
       projectDuration: 24,
-      // Higher risk = higher discount rate
       discountRate: 15,
+    },
+    benchmarks: {
+      grossMarginPct: 72,
+      netMarginPct: 18,
+      avgPaybackMonths: 20,
+      revenueGrowthPct: 30,
+      source: 'SaaStr / Bessemer 2024',
+      note: 'CAC payback ~12 mo; churn <5%/yr is healthy',
     },
   },
 
@@ -63,16 +83,19 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     descriptionKey: 'templates.ecommerce_description',
     category: 'retail',
     data: {
-      // Initial: inventory, website, marketing
       initialInvestment: 30000,
-      // $180K/year ($15K/month revenue)
       yearlyRevenue: 180000,
-      // $8K/month (COGS 60%, marketing 15%, ops 10%)
       monthlyCosts: 8000,
-      // 18 months to establish brand
       projectDuration: 18,
-      // Moderate risk
       discountRate: 12,
+    },
+    benchmarks: {
+      grossMarginPct: 42,
+      netMarginPct: 8,
+      avgPaybackMonths: 14,
+      revenueGrowthPct: 20,
+      source: 'Shopify / NRF 2024',
+      note: 'COGS ~58%; avg cart $85; conversion 2–3%',
     },
   },
 
@@ -84,16 +107,19 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     descriptionKey: 'templates.manufacturing_description',
     category: 'manufacturing',
     data: {
-      // Heavy CAPEX: machinery, facility, tooling
       initialInvestment: 200000,
-      // $400K/year production revenue
       yearlyRevenue: 400000,
-      // $20K/month (raw materials, labor, utilities, maintenance)
       monthlyCosts: 20000,
-      // 36 months to ROI (capital intensive)
       projectDuration: 36,
-      // Lower risk, established industry
       discountRate: 10,
+    },
+    benchmarks: {
+      grossMarginPct: 38,
+      netMarginPct: 9,
+      avgPaybackMonths: 30,
+      revenueGrowthPct: 7,
+      source: 'Deloitte Manufacturing Report 2024',
+      note: 'EBITDA margin ~14%; OEE target 85%',
     },
   },
 
@@ -105,16 +131,19 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     descriptionKey: 'templates.mobile_app_description',
     category: 'tech',
     data: {
-      // Development, design, marketing launch
       initialInvestment: 40000,
-      // $90K/year (ads + IAP)
       yearlyRevenue: 90000,
-      // $3.5K/month (servers, updates, marketing)
       monthlyCosts: 3500,
-      // 18 months to scale user base
       projectDuration: 18,
-      // High risk, competitive market
       discountRate: 18,
+    },
+    benchmarks: {
+      grossMarginPct: 65,
+      netMarginPct: 12,
+      avgPaybackMonths: 16,
+      revenueGrowthPct: 40,
+      source: 'AppAnnie / Sensor Tower 2024',
+      note: 'D30 retention ~25%; ARPU $3–8/mo for freemium',
     },
   },
 
@@ -126,16 +155,19 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     descriptionKey: 'templates.restaurant_description',
     category: 'retail',
     data: {
-      // Lease, equipment, initial inventory, licenses
       initialInvestment: 100000,
-      // $300K/year revenue
       yearlyRevenue: 300000,
-      // $18K/month (COGS 30%, labor 30%, rent 10%, utilities 5%)
       monthlyCosts: 18000,
-      // 24 months to establish reputation
       projectDuration: 24,
-      // Moderate-high risk
       discountRate: 14,
+    },
+    benchmarks: {
+      grossMarginPct: 65,
+      netMarginPct: 6,
+      avgPaybackMonths: 24,
+      revenueGrowthPct: 8,
+      source: 'NRA Restaurant Industry Report 2024',
+      note: 'Prime cost (COGS+labor) should stay under 60%',
     },
   },
 
@@ -147,16 +179,19 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     descriptionKey: 'templates.consulting_description',
     category: 'tech',
     data: {
-      // Low initial: office setup, marketing, certifications
       initialInvestment: 15000,
-      // $150K/year (2-3 consultants billing)
       yearlyRevenue: 150000,
-      // $6K/month (salaries, software, marketing)
       monthlyCosts: 6000,
-      // 12 months to build client base
       projectDuration: 12,
-      // Low risk, service-based
       discountRate: 8,
+    },
+    benchmarks: {
+      grossMarginPct: 55,
+      netMarginPct: 22,
+      avgPaybackMonths: 8,
+      revenueGrowthPct: 15,
+      source: 'IBIS World Consulting 2024',
+      note: 'Utilization rate target 70–75%; avg bill rate $150–250/hr',
     },
   },
 ];
