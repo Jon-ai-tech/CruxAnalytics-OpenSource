@@ -1,8 +1,7 @@
 /**
  * @fileoverview Landing Page for CruxAnalytics
- * Aesthetic: Editorial, bold typography, generous whitespace.
- * Inspired by wearecollins.com — dark theme variant.
- * Mobile-first responsive design.
+ * Aesthetic: Collins-inspired — Editorial serif, extreme whitespace, strategic neon accents
+ * Dark theme with bold typography and grid-based structure
  */
 
 import React from 'react';
@@ -11,7 +10,6 @@ import {
     Text,
     ScrollView,
     Pressable,
-    Platform,
     Linking,
     Dimensions,
 } from 'react-native';
@@ -19,32 +17,19 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LanguageSelector } from '@/components/language-selector';
 import { useTranslation } from '@/lib/i18n-context';
-import {
-    GlassCard,
-    GradientButton,
-    OutlineButton,
-    FeatureCard,
-    StatNumber,
-    SectionHeading,
-    TestimonialCard,
-    Badge,
-    TractionStat,
-    RoadmapCard,
-    PricingCard,
-    VanguardMetricCard,
-} from '@/components/landing/shared-components';
+import { GradientButton, OutlineButton } from '@/components/landing/shared-components';
 
 const ACCENT = '#00C0D4';
 const MINT = '#A7F3D0';
-const CORAL = '#FDBA74';
 const BG = '#0A0A0A';
+const GRID_COLOR = 'rgba(0, 192, 212, 0.08)';
 
 function useIsSmall() {
     return Dimensions.get('window').width < 768;
 }
 
 // ============================================
-// NAV BAR — minimal Collins-style
+// NAVIGATION BAR
 // ============================================
 function NavBar() {
     const router = useRouter();
@@ -52,22 +37,26 @@ function NavBar() {
 
     return (
         <View style={{
-            position: 'absolute', top: 0, left: 0, right: 0, zIndex: 50,
-            backgroundColor: 'rgba(10,10,10,0.85)',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            backgroundColor: BG,
             borderBottomWidth: 1,
-            borderBottomColor: 'rgba(255,255,255,0.06)',
+            borderBottomColor: 'rgba(255,255,255,0.08)',
+            paddingHorizontal: 24,
+            paddingVertical: 16,
         }}>
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                paddingHorizontal: 20,
-                paddingVertical: 16,
-                maxWidth: 1200,
+                maxWidth: 1400,
                 marginHorizontal: 'auto',
                 width: '100%',
             }}>
-                <Text style={{ fontSize: 18, fontWeight: '800', color: '#FFFFFF' }}>
+                <Text style={{ fontSize: 20, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Georgia' }}>
                     Crux<Text style={{ color: ACCENT }}>Analytics</Text>
                 </Text>
 
@@ -76,13 +65,13 @@ function NavBar() {
                     <Pressable
                         onPress={() => router.push('/(tabs)')}
                         style={{
-                            backgroundColor: ACCENT,
-                            paddingHorizontal: 16,
-                            paddingVertical: 8,
+                            backgroundColor: '#FFFFFF',
+                            paddingHorizontal: 18,
+                            paddingVertical: 10,
                             borderRadius: 100,
                         }}
                     >
-                        <Text style={{ color: '#0A0A0A', fontWeight: '700', fontSize: 13 }}>
+                        <Text style={{ color: BG, fontWeight: '800', fontSize: 13 }}>
                             {t('landing.nav.enter_app')}
                         </Text>
                     </Pressable>
@@ -93,17 +82,12 @@ function NavBar() {
 }
 
 // ============================================
-// HERO — Collins editorial: huge type, max whitespace
+// HERO SECTION — Collins-style tagline
 // ============================================
 function HeroSection() {
     const router = useRouter();
     const { t } = useTranslation();
     const isSmall = useIsSmall();
-
-    const titleParts = t('landing.hero.title').split(
-        t('common.language_code') === 'es' ? 'está en riesgo' : 'is at risk'
-    );
-    const highlight = t('common.language_code') === 'es' ? 'está en riesgo' : 'is at risk';
 
     return (
         <View style={{
@@ -112,39 +96,31 @@ function HeroSection() {
             alignItems: 'center',
             paddingHorizontal: 24,
             paddingTop: isSmall ? 120 : 160,
-            paddingBottom: isSmall ? 60 : 100,
+            paddingBottom: isSmall ? 80 : 120,
         }}>
-            <View style={{ maxWidth: 720, alignItems: 'center' }}>
-                {/* Badge */}
-                <Badge variant="success">
-                    <Text style={{ color: MINT, fontSize: 12, fontWeight: '600' }}>
-                        {t('landing.hero.badge')}
-                    </Text>
-                </Badge>
-
-                {/* Title — editorial, huge */}
+            <View style={{ maxWidth: 800, alignItems: 'center' }}>
+                {/* Tagline — huge serif */}
                 <Text style={{
-                    fontSize: isSmall ? 36 : 64,
+                    fontSize: isSmall ? 42 : 72,
                     fontWeight: '800',
                     color: '#FFFFFF',
                     textAlign: 'center',
-                    marginTop: 24,
-                    lineHeight: isSmall ? 44 : 74,
+                    fontFamily: 'Georgia',
+                    lineHeight: isSmall ? 52 : 88,
+                    marginBottom: 32,
                     letterSpacing: -1,
                 }}>
-                    {titleParts[0]}
-                    <Text style={{ color: ACCENT }}>{highlight}</Text>
-                    {titleParts[1] || ''}
+                    Discover if your business is at risk.
                 </Text>
 
                 {/* Subtitle */}
                 <Text style={{
                     fontSize: isSmall ? 16 : 20,
-                    color: 'rgba(255,255,255,0.45)',
+                    color: 'rgba(255,255,255,0.6)',
                     textAlign: 'center',
-                    marginTop: 20,
                     lineHeight: isSmall ? 26 : 32,
-                    maxWidth: 520,
+                    maxWidth: 600,
+                    marginBottom: 48,
                 }}>
                     {t('landing.hero.subtitle')}
                 </Text>
@@ -152,8 +128,7 @@ function HeroSection() {
                 {/* CTAs */}
                 <View style={{
                     flexDirection: isSmall ? 'column' : 'row',
-                    gap: 12,
-                    marginTop: 40,
+                    gap: 16,
                     alignItems: 'center',
                     width: isSmall ? '100%' : undefined,
                 }}>
@@ -174,19 +149,18 @@ function HeroSection() {
                 <View style={{
                     flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: 20,
-                    marginTop: 48,
+                    gap: 24,
+                    marginTop: 64,
                     justifyContent: 'center',
-                    opacity: 0.5,
                 }}>
                     {[
-                        { icon: 'lock-closed' as const, text: t('landing.hero.privacy') },
-                        { icon: 'flash' as const, text: t('landing.hero.results') },
-                        { icon: 'bulb' as const, text: t('landing.hero.ai') },
+                        { icon: 'lock-closed' as const, text: 'Privacy First' },
+                        { icon: 'flash' as const, text: '2 Minutes' },
+                        { icon: 'bulb' as const, text: 'AI-Powered' },
                     ].map((item, i) => (
-                        <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                            <Ionicons name={item.icon} size={14} color="rgba(255,255,255,0.6)" />
-                            <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13 }}>
+                        <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                            <Ionicons name={item.icon} size={16} color={ACCENT} />
+                            <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>
                                 {item.text}
                             </Text>
                         </View>
@@ -198,350 +172,106 @@ function HeroSection() {
 }
 
 // ============================================
-// DIVIDER — thin line
+// GRID DIVIDER — Collins aesthetic
 // ============================================
-function Divider() {
+function GridDivider() {
     return (
         <View style={{
             height: 1,
-            backgroundColor: 'rgba(255,255,255,0.06)',
+            backgroundColor: GRID_COLOR,
             marginHorizontal: 24,
+            marginVertical: 80,
         }} />
     );
 }
 
 // ============================================
-// PROBLEM SECTION
+// PROGRAMS SECTION — Collins-style grid
 // ============================================
-function ProblemSection() {
+function ProgramsSection() {
     const { t } = useTranslation();
     const isSmall = useIsSmall();
 
-    const pains = [
-        { icon: 'alert-circle' as const, title: t('landing.problem.pain1_title'), desc: t('landing.problem.pain1_desc') },
-        { icon: 'cash' as const, title: t('landing.problem.pain2_title'), desc: t('landing.problem.pain2_desc') },
-        { icon: 'help-circle' as const, title: t('landing.problem.pain3_title'), desc: t('landing.problem.pain3_desc') },
+    const programs = [
+        { title: 'Break-Even', subtitle: 'Find your financial threshold' },
+        { title: 'Cash Flow', subtitle: 'Understand your liquidity' },
+        { title: 'Pricing', subtitle: 'Optimize your revenue' },
+        { title: 'Marketing', subtitle: 'Calculate ROI by channel' },
     ];
 
     return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <SectionHeading
-                    title={t('landing.problem.title')}
-                    subtitle={t('landing.problem.subtitle')}
-                    centered
-                />
+        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
+            <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
+                {/* Section title */}
+                <Text style={{
+                    fontSize: isSmall ? 32 : 48,
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    fontFamily: 'Georgia',
+                    marginBottom: 16,
+                    lineHeight: isSmall ? 40 : 56,
+                }}>
+                    Calculators
+                </Text>
+                <Text style={{
+                    fontSize: isSmall ? 16 : 18,
+                    color: 'rgba(255,255,255,0.5)',
+                    marginBottom: 56,
+                    lineHeight: 28,
+                }}>
+                    Professional financial analysis tools built for entrepreneurs
+                </Text>
 
-                {/* Stats */}
+                {/* Grid */}
                 <View style={{
-                    flexDirection: 'row',
+                    flexDirection: isSmall ? 'column' : 'row',
                     flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    gap: isSmall ? 24 : 48,
-                    marginBottom: isSmall ? 40 : 64,
+                    gap: 24,
                 }}>
-                    <StatNumber value={80} suffix="%" label={t('landing.problem.stat1')} />
-                    <StatNumber value={60} suffix="%" label={t('landing.problem.stat2')} />
-                    <StatNumber value={45} suffix="%" label={t('landing.problem.stat3')} />
-                </View>
-
-                {/* Pain cards */}
-                <View style={{
-                    flexDirection: isSmall ? 'column' : 'row',
-                    gap: 16,
-                }}>
-                    {pains.map((pain, i) => (
-                        <View key={i} style={{
-                            flex: 1,
-                            padding: 24,
-                            borderRadius: 16,
-                            backgroundColor: 'rgba(255,255,255,0.03)',
-                            borderWidth: 1,
-                            borderColor: 'rgba(255,255,255,0.06)',
-                        }}>
-                            <View style={{
-                                width: 48, height: 48, borderRadius: 24,
-                                backgroundColor: 'rgba(253,186,116,0.1)',
-                                alignItems: 'center', justifyContent: 'center',
-                                marginBottom: 16,
-                            }}>
-                                <Ionicons name={pain.icon} size={24} color={CORAL} />
-                            </View>
-                            <Text style={{ color: '#FFFFFF', fontSize: 17, fontWeight: '700', marginBottom: 8 }}>
-                                {pain.title}
-                            </Text>
-                            <Text style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 22 }}>
-                                {pain.desc}
-                            </Text>
-                        </View>
-                    ))}
-                </View>
-            </View>
-        </View>
-    );
-}
-
-// ============================================
-// SOLUTION SECTION
-// ============================================
-function SolutionSection() {
-    const { t } = useTranslation();
-    const isSmall = useIsSmall();
-
-    const titleParts = t('landing.solution.title').split(
-        t('common.language_code') === 'es' ? 'Gratis' : 'Free'
-    );
-    const highlight = t('common.language_code') === 'es' ? 'Gratis y en 2 minutos.' : 'Free and in 2 minutes.';
-
-    const features = [
-        t('landing.solution.feature1'),
-        t('landing.solution.feature2'),
-        t('landing.solution.feature3'),
-        t('landing.solution.feature4'),
-    ];
-
-    return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <View style={{
-                    flexDirection: isSmall ? 'column' : 'row',
-                    gap: isSmall ? 40 : 64,
-                    alignItems: isSmall ? 'stretch' : 'center',
-                }}>
-                    {/* Text */}
-                    <View style={{ flex: 1 }}>
-                        <Badge>{t('landing.solution.badge')}</Badge>
-                        <Text style={{
-                            fontSize: isSmall ? 28 : 38,
-                            fontWeight: '700',
-                            color: '#FFFFFF',
-                            marginTop: 16,
-                            lineHeight: isSmall ? 36 : 48,
-                            letterSpacing: -0.5,
-                        }}>
-                            {titleParts[0]}
-                            <Text style={{ color: ACCENT }}>{highlight}</Text>
-                        </Text>
-                        <Text style={{
-                            color: 'rgba(255,255,255,0.45)',
-                            fontSize: 16,
-                            marginTop: 16,
-                            lineHeight: 26,
-                        }}>
-                            {t('landing.solution.subtitle')}
-                        </Text>
-
-                        <View style={{ gap: 14, marginTop: 24 }}>
-                            {features.map((feat, i) => (
-                                <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                                    <View style={{
-                                        width: 28, height: 28, borderRadius: 14,
-                                        backgroundColor: 'rgba(167,243,208,0.15)',
-                                        alignItems: 'center', justifyContent: 'center',
-                                    }}>
-                                        <Ionicons name="checkmark" size={16} color={MINT} />
-                                    </View>
-                                    <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 15 }}>{feat}</Text>
-                                </View>
-                            ))}
-                        </View>
-                    </View>
-
-                    {/* Visual mock */}
-                    <View style={{ flex: 1 }}>
-                        <View style={{
-                            borderRadius: 16,
-                            backgroundColor: 'rgba(255,255,255,0.03)',
-                            borderWidth: 1,
-                            borderColor: 'rgba(255,255,255,0.08)',
-                            padding: 24,
-                        }}>
-                            <View style={{
-                                backgroundColor: 'rgba(0,0,0,0.4)',
-                                borderRadius: 12,
-                                padding: 20,
-                            }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                                    <Ionicons name="checkmark-circle" size={18} color={MINT} />
-                                    <Text style={{ color: MINT, fontSize: 13, fontWeight: '600' }}>
-                                        {t('landing.solution.visual_status')}
-                                    </Text>
-                                </View>
-                                <Text style={{ color: '#FFFFFF', fontSize: 22, fontWeight: '700' }}>
-                                    {t('landing.solution.visual_health')}
-                                </Text>
-
-                                <View style={{ flexDirection: 'row', gap: 12, marginTop: 20 }}>
-                                    <View style={{
-                                        flex: 1, borderRadius: 10, padding: 14,
-                                        backgroundColor: 'rgba(255,255,255,0.04)',
-                                    }}>
-                                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11 }}>
-                                            {t('landing.solution.visual_breakeven')}
-                                        </Text>
-                                        <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '700', marginTop: 4 }}>
-                                            $8,500
-                                        </Text>
-                                        <Text style={{ color: MINT, fontSize: 11, marginTop: 2 }}>
-                                            {t('landing.solution.visual_margin')}
-                                        </Text>
-                                    </View>
-                                    <View style={{
-                                        flex: 1, borderRadius: 10, padding: 14,
-                                        backgroundColor: 'rgba(255,255,255,0.04)',
-                                    }}>
-                                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11 }}>
-                                            {t('landing.solution.visual_runway')}
-                                        </Text>
-                                        <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '700', marginTop: 4 }}>
-                                            {t('landing.solution.visual_runway_val')}
-                                        </Text>
-                                        <Text style={{ color: MINT, fontSize: 11, marginTop: 2 }}>
-                                            {t('landing.solution.visual_health')}
-                                        </Text>
-                                    </View>
-                                </View>
-
-                                {/* Vanguard mini */}
-                                <View style={{
-                                    marginTop: 16, paddingTop: 16,
-                                    borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.06)',
+                    {programs.map((prog, i) => (
+                        <View
+                            key={i}
+                            style={{
+                                flex: isSmall ? 1 : 0.48,
+                                borderWidth: 1,
+                                borderColor: GRID_COLOR,
+                                borderStyle: 'dashed',
+                                padding: 32,
+                                minHeight: 200,
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <View>
+                                <Text style={{
+                                    fontSize: isSmall ? 24 : 28,
+                                    fontWeight: '700',
+                                    color: '#FFFFFF',
+                                    marginBottom: 12,
                                 }}>
-                                    <Text style={{
-                                        color: 'rgba(255,255,255,0.3)', fontSize: 10,
-                                        letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10,
-                                    }}>
-                                        Vanguard Crux Metrics
-                                    </Text>
-                                    <View style={{ flexDirection: 'row', gap: 12 }}>
-                                        {[
-                                            { label: 'OFI', value: '12%', color: ACCENT },
-                                            { label: 'TFDI', value: '8%', color: MINT },
-                                            { label: 'SER', value: '2.4x', color: CORAL },
-                                        ].map(m => (
-                                            <View key={m.label} style={{ flex: 1, alignItems: 'center' }}>
-                                                <Text style={{ color: m.color, fontSize: 16, fontWeight: '700' }}>
-                                                    {m.value}
-                                                </Text>
-                                                <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10 }}>
-                                                    {m.label}
-                                                </Text>
-                                            </View>
-                                        ))}
-                                    </View>
-                                </View>
+                                    {prog.title}
+                                </Text>
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: 'rgba(255,255,255,0.5)',
+                                    lineHeight: 22,
+                                }}>
+                                    {prog.subtitle}
+                                </Text>
+                            </View>
+                            <View style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: 16,
+                                backgroundColor: ACCENT,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                alignSelf: 'flex-start',
+                                marginTop: 24,
+                            }}>
+                                <Text style={{ color: BG, fontWeight: '800', fontSize: 16 }}>→</Text>
                             </View>
                         </View>
-                    </View>
-                </View>
-            </View>
-        </View>
-    );
-}
-
-// ============================================
-// FEATURES SECTION
-// ============================================
-function FeaturesSection() {
-    const { t } = useTranslation();
-    const isSmall = useIsSmall();
-
-    const features = [
-        { icon: 'trending-up' as const, title: t('landing.features.f1_title'), description: t('landing.features.f1_desc'), highlight: true },
-        { icon: 'wallet' as const, title: t('landing.features.f2_title'), description: t('landing.features.f2_desc'), highlight: false },
-        { icon: 'pricetag' as const, title: t('landing.features.f3_title'), description: t('landing.features.f3_desc'), highlight: false },
-        { icon: 'card' as const, title: t('landing.features.f4_title'), description: t('landing.features.f4_desc'), highlight: false },
-        { icon: 'people' as const, title: t('landing.features.f5_title'), description: t('landing.features.f5_desc'), highlight: false },
-        { icon: 'megaphone' as const, title: t('landing.features.f6_title'), description: t('landing.features.f6_desc'), highlight: false },
-    ];
-
-    return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <SectionHeading
-                    title={t('landing.features.title')}
-                    subtitle={t('landing.features.subtitle')}
-                    centered
-                />
-
-                <View style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    gap: 16,
-                    justifyContent: 'center',
-                }}>
-                    {features.map((feature, index) => (
-                        <FeatureCard
-                            key={index}
-                            icon={<Ionicons name={feature.icon} size={22} color="#FFFFFF" />}
-                            title={feature.title}
-                            description={feature.description}
-                            highlight={feature.highlight}
-                        />
                     ))}
-                </View>
-            </View>
-        </View>
-    );
-}
-
-// ============================================
-// TRACTION SECTION
-// ============================================
-function TractionSection() {
-    const { t } = useTranslation();
-    const isSmall = useIsSmall();
-
-    return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <View style={{ alignItems: 'center', marginBottom: 16 }}>
-                    <Badge variant="success">{t('landing.traction.badge')}</Badge>
-                </View>
-                <SectionHeading
-                    title={t('landing.traction.title')}
-                    subtitle={t('landing.traction.subtitle')}
-                    centered
-                />
-
-                <View style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    gap: 12,
-                    justifyContent: 'center',
-                }}>
-                    <TractionStat value={t('landing.traction.stat1_value')} label={t('landing.traction.stat1_label')} color="teal" />
-                    <TractionStat value={t('landing.traction.stat2_value')} label={t('landing.traction.stat2_label')} color="mint" />
-                    <TractionStat value={t('landing.traction.stat3_value')} label={t('landing.traction.stat3_label')} color="coral" />
-                    <TractionStat value={t('landing.traction.stat4_value')} label={t('landing.traction.stat4_label')} color="teal" />
-                </View>
-
-                {/* Quote */}
-                <View style={{
-                    marginTop: 48,
-                    maxWidth: 600,
-                    marginHorizontal: 'auto',
-                    alignItems: 'center',
-                    paddingVertical: 32,
-                    paddingHorizontal: 24,
-                    borderRadius: 16,
-                    backgroundColor: 'rgba(255,255,255,0.03)',
-                    borderWidth: 1,
-                    borderColor: 'rgba(255,255,255,0.06)',
-                }}>
-                    <Text style={{
-                        color: 'rgba(255,255,255,0.7)',
-                        fontSize: isSmall ? 18 : 22,
-                        fontWeight: '600',
-                        textAlign: 'center',
-                        lineHeight: isSmall ? 28 : 34,
-                        fontStyle: 'italic',
-                    }}>
-                        "{t('landing.traction.quote')}"
-                    </Text>
-                    <Text style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, marginTop: 16 }}>
-                        — {t('landing.traction.quote_author')}
-                    </Text>
                 </View>
             </View>
         </View>
@@ -551,107 +281,87 @@ function TractionSection() {
 // ============================================
 // VANGUARD METRICS SECTION
 // ============================================
-function VanguardMetricsSection() {
+function VanguardSection() {
     const { t } = useTranslation();
     const isSmall = useIsSmall();
 
-    return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <View style={{ alignItems: 'center', marginBottom: 16 }}>
-                    <Badge>{t('landing.vanguard_section.badge')}</Badge>
-                </View>
-                <SectionHeading
-                    title={t('landing.vanguard_section.title')}
-                    subtitle={t('landing.vanguard_section.subtitle')}
-                    centered
-                />
-
-                <View style={{
-                    flexDirection: isSmall ? 'column' : 'row',
-                    gap: 16,
-                    justifyContent: 'center',
-                }}>
-                    <VanguardMetricCard
-                        acronym="OFI"
-                        title={t('landing.vanguard_section.m1_title')}
-                        description={t('landing.vanguard_section.m1_desc')}
-                        badge={t('landing.vanguard_section.m1_badge')}
-                        color="teal"
-                    />
-                    <VanguardMetricCard
-                        acronym="TFDI"
-                        title={t('landing.vanguard_section.m2_title')}
-                        description={t('landing.vanguard_section.m2_desc')}
-                        badge={t('landing.vanguard_section.m2_badge')}
-                        color="mint"
-                    />
-                    <VanguardMetricCard
-                        acronym="SER"
-                        title={t('landing.vanguard_section.m3_title')}
-                        description={t('landing.vanguard_section.m3_desc')}
-                        badge={t('landing.vanguard_section.m3_badge')}
-                        color="coral"
-                    />
-                </View>
-            </View>
-        </View>
-    );
-}
-
-// ============================================
-// BUSINESS MODEL SECTION
-// ============================================
-function BusinessModelSection() {
-    const { t } = useTranslation();
-    const isSmall = useIsSmall();
-
-    const tiers = [
-        {
-            name: t('landing.business_model.tier1_name'),
-            price: t('landing.business_model.tier1_price'),
-            description: t('landing.business_model.tier1_desc'),
-            features: [t('landing.business_model.tier1_f1'), t('landing.business_model.tier1_f2'), t('landing.business_model.tier1_f3'), t('landing.business_model.tier1_f4')],
-            highlighted: false,
-        },
-        {
-            name: t('landing.business_model.tier2_name'),
-            price: t('landing.business_model.tier2_price'),
-            description: t('landing.business_model.tier2_desc'),
-            badge: t('landing.business_model.tier2_badge'),
-            features: [t('landing.business_model.tier2_f1'), t('landing.business_model.tier2_f2'), t('landing.business_model.tier2_f3'), t('landing.business_model.tier2_f4')],
-            highlighted: true,
-        },
-        {
-            name: t('landing.business_model.tier3_name'),
-            price: t('landing.business_model.tier3_price'),
-            description: t('landing.business_model.tier3_desc'),
-            badge: t('landing.business_model.tier3_badge'),
-            features: [t('landing.business_model.tier3_f1'), t('landing.business_model.tier3_f2'), t('landing.business_model.tier3_f3'), t('landing.business_model.tier3_f4')],
-            highlighted: false,
-        },
+    const metrics = [
+        { acronym: 'OFI', name: 'Operating Flow Index', desc: 'Measure business health' },
+        { acronym: 'TFDI', name: 'Total Financial Dependency Index', desc: 'Understand dependencies' },
+        { acronym: 'SER', name: 'Stability Efficiency Ratio', desc: 'Track sustainability' },
     ];
 
     return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <View style={{ alignItems: 'center', marginBottom: 16 }}>
-                    <Badge variant="warning">{t('landing.business_model.badge')}</Badge>
-                </View>
-                <SectionHeading
-                    title={t('landing.business_model.title')}
-                    subtitle={t('landing.business_model.subtitle')}
-                    centered
-                />
+        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
+            <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
+                <Text style={{
+                    fontSize: isSmall ? 32 : 48,
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    fontFamily: 'Georgia',
+                    marginBottom: 16,
+                    lineHeight: isSmall ? 40 : 56,
+                }}>
+                    Vanguard Metrics
+                </Text>
+                <Text style={{
+                    fontSize: isSmall ? 16 : 18,
+                    color: 'rgba(255,255,255,0.5)',
+                    marginBottom: 56,
+                    lineHeight: 28,
+                }}>
+                    Proprietary financial indicators designed for decision makers
+                </Text>
 
                 <View style={{
                     flexDirection: isSmall ? 'column' : 'row',
-                    gap: 16,
-                    justifyContent: 'center',
-                    marginTop: 16,
+                    gap: 24,
                 }}>
-                    {tiers.map((tier, i) => (
-                        <PricingCard key={i} {...tier} />
+                    {metrics.map((m, i) => (
+                        <View
+                            key={i}
+                            style={{
+                                flex: 1,
+                                borderWidth: 1,
+                                borderColor: GRID_COLOR,
+                                borderStyle: 'dashed',
+                                padding: 32,
+                            }}
+                        >
+                            <View style={{
+                                width: 56,
+                                height: 56,
+                                borderRadius: 12,
+                                backgroundColor: `${ACCENT}20`,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: 20,
+                            }}>
+                                <Text style={{
+                                    color: ACCENT,
+                                    fontSize: 18,
+                                    fontWeight: '900',
+                                    fontFamily: 'monospace',
+                                }}>
+                                    {m.acronym}
+                                </Text>
+                            </View>
+                            <Text style={{
+                                fontSize: 18,
+                                fontWeight: '700',
+                                color: '#FFFFFF',
+                                marginBottom: 8,
+                            }}>
+                                {m.name}
+                            </Text>
+                            <Text style={{
+                                fontSize: 14,
+                                color: 'rgba(255,255,255,0.5)',
+                                lineHeight: 22,
+                            }}>
+                                {m.desc}
+                            </Text>
+                        </View>
                     ))}
                 </View>
             </View>
@@ -660,76 +370,86 @@ function BusinessModelSection() {
 }
 
 // ============================================
-// ROADMAP SECTION
+// CASE STUDIES SECTION
 // ============================================
-function RoadmapSection() {
-    const { t } = useTranslation();
+function CaseStudiesSection() {
     const isSmall = useIsSmall();
 
-    const steps = [
-        { quarter: t('landing.roadmap.q1_label'), title: t('landing.roadmap.q1_title'), description: t('landing.roadmap.q1_desc'), status: 'completed' as const },
-        { quarter: t('landing.roadmap.q2_label'), title: t('landing.roadmap.q2_title'), description: t('landing.roadmap.q2_desc'), status: 'in_progress' as const },
-        { quarter: t('landing.roadmap.q3_label'), title: t('landing.roadmap.q3_title'), description: t('landing.roadmap.q3_desc'), status: 'planned' as const },
-        { quarter: t('landing.roadmap.q4_label'), title: t('landing.roadmap.q4_title'), description: t('landing.roadmap.q4_desc'), status: 'planned' as const, isLast: true },
+    const cases = [
+        { title: 'E-Commerce Startup', result: '3x Revenue Growth' },
+        { title: 'SaaS Platform', result: '45% Cost Reduction' },
+        { title: 'Consulting Firm', result: '2.1x Profitability' },
+        { title: 'Tech Startup', result: '18-Month Runway' },
     ];
 
     return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <View style={{ alignItems: 'center', marginBottom: 16 }}>
-                    <Badge>{t('landing.roadmap.badge')}</Badge>
-                </View>
-                <SectionHeading
-                    title={t('landing.roadmap.title')}
-                    subtitle={t('landing.roadmap.subtitle')}
-                    centered
-                />
-
-                <View style={{ maxWidth: 560, marginHorizontal: 'auto', width: '100%' }}>
-                    {steps.map((step, i) => (
-                        <RoadmapCard key={i} {...step} />
-                    ))}
-                </View>
-            </View>
-        </View>
-    );
-}
-
-// ============================================
-// TESTIMONIALS SECTION
-// ============================================
-function TestimonialsSection() {
-    const { t } = useTranslation();
-    const isSmall = useIsSmall();
-
-    return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
-            <View style={{ maxWidth: 1100, marginHorizontal: 'auto', width: '100%' }}>
-                <SectionHeading
-                    title={t('landing.testimonials.title')}
-                    centered
-                />
+        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
+            <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
+                <Text style={{
+                    fontSize: isSmall ? 32 : 48,
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    fontFamily: 'Georgia',
+                    marginBottom: 16,
+                    lineHeight: isSmall ? 40 : 56,
+                }}>
+                    Results
+                </Text>
+                <Text style={{
+                    fontSize: isSmall ? 16 : 18,
+                    color: 'rgba(255,255,255,0.5)',
+                    marginBottom: 56,
+                    lineHeight: 28,
+                }}>
+                    Real outcomes from real businesses using CruxAnalytics
+                </Text>
 
                 <View style={{
                     flexDirection: isSmall ? 'column' : 'row',
-                    gap: 16,
-                    justifyContent: 'center',
+                    flexWrap: 'wrap',
+                    gap: 24,
                 }}>
-                    <TestimonialCard
-                        quote={t('landing.testimonials.t1_quote')}
-                        author={t('landing.testimonials.t1_author')}
-                        role={t('landing.testimonials.t1_role')}
-                    />
-                    <TestimonialCard
-                        quote={t('landing.testimonials.t2_quote')}
-                        author={t('landing.testimonials.t2_author')}
-                        role={t('landing.testimonials.t2_role')}
-                    />
-                    <TestimonialCard
-                        quote={t('landing.testimonials.t3_quote')}
-                        author={t('landing.testimonials.t3_author')}
-                        role={t('landing.testimonials.t3_role')}
-                    />
+                    {cases.map((c, i) => (
+                        <View
+                            key={i}
+                            style={{
+                                flex: isSmall ? 1 : 0.48,
+                                borderWidth: 1,
+                                borderColor: GRID_COLOR,
+                                borderStyle: 'dashed',
+                                padding: 32,
+                                minHeight: 160,
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Text style={{
+                                fontSize: 18,
+                                fontWeight: '700',
+                                color: '#FFFFFF',
+                                marginBottom: 16,
+                            }}>
+                                {c.title}
+                            </Text>
+                            <View>
+                                <Text style={{
+                                    fontSize: 12,
+                                    color: 'rgba(255,255,255,0.4)',
+                                    marginBottom: 4,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: 1,
+                                }}>
+                                    Result
+                                </Text>
+                                <Text style={{
+                                    fontSize: 28,
+                                    fontWeight: '800',
+                                    color: ACCENT,
+                                }}>
+                                    {c.result}
+                                </Text>
+                            </View>
+                        </View>
+                    ))}
                 </View>
             </View>
         </View>
@@ -745,104 +465,85 @@ function CTASection() {
     const isSmall = useIsSmall();
 
     return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: isSmall ? 60 : 100 }}>
+        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
             <View style={{
-                maxWidth: 720,
+                maxWidth: 900,
                 marginHorizontal: 'auto',
                 width: '100%',
                 alignItems: 'center',
-                paddingVertical: isSmall ? 48 : 72,
-                paddingHorizontal: 24,
-                borderRadius: 20,
-                backgroundColor: 'rgba(0,192,212,0.04)',
                 borderWidth: 1,
-                borderColor: 'rgba(0,192,212,0.15)',
+                borderColor: GRID_COLOR,
+                borderStyle: 'dashed',
+                paddingVertical: 80,
+                paddingHorizontal: 32,
             }}>
                 <Text style={{
-                    fontSize: isSmall ? 28 : 38,
-                    fontWeight: '700',
+                    fontSize: isSmall ? 36 : 56,
+                    fontWeight: '800',
                     color: '#FFFFFF',
                     textAlign: 'center',
-                    lineHeight: isSmall ? 36 : 48,
-                    letterSpacing: -0.5,
+                    fontFamily: 'Georgia',
+                    lineHeight: isSmall ? 44 : 68,
+                    marginBottom: 24,
+                    letterSpacing: -1,
                 }}>
-                    {t('landing.cta.title')}
+                    Ready to analyze your business?
                 </Text>
                 <Text style={{
-                    color: 'rgba(255,255,255,0.45)',
                     fontSize: 16,
-                    marginTop: 16,
+                    color: 'rgba(255,255,255,0.5)',
                     textAlign: 'center',
-                    maxWidth: 480,
+                    marginBottom: 48,
                     lineHeight: 26,
                 }}>
-                    {t('landing.cta.subtitle')}
+                    Get started in 2 minutes. No credit card required.
                 </Text>
 
                 <GradientButton
                     size="lg"
                     onPress={() => router.push('/(tabs)')}
-                    className="mt-8"
                 >
                     {t('landing.cta.button')}
                 </GradientButton>
-
-                <Text style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12, marginTop: 20 }}>
-                    {t('landing.cta.privacy')}
-                </Text>
             </View>
         </View>
     );
 }
 
 // ============================================
-// FOOTER — minimal
+// FOOTER
 // ============================================
 function Footer() {
-    const { t } = useTranslation();
     const isSmall = useIsSmall();
 
     return (
         <View style={{
             paddingHorizontal: 24,
-            paddingVertical: 32,
+            paddingVertical: 48,
             borderTopWidth: 1,
-            borderTopColor: 'rgba(255,255,255,0.06)',
+            borderTopColor: GRID_COLOR,
         }}>
             <View style={{
-                maxWidth: 1100,
+                maxWidth: 1200,
                 marginHorizontal: 'auto',
                 width: '100%',
                 flexDirection: isSmall ? 'column' : 'row',
                 justifyContent: 'space-between',
                 alignItems: isSmall ? 'center' : 'center',
-                gap: 16,
+                gap: 24,
             }}>
-                <View style={{ alignItems: isSmall ? 'center' : 'flex-start' }}>
-                    <Text style={{ fontSize: 18, fontWeight: '800', color: '#FFFFFF' }}>
-                        Crux<Text style={{ color: ACCENT }}>Analytics</Text>
-                    </Text>
-                    <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13, marginTop: 4 }}>
-                        {t('landing.footer.description')}
-                    </Text>
-                </View>
+                <Text style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>
+                    © 2026 CruxAnalytics. All rights reserved.
+                </Text>
 
                 <View style={{ flexDirection: 'row', gap: 24 }}>
                     <Pressable onPress={() => Linking.openURL('https://github.com/Jon-human-in-the-loop/CruxAnalytics')}>
-                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
-                            {t('landing.footer.github')}
-                        </Text>
+                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>GitHub</Text>
                     </Pressable>
                     <Pressable onPress={() => Linking.openURL('https://www.vanguardcrux.com/')}>
-                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
-                            {t('landing.footer.contact')}
-                        </Text>
+                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>Contact</Text>
                     </Pressable>
                 </View>
-
-                <Text style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>
-                    {t('landing.footer.copyright')}
-                </Text>
             </View>
         </View>
     );
@@ -859,23 +560,13 @@ export default function LandingPage() {
         >
             <NavBar />
             <HeroSection />
-            <Divider />
-            <ProblemSection />
-            <Divider />
-            <SolutionSection />
-            <Divider />
-            <FeaturesSection />
-            <Divider />
-            <TractionSection />
-            <Divider />
-            <VanguardMetricsSection />
-            <Divider />
-            <BusinessModelSection />
-            <Divider />
-            <RoadmapSection />
-            <Divider />
-            <TestimonialsSection />
-            <Divider />
+            <GridDivider />
+            <ProgramsSection />
+            <GridDivider />
+            <VanguardSection />
+            <GridDivider />
+            <CaseStudiesSection />
+            <GridDivider />
             <CTASection />
             <Footer />
         </ScrollView>
