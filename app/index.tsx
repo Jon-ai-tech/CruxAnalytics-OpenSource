@@ -1,10 +1,10 @@
 /**
  * @fileoverview Landing Page for CruxAnalytics
- * Aesthetic: Collins-inspired — Editorial serif, extreme whitespace, strategic neon accents
- * Dark theme with bold typography and grid-based structure
+ * Aesthetic: Tendril Studio inspired — Playfair Display, Glass-cards, smooth layout
+ * Dark theme with sophisticated typography and translucent elements
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -12,20 +12,36 @@ import {
     Pressable,
     Linking,
     Dimensions,
+    StyleSheet,
+    Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LanguageSelector } from '@/components/language-selector';
-import { useTranslation } from '@/lib/i18n-context';
-import { GradientButton, OutlineButton } from '@/components/landing/shared-components';
+import { useTranslation } from '@/providers/i18n-provider';
+import { 
+    GradientButton, 
+    OutlineButton, 
+    GlassCard, 
+    SectionHeading,
+    FeatureCard,
+    Badge
+} from '@/components/landing/shared-components';
 
 const ACCENT = '#00C0D4';
-const MINT = '#A7F3D0';
-const BG = '#0A0A0A';
-const GRID_COLOR = 'rgba(0, 192, 212, 0.08)';
+const BG = '#000000';
 
 function useIsSmall() {
-    return Dimensions.get('window').width < 768;
+    const [isSmall, setIsSmall] = useState(Dimensions.get('window').width < 768);
+    
+    useEffect(() => {
+        const subscription = Dimensions.addEventListener('change', ({ window }) => {
+            setIsSmall(window.width < 768);
+        });
+        return () => subscription.remove();
+    }, []);
+    
+    return isSmall;
 }
 
 // ============================================
@@ -42,36 +58,41 @@ function NavBar() {
             left: 0,
             right: 0,
             zIndex: 50,
-            backgroundColor: BG,
-            borderBottomWidth: 1,
-            borderBottomColor: 'rgba(255,255,255,0.08)',
+            backgroundColor: 'rgba(0,0,0,0.5)',
             paddingHorizontal: 24,
-            paddingVertical: 16,
+            paddingVertical: 20,
+            ...Platform.select({
+                web: {
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                }
+            })
         }}>
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                maxWidth: 1400,
+                maxWidth: 1200,
                 marginHorizontal: 'auto',
                 width: '100%',
             }}>
-                <Text style={{ fontSize: 20, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Georgia' }}>
+                <Text style={{ fontSize: 22, fontWeight: '900', color: '#FFFFFF', fontFamily: 'Inter-Bold' }}>
                     Crux<Text style={{ color: ACCENT }}>Analytics</Text>
                 </Text>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
                     <LanguageSelector />
                     <Pressable
                         onPress={() => router.push('/(tabs)')}
-                        style={{
+                        style={({ pressed }) => ({
                             backgroundColor: '#FFFFFF',
-                            paddingHorizontal: 18,
-                            paddingVertical: 10,
+                            paddingHorizontal: 20,
+                            paddingVertical: 12,
                             borderRadius: 100,
-                        }}
+                            opacity: pressed ? 0.8 : 1,
+                        })}
                     >
-                        <Text style={{ color: BG, fontWeight: '800', fontSize: 13 }}>
+                        <Text style={{ color: BG, fontWeight: '800', fontSize: 14, fontFamily: 'Inter-Bold' }}>
                             {t('landing.nav.enter_app')}
                         </Text>
                     </Pressable>
@@ -82,7 +103,7 @@ function NavBar() {
 }
 
 // ============================================
-// HERO SECTION — Collins-style tagline
+// HERO SECTION
 // ============================================
 function HeroSection() {
     const router = useRouter();
@@ -95,37 +116,42 @@ function HeroSection() {
             justifyContent: 'center',
             alignItems: 'center',
             paddingHorizontal: 24,
-            paddingTop: isSmall ? 120 : 160,
+            paddingTop: isSmall ? 140 : 160,
             paddingBottom: isSmall ? 80 : 120,
         }}>
-            <View style={{ maxWidth: 800, alignItems: 'center' }}>
-                {/* Tagline — huge serif */}
+            <View style={{ maxWidth: 900, alignItems: 'center' }}>
+                <Badge variant="success">
+                    <Text style={{ color: '#A7F3D0', fontSize: 12, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
+                        {t('landing.hero.badge')}
+                    </Text>
+                </Badge>
+
                 <Text style={{
-                    fontSize: isSmall ? 42 : 72,
+                    fontSize: isSmall ? 48 : 84,
                     fontWeight: '800',
                     color: '#FFFFFF',
                     textAlign: 'center',
-                    fontFamily: 'Georgia',
-                    lineHeight: isSmall ? 52 : 88,
-                    marginBottom: 32,
-                    letterSpacing: -1,
+                    fontFamily: 'PlayfairDisplay-Bold',
+                    lineHeight: isSmall ? 56 : 94,
+                    marginTop: 32,
+                    marginBottom: 24,
+                    letterSpacing: -2,
                 }}>
-                    Discover if your business is at risk.
+                    {t('landing.hero.title')}
                 </Text>
 
-                {/* Subtitle */}
                 <Text style={{
-                    fontSize: isSmall ? 16 : 20,
-                    color: 'rgba(255,255,255,0.6)',
+                    fontSize: isSmall ? 18 : 22,
+                    color: 'rgba(255,255,255,0.5)',
                     textAlign: 'center',
-                    lineHeight: isSmall ? 26 : 32,
-                    maxWidth: 600,
+                    lineHeight: isSmall ? 28 : 34,
+                    maxWidth: 640,
                     marginBottom: 48,
+                    fontFamily: 'Inter-Regular',
                 }}>
                     {t('landing.hero.subtitle')}
                 </Text>
 
-                {/* CTAs */}
                 <View style={{
                     flexDirection: isSmall ? 'column' : 'row',
                     gap: 16,
@@ -133,7 +159,7 @@ function HeroSection() {
                     width: isSmall ? '100%' : undefined,
                 }}>
                     <GradientButton
-                        size={isSmall ? 'md' : 'lg'}
+                        size="lg"
                         onPress={() => router.push('/(tabs)')}
                     >
                         {t('landing.hero.cta')}
@@ -145,22 +171,21 @@ function HeroSection() {
                     </OutlineButton>
                 </View>
 
-                {/* Trust row */}
                 <View style={{
                     flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: 24,
-                    marginTop: 64,
+                    gap: 32,
+                    marginTop: 80,
                     justifyContent: 'center',
                 }}>
                     {[
-                        { icon: 'lock-closed' as const, text: 'Privacy First' },
-                        { icon: 'flash' as const, text: '2 Minutes' },
-                        { icon: 'bulb' as const, text: 'AI-Powered' },
+                        { icon: 'lock-closed' as const, text: t('landing.hero.privacy') },
+                        { icon: 'flash' as const, text: t('landing.hero.results') },
+                        { icon: 'bulb' as const, text: t('landing.hero.ai') },
                     ].map((item, i) => (
-                        <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                            <Ionicons name={item.icon} size={16} color={ACCENT} />
-                            <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>
+                        <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                            <Ionicons name={item.icon} size={18} color={ACCENT} />
+                            <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, fontFamily: 'Inter-Medium' }}>
                                 {item.text}
                             </Text>
                         </View>
@@ -172,104 +197,38 @@ function HeroSection() {
 }
 
 // ============================================
-// GRID DIVIDER — Collins aesthetic
+// FEATURES SECTION
 // ============================================
-function GridDivider() {
-    return (
-        <View style={{
-            height: 1,
-            backgroundColor: GRID_COLOR,
-            marginHorizontal: 24,
-            marginVertical: 80,
-        }} />
-    );
-}
-
-// ============================================
-// PROGRAMS SECTION — Collins-style grid
-// ============================================
-function ProgramsSection() {
+function FeaturesSection() {
     const { t } = useTranslation();
     const isSmall = useIsSmall();
 
-    const programs = [
-        { title: 'Break-Even', subtitle: 'Find your financial threshold' },
-        { title: 'Cash Flow', subtitle: 'Understand your liquidity' },
-        { title: 'Pricing', subtitle: 'Optimize your revenue' },
-        { title: 'Marketing', subtitle: 'Calculate ROI by channel' },
+    const features = [
+        { icon: 'analytics', title: t('landing.features.f1_title'), desc: t('landing.features.f1_desc') },
+        { icon: 'cash', title: t('landing.features.f2_title'), desc: t('landing.features.f2_desc') },
+        { icon: 'pricetag', title: t('landing.features.f3_title'), desc: t('landing.features.f3_desc') },
+        { icon: 'trending-up', title: t('landing.features.f4_title'), desc: t('landing.features.f4_desc') },
+        { icon: 'people', title: t('landing.features.f5_title'), desc: t('landing.features.f5_desc') },
+        { icon: 'megaphone', title: t('landing.features.f6_title'), desc: t('landing.features.f6_desc') },
     ];
 
     return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
+        <View style={{ paddingHorizontal: 24, paddingVertical: 120 }}>
             <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
-                {/* Section title */}
-                <Text style={{
-                    fontSize: isSmall ? 32 : 48,
-                    fontWeight: '800',
-                    color: '#FFFFFF',
-                    fontFamily: 'Georgia',
-                    marginBottom: 16,
-                    lineHeight: isSmall ? 40 : 56,
-                }}>
-                    Calculators
-                </Text>
-                <Text style={{
-                    fontSize: isSmall ? 16 : 18,
-                    color: 'rgba(255,255,255,0.5)',
-                    marginBottom: 56,
-                    lineHeight: 28,
-                }}>
-                    Professional financial analysis tools built for entrepreneurs
-                </Text>
-
-                {/* Grid */}
+                <SectionHeading 
+                    title={t('landing.features.title')}
+                    subtitle={t('landing.features.subtitle')}
+                    badge="Features"
+                />
+                
                 <View style={{
                     flexDirection: isSmall ? 'column' : 'row',
                     flexWrap: 'wrap',
                     gap: 24,
                 }}>
-                    {programs.map((prog, i) => (
-                        <View
-                            key={i}
-                            style={{
-                                flex: isSmall ? 1 : 0.48,
-                                borderWidth: 1,
-                                borderColor: GRID_COLOR,
-                                borderStyle: 'dashed',
-                                padding: 32,
-                                minHeight: 200,
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <View>
-                                <Text style={{
-                                    fontSize: isSmall ? 24 : 28,
-                                    fontWeight: '700',
-                                    color: '#FFFFFF',
-                                    marginBottom: 12,
-                                }}>
-                                    {prog.title}
-                                </Text>
-                                <Text style={{
-                                    fontSize: 14,
-                                    color: 'rgba(255,255,255,0.5)',
-                                    lineHeight: 22,
-                                }}>
-                                    {prog.subtitle}
-                                </Text>
-                            </View>
-                            <View style={{
-                                width: 32,
-                                height: 32,
-                                borderRadius: 16,
-                                backgroundColor: ACCENT,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                alignSelf: 'flex-start',
-                                marginTop: 24,
-                            }}>
-                                <Text style={{ color: BG, fontWeight: '800', fontSize: 16 }}>→</Text>
-                            </View>
+                    {features.map((f, i) => (
+                        <View key={i} style={{ flex: isSmall ? 1 : 0.3 }}>
+                            <FeatureCard {...f} />
                         </View>
                     ))}
                 </View>
@@ -279,232 +238,34 @@ function ProgramsSection() {
 }
 
 // ============================================
-// VANGUARD METRICS SECTION
+// VANGUARD SECTION
 // ============================================
 function VanguardSection() {
     const { t } = useTranslation();
     const isSmall = useIsSmall();
 
-    const metrics = [
-        { acronym: 'OFI', name: 'Operating Flow Index', desc: 'Measure business health' },
-        { acronym: 'TFDI', name: 'Total Financial Dependency Index', desc: 'Understand dependencies' },
-        { acronym: 'SER', name: 'Stability Efficiency Ratio', desc: 'Track sustainability' },
-    ];
-
     return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
+        <View style={{ paddingHorizontal: 24, paddingVertical: 120, backgroundColor: 'rgba(255,255,255,0.02)' }}>
             <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
-                <Text style={{
-                    fontSize: isSmall ? 32 : 48,
-                    fontWeight: '800',
-                    color: '#FFFFFF',
-                    fontFamily: 'Georgia',
-                    marginBottom: 16,
-                    lineHeight: isSmall ? 40 : 56,
-                }}>
-                    Vanguard Metrics
-                </Text>
-                <Text style={{
-                    fontSize: isSmall ? 16 : 18,
-                    color: 'rgba(255,255,255,0.5)',
-                    marginBottom: 56,
-                    lineHeight: 28,
-                }}>
-                    Proprietary financial indicators designed for decision makers
-                </Text>
+                <SectionHeading 
+                    title="Vanguard Metrics"
+                    subtitle="Proprietary indicators for deep financial insight"
+                    badge="Innovation"
+                />
 
-                <View style={{
-                    flexDirection: isSmall ? 'column' : 'row',
-                    gap: 24,
-                }}>
-                    {metrics.map((m, i) => (
-                        <View
-                            key={i}
-                            style={{
-                                flex: 1,
-                                borderWidth: 1,
-                                borderColor: GRID_COLOR,
-                                borderStyle: 'dashed',
-                                padding: 32,
-                            }}
-                        >
-                            <View style={{
-                                width: 56,
-                                height: 56,
-                                borderRadius: 12,
-                                backgroundColor: `${ACCENT}20`,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: 20,
-                            }}>
-                                <Text style={{
-                                    color: ACCENT,
-                                    fontSize: 18,
-                                    fontWeight: '900',
-                                    fontFamily: 'monospace',
-                                }}>
-                                    {m.acronym}
-                                </Text>
-                            </View>
-                            <Text style={{
-                                fontSize: 18,
-                                fontWeight: '700',
-                                color: '#FFFFFF',
-                                marginBottom: 8,
-                            }}>
-                                {m.name}
-                            </Text>
-                            <Text style={{
-                                fontSize: 14,
-                                color: 'rgba(255,255,255,0.5)',
-                                lineHeight: 22,
-                            }}>
-                                {m.desc}
-                            </Text>
-                        </View>
+                <View style={{ flexDirection: isSmall ? 'column' : 'row', gap: 24 }}>
+                    {[
+                        { id: 'OFI', name: 'Operating Flow Index', desc: 'Real-time operational health' },
+                        { id: 'TFDI', name: 'Total Financial Dependency', desc: 'Risk and dependency analysis' },
+                        { id: 'SER', name: 'Stability Efficiency Ratio', desc: 'Growth sustainability metric' }
+                    ].map((m, i) => (
+                        <GlassCard key={i} style={{ flex: 1 }}>
+                            <Text style={{ color: ACCENT, fontSize: 32, fontWeight: '900', marginBottom: 16, fontFamily: 'Inter-Bold' }}>{m.id}</Text>
+                            <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '700', marginBottom: 12, fontFamily: 'Inter-Bold' }}>{m.name}</Text>
+                            <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, lineHeight: 24, fontFamily: 'Inter-Regular' }}>{m.desc}</Text>
+                        </GlassCard>
                     ))}
                 </View>
-            </View>
-        </View>
-    );
-}
-
-// ============================================
-// CASE STUDIES SECTION
-// ============================================
-function CaseStudiesSection() {
-    const isSmall = useIsSmall();
-
-    const cases = [
-        { title: 'E-Commerce Startup', result: '3x Revenue Growth' },
-        { title: 'SaaS Platform', result: '45% Cost Reduction' },
-        { title: 'Consulting Firm', result: '2.1x Profitability' },
-        { title: 'Tech Startup', result: '18-Month Runway' },
-    ];
-
-    return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
-            <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
-                <Text style={{
-                    fontSize: isSmall ? 32 : 48,
-                    fontWeight: '800',
-                    color: '#FFFFFF',
-                    fontFamily: 'Georgia',
-                    marginBottom: 16,
-                    lineHeight: isSmall ? 40 : 56,
-                }}>
-                    Results
-                </Text>
-                <Text style={{
-                    fontSize: isSmall ? 16 : 18,
-                    color: 'rgba(255,255,255,0.5)',
-                    marginBottom: 56,
-                    lineHeight: 28,
-                }}>
-                    Real outcomes from real businesses using CruxAnalytics
-                </Text>
-
-                <View style={{
-                    flexDirection: isSmall ? 'column' : 'row',
-                    flexWrap: 'wrap',
-                    gap: 24,
-                }}>
-                    {cases.map((c, i) => (
-                        <View
-                            key={i}
-                            style={{
-                                flex: isSmall ? 1 : 0.48,
-                                borderWidth: 1,
-                                borderColor: GRID_COLOR,
-                                borderStyle: 'dashed',
-                                padding: 32,
-                                minHeight: 160,
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Text style={{
-                                fontSize: 18,
-                                fontWeight: '700',
-                                color: '#FFFFFF',
-                                marginBottom: 16,
-                            }}>
-                                {c.title}
-                            </Text>
-                            <View>
-                                <Text style={{
-                                    fontSize: 12,
-                                    color: 'rgba(255,255,255,0.4)',
-                                    marginBottom: 4,
-                                    textTransform: 'uppercase',
-                                    letterSpacing: 1,
-                                }}>
-                                    Result
-                                </Text>
-                                <Text style={{
-                                    fontSize: 28,
-                                    fontWeight: '800',
-                                    color: ACCENT,
-                                }}>
-                                    {c.result}
-                                </Text>
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            </View>
-        </View>
-    );
-}
-
-// ============================================
-// CTA SECTION
-// ============================================
-function CTASection() {
-    const router = useRouter();
-    const { t } = useTranslation();
-    const isSmall = useIsSmall();
-
-    return (
-        <View style={{ paddingHorizontal: 24, paddingVertical: 80 }}>
-            <View style={{
-                maxWidth: 900,
-                marginHorizontal: 'auto',
-                width: '100%',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: GRID_COLOR,
-                borderStyle: 'dashed',
-                paddingVertical: 80,
-                paddingHorizontal: 32,
-            }}>
-                <Text style={{
-                    fontSize: isSmall ? 36 : 56,
-                    fontWeight: '800',
-                    color: '#FFFFFF',
-                    textAlign: 'center',
-                    fontFamily: 'Georgia',
-                    lineHeight: isSmall ? 44 : 68,
-                    marginBottom: 24,
-                    letterSpacing: -1,
-                }}>
-                    Ready to analyze your business?
-                </Text>
-                <Text style={{
-                    fontSize: 16,
-                    color: 'rgba(255,255,255,0.5)',
-                    textAlign: 'center',
-                    marginBottom: 48,
-                    lineHeight: 26,
-                }}>
-                    Get started in 2 minutes. No credit card required.
-                </Text>
-
-                <GradientButton
-                    size="lg"
-                    onPress={() => router.push('/(tabs)')}
-                >
-                    {t('landing.cta.button')}
-                </GradientButton>
             </View>
         </View>
     );
@@ -514,14 +275,15 @@ function CTASection() {
 // FOOTER
 // ============================================
 function Footer() {
+    const { t } = useTranslation();
     const isSmall = useIsSmall();
 
     return (
         <View style={{
             paddingHorizontal: 24,
-            paddingVertical: 48,
+            paddingVertical: 64,
             borderTopWidth: 1,
-            borderTopColor: GRID_COLOR,
+            borderTopColor: 'rgba(255,255,255,0.05)',
         }}>
             <View style={{
                 maxWidth: 1200,
@@ -529,19 +291,24 @@ function Footer() {
                 width: '100%',
                 flexDirection: isSmall ? 'column' : 'row',
                 justifyContent: 'space-between',
-                alignItems: isSmall ? 'center' : 'center',
-                gap: 24,
+                alignItems: 'center',
+                gap: 32,
             }}>
-                <Text style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>
-                    © 2026 CruxAnalytics. All rights reserved.
-                </Text>
+                <View>
+                    <Text style={{ fontSize: 20, fontWeight: '900', color: '#FFFFFF', marginBottom: 8, fontFamily: 'Inter-Bold' }}>
+                        Crux<Text style={{ color: ACCENT }}>Analytics</Text>
+                    </Text>
+                    <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14, fontFamily: 'Inter-Regular' }}>
+                        {t('landing.footer.copyright')}
+                    </Text>
+                </View>
 
-                <View style={{ flexDirection: 'row', gap: 24 }}>
+                <View style={{ flexDirection: 'row', gap: 32 }}>
                     <Pressable onPress={() => Linking.openURL('https://github.com/Jon-human-in-the-loop/CruxAnalytics')}>
-                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>GitHub</Text>
+                        <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, fontFamily: 'Inter-Medium' }}>GitHub</Text>
                     </Pressable>
                     <Pressable onPress={() => Linking.openURL('https://www.vanguardcrux.com/')}>
-                        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>Contact</Text>
+                        <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, fontFamily: 'Inter-Medium' }}>Contact</Text>
                     </Pressable>
                 </View>
             </View>
@@ -553,6 +320,12 @@ function Footer() {
 // MAIN LANDING PAGE
 // ============================================
 export default function LandingPage() {
+    const { isReady } = useTranslation();
+
+    if (!isReady) {
+        return <View style={{ flex: 1, backgroundColor: BG }} />;
+    }
+
     return (
         <ScrollView
             style={{ flex: 1, backgroundColor: BG }}
@@ -560,14 +333,8 @@ export default function LandingPage() {
         >
             <NavBar />
             <HeroSection />
-            <GridDivider />
-            <ProgramsSection />
-            <GridDivider />
+            <FeaturesSection />
             <VanguardSection />
-            <GridDivider />
-            <CaseStudiesSection />
-            <GridDivider />
-            <CTASection />
             <Footer />
         </ScrollView>
     );

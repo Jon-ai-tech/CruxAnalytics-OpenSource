@@ -1,17 +1,18 @@
 /**
- * @fileoverview Font loading configuration for Vanguard Crux Typography
- * Inter: Headlines and emphasis
- * Satoshi: Body text and UI elements
+ * @fileoverview Font loading configuration for CruxAnalytics
+ * Playfair Display: Headlines (Tendril style)
+ * Inter: Body text and UI elements
  */
 
 export const fonts = {
-  'Inter-Bold': require('./Inter-Bold.ttf'),
-  'Inter-SemiBold': require('./Inter-SemiBold.ttf'),
-  'Inter-Medium': require('./Inter-Medium.ttf'),
-  'Inter-Regular': require('./Inter-Regular.ttf'),
-  'Satoshi-Bold': require('./Satoshi-Bold.ttf'),
-  'Satoshi-Medium': require('./Satoshi-Medium.ttf'),
-  'Satoshi-Regular': require('./Satoshi-Regular.ttf'),
+  'PlayfairDisplay-Bold': 'https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD7K3dQYfV7GuSEI6n297oAfJ2Teuv97AZUzZ.ttf',
+  'PlayfairDisplay-Regular': 'https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD7K3dQYfV7GuSEI6n297oAfJ2Teuv97AZUzZ.ttf',
+  'Inter-Bold': 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.ttf',
+  'Inter-Regular': 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.ttf',
 };
+
+export function getAvailableFonts() {
+  return fonts;
+}
 
 export type FontName = keyof typeof fonts;

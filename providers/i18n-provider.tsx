@@ -12,6 +12,7 @@ interface I18nContextType {
     setLanguage: (lang: Language) => Promise<void>;
     t: (key: string, params?: Record<string, string>) => string;
     translations: Translations;
+    isReady: boolean;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -26,6 +27,7 @@ const translationsMap: Record<Language, Translations> = {
 export function I18nProvider({ children }: { children: ReactNode }) {
     const [language, setLanguageState] = useState<Language>('es');
     const [translations, setTranslations] = useState<Translations>(esTranslations);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         loadLanguage();
@@ -40,6 +42,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
             }
         } catch (error) {
             console.error('Error loading language:', error);
+        } finally {
+            setIsReady(true);
         }
     };
 
@@ -80,7 +84,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <I18nContext.Provider value={{ language, setLanguage, t, translations }}>
+        <I18nContext.Provider value={{ language, setLanguage, t, translations, isReady }}>
             {children}
         </I18nContext.Provider>
     );
