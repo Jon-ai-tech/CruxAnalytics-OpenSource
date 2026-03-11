@@ -1,16 +1,25 @@
 /**
- * @fileoverview Shared UI components for the landing page and app.
- * Premium, glassmorphism-styled components with animations.
- * Updated: investor-grade components added (TractionStat, RoadmapCard, PricingCard)
+ * @fileoverview Shared UI components for the landing page.
+ * Aesthetic: Editorial, bold typography, generous whitespace.
+ * Inspired by wearecollins.com — dark theme variant.
  */
 
 import React from 'react';
-import { View, Text, Pressable, Animated, Dimensions } from 'react-native';
+import { View, Text, Pressable, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
-/**
- * Glass-styled card with blur effect and gradient border
- */
+const ACCENT = '#00C0D4';
+const MINT = '#A7F3D0';
+const CORAL = '#FDBA74';
+
+function useIsSmall() {
+    return Dimensions.get('window').width < 768;
+}
+
+// ============================================
+// GLASS CARD — simplified, less "glassy"
+// ============================================
 export function GlassCard({
     children,
     className = '',
@@ -20,24 +29,14 @@ export function GlassCard({
     className?: string;
     gradient?: boolean;
 }) {
-    const isSmall = Dimensions.get('window').width < 600;
-    const paddingClass = className.includes('p-') ? '' : (isSmall ? 'p-4' : 'p-6');
-
     return (
         <View
-            style={{ borderRadius: 16 }}
-            className={`
-        rounded-2xl ${paddingClass}
-        bg-white/5 backdrop-blur-xl
-        border border-white/10
-        shadow-2xl shadow-black/20
-        ${className}
-      `}
+            className={`rounded-2xl p-6 bg-white/[0.04] border border-white/[0.08] ${className}`}
         >
             {gradient && (
-                <View className="absolute inset-0 rounded-2xl overflow-hidden opacity-20">
+                <View className="absolute inset-0 rounded-2xl overflow-hidden opacity-10">
                     <LinearGradient
-                        colors={['#00C0D4', '#A7F3D0', '#FDBA74']}
+                        colors={[ACCENT, MINT]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                         style={{ flex: 1 }}
@@ -49,9 +48,9 @@ export function GlassCard({
     );
 }
 
-/**
- * Gradient button with hover effects
- */
+// ============================================
+// PRIMARY BUTTON — solid, no gradient noise
+// ============================================
 export function GradientButton({
     children,
     onPress,
@@ -63,37 +62,41 @@ export function GradientButton({
     size?: 'sm' | 'md' | 'lg';
     className?: string;
 }) {
-    const sizeClasses = {
-        sm: 'px-4 py-2 text-sm',
-        md: 'px-6 py-3 text-base',
-        lg: 'px-8 py-4 text-lg',
+    const sizeStyles = {
+        sm: { paddingHorizontal: 20, paddingVertical: 10 },
+        md: { paddingHorizontal: 28, paddingVertical: 14 },
+        lg: { paddingHorizontal: 36, paddingVertical: 18 },
     };
+
+    const fontSizes = { sm: 14, md: 16, lg: 18 };
 
     return (
         <Pressable
             onPress={onPress}
-            style={{ borderRadius: 16, overflow: 'hidden' }}
-            className={`
-        rounded-2xl overflow-hidden
-        active:scale-95 transition-transform
-        ${className}
-      `}
+            style={[
+                sizeStyles[size],
+                {
+                    backgroundColor: ACCENT,
+                    borderRadius: 100,
+                },
+            ]}
+            className={`active:opacity-80 ${className}`}
         >
-            <LinearGradient
-                colors={['#00C0D4', '#A7F3D0']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                className={`${sizeClasses[size]} items-center justify-center`}
-            >
-                <Text className="text-white font-bold text-center">{children}</Text>
-            </LinearGradient>
+            <Text style={{
+                color: '#0A0A0A',
+                fontWeight: '700',
+                fontSize: fontSizes[size],
+                textAlign: 'center',
+            }}>
+                {children}
+            </Text>
         </Pressable>
     );
 }
 
-/**
- * Secondary outline button
- */
+// ============================================
+// OUTLINE BUTTON — minimal
+// ============================================
 export function OutlineButton({
     children,
     onPress,
@@ -106,94 +109,62 @@ export function OutlineButton({
     return (
         <Pressable
             onPress={onPress}
-            className={`
-        px-6 py-3 rounded-xl
-        border border-white/30
-        bg-white/5
-        active:bg-white/10 transition-colors
-        ${className}
-      `}
+            style={{
+                paddingHorizontal: 28,
+                paddingVertical: 14,
+                borderRadius: 100,
+                borderWidth: 1,
+                borderColor: 'rgba(255,255,255,0.25)',
+            }}
+            className={`active:opacity-70 ${className}`}
         >
-            <Text className="text-white font-semibold text-center">{children}</Text>
+            <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 16, textAlign: 'center' }}>
+                {children}
+            </Text>
         </Pressable>
     );
 }
 
-/**
- * Metric card with icon and value
- */
-export function MetricCard({
-    icon,
-    label,
-    value,
-    subValue,
-    trend,
-    color = 'indigo',
-}: {
-    icon: React.ReactNode;
-    label: string;
-    value: string | number;
-    subValue?: string;
-    trend?: 'up' | 'down' | 'neutral';
-    color?: 'indigo' | 'emerald' | 'amber' | 'rose';
-}) {
-    const colorClasses = {
-        indigo: 'from-[#00C0D4] to-[#A7F3D0]',
-        emerald: 'from-[#A7F3D0] to-teal-500',
-        amber: 'from-[#FDBA74] to-orange-500',
-        rose: 'from-rose-500 to-pink-500',
-    };
-
-    const trendColors = {
-        up: 'text-emerald-400',
-        down: 'text-rose-400',
-        neutral: 'text-gray-400',
-    };
-
-    return (
-        <GlassCard className="flex-1 min-w-[160px]">
-            <View className="flex-row items-center gap-3 mb-3">
-                <View
-                    className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorClasses[color]} items-center justify-center`}
-                >
-                    {icon}
-                </View>
-                <Text className="text-gray-400 text-sm flex-1">{label}</Text>
-            </View>
-            <Text className="text-white text-2xl font-bold">{value}</Text>
-            {subValue && (
-                <Text className={`text-sm mt-1 ${trend ? trendColors[trend] : 'text-gray-500'}`}>
-                    {subValue}
-                </Text>
-            )}
-        </GlassCard>
-    );
-}
-
-/**
- * Section heading
- */
+// ============================================
+// SECTION HEADING — Collins-style editorial
+// ============================================
 export function SectionHeading({
     title,
     subtitle,
     centered = false,
+    light = false,
 }: {
     title: string;
     subtitle?: string;
     centered?: boolean;
+    light?: boolean;
 }) {
-    const isSmall = Dimensions.get('window').width < 600;
+    const isSmall = useIsSmall();
 
     return (
-        <View className={`${isSmall ? 'mb-4' : 'mb-8'} w-full ${centered ? 'items-center' : ''}`}>
+        <View style={{ marginBottom: isSmall ? 32 : 48, width: '100%', alignItems: centered ? 'center' : 'flex-start' }}>
             <Text
-                className={`${isSmall ? 'text-2xl' : 'text-3xl'} font-bold text-white ${centered ? 'text-center' : ''}`}
+                style={{
+                    fontSize: isSmall ? 28 : 42,
+                    fontWeight: '700',
+                    color: light ? '#0A0A0A' : '#FFFFFF',
+                    textAlign: centered ? 'center' : 'left',
+                    lineHeight: isSmall ? 36 : 52,
+                    letterSpacing: -0.5,
+                }}
             >
                 {title}
             </Text>
             {subtitle && (
                 <Text
-                    className={`text-gray-400 ${isSmall ? 'text-sm' : 'text-base'} mt-2 ${centered ? 'text-center' : ''}`}
+                    style={{
+                        color: light ? 'rgba(10,10,10,0.5)' : 'rgba(255,255,255,0.45)',
+                        fontSize: isSmall ? 16 : 18,
+                        marginTop: 12,
+                        textAlign: centered ? 'center' : 'left',
+                        lineHeight: isSmall ? 24 : 28,
+                        maxWidth: 560,
+                    }}
                 >
                     {subtitle}
                 </Text>
@@ -202,9 +173,9 @@ export function SectionHeading({
     );
 }
 
-/**
- * Badge component
- */
+// ============================================
+// BADGE — pill, subtle
+// ============================================
 export function Badge({
     children,
     variant = 'default',
@@ -214,26 +185,41 @@ export function Badge({
     variant?: 'default' | 'success' | 'warning' | 'danger';
     className?: string;
 }) {
-    const variantClasses = {
-        default: 'bg-[#00C0D4]/20 text-[#00C0D4] border-[#00C0D4]/30',
-        success: 'bg-[#A7F3D0]/20 text-[#A7F3D0] border-[#A7F3D0]/30',
-        warning: 'bg-[#FDBA74]/20 text-[#FDBA74] border-[#FDBA74]/30',
-        danger: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    const colors = {
+        default: ACCENT,
+        success: MINT,
+        warning: CORAL,
+        danger: '#F87171',
     };
+
+    const c = colors[variant];
 
     return (
         <View
-            style={{ borderRadius: 8 }}
-            className={`px-3 py-1 rounded-lg border ${variantClasses[variant]} ${className}`}
+            style={{
+                paddingHorizontal: 14,
+                paddingVertical: 6,
+                borderRadius: 100,
+                borderWidth: 1,
+                borderColor: `${c}40`,
+                backgroundColor: `${c}15`,
+            }}
+            className={className}
         >
-            <Text className="text-xs font-medium">{children}</Text>
+            {typeof children === 'string' ? (
+                <Text style={{ color: c, fontSize: 12, fontWeight: '600', letterSpacing: 0.5 }}>
+                    {children}
+                </Text>
+            ) : (
+                children
+            )}
         </View>
     );
 }
 
-/**
- * Feature card for landing page
- */
+// ============================================
+// FEATURE CARD — clean, no heavy glass
+// ============================================
 export function FeatureCard({
     icon,
     title,
@@ -245,23 +231,42 @@ export function FeatureCard({
     description: string;
     highlight?: boolean;
 }) {
+    const isSmall = useIsSmall();
+
     return (
-        <GlassCard
-            gradient={highlight}
-            className={`flex-1 min-w-[280px] ${highlight ? 'border-[#00C0D4]/50' : ''}`}
+        <View
+            style={{
+                flex: 1,
+                minWidth: isSmall ? '100%' : 280,
+                maxWidth: isSmall ? '100%' : 360,
+                padding: 24,
+                borderRadius: 16,
+                backgroundColor: highlight ? 'rgba(0,192,212,0.06)' : 'rgba(255,255,255,0.03)',
+                borderWidth: 1,
+                borderColor: highlight ? 'rgba(0,192,212,0.2)' : 'rgba(255,255,255,0.06)',
+            }}
         >
-            <View className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00C0D4] to-[#A7F3D0] items-center justify-center mb-4">
+            <View style={{
+                width: 48, height: 48, borderRadius: 12,
+                backgroundColor: 'rgba(0,192,212,0.1)',
+                alignItems: 'center', justifyContent: 'center',
+                marginBottom: 16,
+            }}>
                 {icon}
             </View>
-            <Text className="text-white text-xl font-bold mb-2">{title}</Text>
-            <Text className="text-gray-400 leading-relaxed">{description}</Text>
-        </GlassCard>
+            <Text style={{ color: '#FFFFFF', fontSize: 18, fontWeight: '700', marginBottom: 8 }}>
+                {title}
+            </Text>
+            <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, lineHeight: 22 }}>
+                {description}
+            </Text>
+        </View>
     );
 }
 
-/**
- * Stats number with animation placeholder
- */
+// ============================================
+// STAT NUMBER — editorial, large
+// ============================================
 export function StatNumber({
     value,
     label,
@@ -271,19 +276,28 @@ export function StatNumber({
     label: string;
     suffix?: string;
 }) {
+    const isSmall = useIsSmall();
+
     return (
-        <View className="items-center">
-            <Text className="text-4xl md:text-5xl font-bold text-white">
+        <View style={{ alignItems: 'center', minWidth: isSmall ? 100 : 140 }}>
+            <Text style={{
+                fontSize: isSmall ? 40 : 56,
+                fontWeight: '800',
+                color: '#FFFFFF',
+                letterSpacing: -2,
+            }}>
                 {value.toLocaleString()}{suffix}
             </Text>
-            <Text className="text-gray-400 mt-2">{label}</Text>
+            <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, marginTop: 4, textAlign: 'center' }}>
+                {label}
+            </Text>
         </View>
     );
 }
 
-/**
- * Testimonial card — with avatar initials
- */
+// ============================================
+// TESTIMONIAL CARD — minimal
+// ============================================
 export function TestimonialCard({
     quote,
     author,
@@ -295,47 +309,43 @@ export function TestimonialCard({
     role: string;
     avatar?: string;
 }) {
-    // Generate initials from author name
-    const initials = author
-        .split(' ')
-        .map(n => n[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase();
+    const initials = author.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    const isSmall = useIsSmall();
 
     return (
-        <GlassCard className="max-w-md">
-            {/* Stars */}
-            <View className="flex-row gap-1 mb-3">
-                {[1, 2, 3, 4, 5].map(i => (
-                    <Text key={i} style={{ color: '#FDBA74', fontSize: 14 }}>★</Text>
-                ))}
-            </View>
-            <Text className="text-gray-300 text-base leading-relaxed mb-4">"{quote}"</Text>
-            <View className="flex-row items-center gap-3">
-                <View
-                    className="w-10 h-10 rounded-full items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg, #00C0D4, #A7F3D0)' }}
-                >
-                    <LinearGradient
-                        colors={['#00C0D4', '#A7F3D0']}
-                        style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}
-                    >
-                        <Text style={{ color: '#0A0A0A', fontWeight: '700', fontSize: 14 }}>{initials}</Text>
-                    </LinearGradient>
+        <View style={{
+            flex: 1,
+            minWidth: isSmall ? '100%' : 280,
+            maxWidth: isSmall ? '100%' : 380,
+            padding: 28,
+            borderRadius: 16,
+            backgroundColor: 'rgba(255,255,255,0.03)',
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.06)',
+        }}>
+            <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 16, lineHeight: 26, marginBottom: 20 }}>
+                "{quote}"
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                <View style={{
+                    width: 36, height: 36, borderRadius: 18,
+                    backgroundColor: ACCENT,
+                    alignItems: 'center', justifyContent: 'center',
+                }}>
+                    <Text style={{ color: '#0A0A0A', fontWeight: '700', fontSize: 13 }}>{initials}</Text>
                 </View>
                 <View>
-                    <Text className="text-white font-semibold">{author}</Text>
-                    <Text className="text-gray-500 text-sm">{role}</Text>
+                    <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 14 }}>{author}</Text>
+                    <Text style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12 }}>{role}</Text>
                 </View>
             </View>
-        </GlassCard>
+        </View>
     );
 }
 
-/**
- * Traction stat card — for investor section
- */
+// ============================================
+// TRACTION STAT — bold number
+// ============================================
 export function TractionStat({
     value,
     label,
@@ -345,28 +355,39 @@ export function TractionStat({
     label: string;
     color?: 'teal' | 'mint' | 'coral';
 }) {
-    const colorMap = {
-        teal: '#00C0D4',
-        mint: '#A7F3D0',
-        coral: '#FDBA74',
-    };
+    const colorMap = { teal: ACCENT, mint: MINT, coral: CORAL };
+    const isSmall = useIsSmall();
 
     return (
-        <GlassCard className="flex-1 min-w-[140px] items-center p-6">
-            <Text
-                className="text-3xl md:text-4xl font-bold text-center"
-                style={{ color: colorMap[color] }}
-            >
+        <View style={{
+            flex: 1,
+            minWidth: isSmall ? '45%' : 160,
+            alignItems: 'center',
+            paddingVertical: 24,
+            paddingHorizontal: 16,
+            borderRadius: 16,
+            backgroundColor: 'rgba(255,255,255,0.03)',
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.06)',
+        }}>
+            <Text style={{
+                color: colorMap[color],
+                fontSize: isSmall ? 32 : 40,
+                fontWeight: '800',
+                letterSpacing: -1,
+            }}>
                 {value}
             </Text>
-            <Text className="text-gray-400 text-sm text-center mt-2">{label}</Text>
-        </GlassCard>
+            <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, textAlign: 'center', marginTop: 6 }}>
+                {label}
+            </Text>
+        </View>
     );
 }
 
-/**
- * Roadmap step card
- */
+// ============================================
+// ROADMAP CARD — timeline
+// ============================================
 export function RoadmapCard({
     quarter,
     title,
@@ -381,48 +402,53 @@ export function RoadmapCard({
     isLast?: boolean;
 }) {
     const statusConfig = {
-        completed: { color: '#A7F3D0', label: '✓', bg: 'bg-[#A7F3D0]/20 border-[#A7F3D0]/40' },
-        in_progress: { color: '#00C0D4', label: '→', bg: 'bg-[#00C0D4]/20 border-[#00C0D4]/40' },
-        planned: { color: '#6b7280', label: '○', bg: 'bg-white/5 border-white/10' },
+        completed: { color: MINT, icon: 'checkmark' as const },
+        in_progress: { color: ACCENT, icon: 'arrow-forward' as const },
+        planned: { color: '#6b7280', icon: 'ellipse-outline' as const },
     };
 
     const config = statusConfig[status];
 
     return (
-        <View className="flex-row gap-4 mb-6">
-            {/* Timeline */}
-            <View className="items-center" style={{ width: 40 }}>
-                <View
-                    className={`w-10 h-10 rounded-full border-2 items-center justify-center ${config.bg}`}
-                >
-                    <Text style={{ color: config.color, fontWeight: '700', fontSize: 16 }}>
-                        {config.label}
-                    </Text>
+        <View style={{ flexDirection: 'row', gap: 16, marginBottom: 24 }}>
+            <View style={{ alignItems: 'center', width: 40 }}>
+                <View style={{
+                    width: 40, height: 40, borderRadius: 20,
+                    borderWidth: 2, borderColor: config.color,
+                    backgroundColor: `${config.color}15`,
+                    alignItems: 'center', justifyContent: 'center',
+                }}>
+                    <Ionicons name={config.icon} size={16} color={config.color} />
                 </View>
                 {!isLast && (
-                    <View
-                        className="flex-1 w-0.5 mt-2"
-                        style={{ backgroundColor: status === 'completed' ? '#A7F3D0' : '#374151', minHeight: 32 }}
-                    />
+                    <View style={{
+                        flex: 1, width: 2, marginTop: 8,
+                        backgroundColor: status === 'completed' ? MINT : '#374151',
+                        minHeight: 32,
+                    }} />
                 )}
             </View>
-
-            {/* Content */}
-            <View className="flex-1 pb-4">
-                <Text className="text-xs font-mono uppercase tracking-wider mb-1"
-                    style={{ color: config.color }}>
+            <View style={{ flex: 1, paddingBottom: 8 }}>
+                <Text style={{
+                    color: config.color, fontSize: 11, fontWeight: '700',
+                    letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4,
+                }}>
                     {quarter}
                 </Text>
-                <Text className="text-white font-bold text-lg mb-1">{title}</Text>
-                <Text className="text-gray-400 text-sm leading-relaxed">{description}</Text>
+                <Text style={{ color: '#FFFFFF', fontWeight: '700', fontSize: 17, marginBottom: 4 }}>
+                    {title}
+                </Text>
+                <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, lineHeight: 22 }}>
+                    {description}
+                </Text>
             </View>
         </View>
     );
 }
 
-/**
- * Pricing tier card for business model section
- */
+// ============================================
+// PRICING CARD — clean tiers
+// ============================================
 export function PricingCard({
     name,
     price,
@@ -438,44 +464,56 @@ export function PricingCard({
     badge?: string;
     highlighted?: boolean;
 }) {
+    const isSmall = useIsSmall();
+
     return (
-        <GlassCard
-            gradient={highlighted}
-            className={`flex-1 min-w-[240px] max-w-[320px] relative ${highlighted ? 'border-[#00C0D4]/60' : ''}`}
-        >
+        <View style={{
+            flex: 1,
+            minWidth: isSmall ? '100%' : 240,
+            maxWidth: isSmall ? '100%' : 320,
+            padding: 28,
+            borderRadius: 16,
+            backgroundColor: highlighted ? 'rgba(0,192,212,0.06)' : 'rgba(255,255,255,0.03)',
+            borderWidth: highlighted ? 2 : 1,
+            borderColor: highlighted ? 'rgba(0,192,212,0.3)' : 'rgba(255,255,255,0.06)',
+            position: 'relative',
+        }}>
             {badge && (
-                <View
-                    className="absolute -top-3 left-1/2 px-3 py-1 rounded-full"
-                    style={{
-                        transform: [{ translateX: -40 }],
-                        backgroundColor: highlighted ? '#00C0D4' : '#374151',
-                    }}
-                >
-                    <Text style={{ color: highlighted ? '#0A0A0A' : '#9ca3af', fontSize: 11, fontWeight: '700' }}>
+                <View style={{
+                    position: 'absolute', top: -12, alignSelf: 'center',
+                    paddingHorizontal: 12, paddingVertical: 4, borderRadius: 100,
+                    backgroundColor: highlighted ? ACCENT : '#374151',
+                }}>
+                    <Text style={{
+                        color: highlighted ? '#0A0A0A' : '#9ca3af',
+                        fontSize: 11, fontWeight: '700',
+                    }}>
                         {badge}
                     </Text>
                 </View>
             )}
 
-            <Text className="text-gray-400 text-sm mb-1">{name}</Text>
-            <Text className="text-white text-3xl font-bold mb-1">{price}</Text>
-            <Text className="text-gray-500 text-sm mb-5">{description}</Text>
+            <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, marginBottom: 4 }}>{name}</Text>
+            <Text style={{ color: '#FFFFFF', fontSize: 32, fontWeight: '800', letterSpacing: -1, marginBottom: 4 }}>
+                {price}
+            </Text>
+            <Text style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, marginBottom: 20 }}>{description}</Text>
 
-            <View className="gap-2">
+            <View style={{ gap: 10 }}>
                 {features.map((feature, i) => (
-                    <View key={i} className="flex-row items-center gap-2">
-                        <Text style={{ color: '#A7F3D0', fontSize: 14 }}>✓</Text>
-                        <Text className="text-gray-300 text-sm">{feature}</Text>
+                    <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <Ionicons name="checkmark" size={14} color={MINT} />
+                        <Text style={{ color: 'rgba(255,255,255,0.65)', fontSize: 14 }}>{feature}</Text>
                     </View>
                 ))}
             </View>
-        </GlassCard>
+        </View>
     );
 }
 
-/**
- * Vanguard metric showcase card
- */
+// ============================================
+// VANGUARD METRIC CARD — proprietary metrics
+// ============================================
 export function VanguardMetricCard({
     acronym,
     title,
@@ -489,35 +527,96 @@ export function VanguardMetricCard({
     badge: string;
     color?: 'teal' | 'mint' | 'coral';
 }) {
-    const colorMap = {
-        teal: { primary: '#00C0D4', bg: 'bg-[#00C0D4]/10', border: 'border-[#00C0D4]/30' },
-        mint: { primary: '#A7F3D0', bg: 'bg-[#A7F3D0]/10', border: 'border-[#A7F3D0]/30' },
-        coral: { primary: '#FDBA74', bg: 'bg-[#FDBA74]/10', border: 'border-[#FDBA74]/30' },
-    };
-
+    const colorMap = { teal: ACCENT, mint: MINT, coral: CORAL };
     const c = colorMap[color];
+    const isSmall = useIsSmall();
 
     return (
-        <GlassCard className={`flex-1 min-w-[260px] border ${c.border}`}>
-            {/* Acronym badge */}
-            <View className={`w-14 h-14 rounded-2xl ${c.bg} items-center justify-center mb-4`}>
-                <Text style={{ color: c.primary, fontSize: 20, fontWeight: '900', fontFamily: 'monospace' }}>
+        <View style={{
+            flex: 1,
+            minWidth: isSmall ? '100%' : 260,
+            maxWidth: isSmall ? '100%' : 340,
+            padding: 28,
+            borderRadius: 16,
+            backgroundColor: 'rgba(255,255,255,0.03)',
+            borderWidth: 1,
+            borderColor: `${c}30`,
+        }}>
+            <View style={{
+                width: 56, height: 56, borderRadius: 16,
+                backgroundColor: `${c}15`,
+                alignItems: 'center', justifyContent: 'center',
+                marginBottom: 20,
+            }}>
+                <Text style={{
+                    color: c, fontSize: 20, fontWeight: '900',
+                    fontFamily: 'monospace',
+                }}>
                     {acronym}
                 </Text>
             </View>
 
-            <View className="flex-row items-center gap-2 mb-2">
-                <Text className="text-white font-bold text-lg">{title}</Text>
-            </View>
+            <Text style={{ color: '#FFFFFF', fontWeight: '700', fontSize: 17, marginBottom: 8 }}>
+                {title}
+            </Text>
+            <Text style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 22, marginBottom: 16 }}>
+                {description}
+            </Text>
 
-            <Text className="text-gray-400 text-sm leading-relaxed mb-4">{description}</Text>
-
-            <View
-                className="px-2 py-1 rounded-md self-start"
-                style={{ backgroundColor: `${c.primary}20`, borderWidth: 1, borderColor: `${c.primary}40` }}
-            >
-                <Text style={{ color: c.primary, fontSize: 11, fontWeight: '700' }}>{badge}</Text>
+            <View style={{
+                paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6,
+                backgroundColor: `${c}15`, borderWidth: 1, borderColor: `${c}30`,
+                alignSelf: 'flex-start',
+            }}>
+                <Text style={{ color: c, fontSize: 11, fontWeight: '700' }}>{badge}</Text>
             </View>
-        </GlassCard>
+        </View>
+    );
+}
+
+// ============================================
+// METRIC CARD — kept for app usage
+// ============================================
+export function MetricCard({
+    icon,
+    label,
+    value,
+    subValue,
+    trend,
+    color = 'indigo',
+}: {
+    icon: React.ReactNode;
+    label: string;
+    value: string | number;
+    subValue?: string;
+    trend?: 'up' | 'down' | 'neutral';
+    color?: 'indigo' | 'emerald' | 'amber' | 'rose';
+}) {
+    return (
+        <View style={{
+            flex: 1, minWidth: 160, padding: 20, borderRadius: 16,
+            backgroundColor: 'rgba(255,255,255,0.04)',
+            borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)',
+        }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                <View style={{
+                    width: 40, height: 40, borderRadius: 10,
+                    backgroundColor: 'rgba(0,192,212,0.1)',
+                    alignItems: 'center', justifyContent: 'center',
+                }}>
+                    {icon}
+                </View>
+                <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, flex: 1 }}>{label}</Text>
+            </View>
+            <Text style={{ color: '#FFFFFF', fontSize: 24, fontWeight: '700' }}>{value}</Text>
+            {subValue && (
+                <Text style={{
+                    fontSize: 13, marginTop: 4,
+                    color: trend === 'up' ? MINT : trend === 'down' ? '#F87171' : 'rgba(255,255,255,0.4)',
+                }}>
+                    {subValue}
+                </Text>
+            )}
+        </View>
     );
 }
