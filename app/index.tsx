@@ -96,8 +96,8 @@ function HeroSection() {
             paddingBottom: isSmall ? 80 : 120,
         }}>
             <View style={{ maxWidth: 900, alignItems: 'center' }}>
-                <Badge variant="success">
-                    <Text style={{ color: '#A7F3D0', fontSize: 12, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
+                <Badge>
+                    <Text style={{ color: ACCENT, fontSize: 12, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
                         {t('landing.hero.badge')}
                     </Text>
                 </Badge>
@@ -189,10 +189,10 @@ function FeaturesSection() {
     return (
         <View style={{ paddingHorizontal: 24, paddingVertical: 120 }}>
             <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
-                <SectionHeading 
+                <SectionHeading
                     title={t('landing.features.title')}
                     subtitle={t('landing.features.subtitle')}
-                    badge="Features"
+                    badge={t('landing.features.badge')}
                 />
 
                 <View style={{
@@ -223,17 +223,17 @@ function VanguardSection() {
     return (
         <View style={{ paddingHorizontal: 24, paddingVertical: 120, backgroundColor: 'rgba(255,255,255,0.02)' }}>
             <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
-                <SectionHeading 
-                    title="Vanguard Metrics"
-                    subtitle="Proprietary indicators for deep financial insight"
-                    badge="Innovation"
+                <SectionHeading
+                    title={t('landing.vanguard.title')}
+                    subtitle={t('landing.vanguard.subtitle')}
+                    badge={t('landing.vanguard.badge')}
                 />
 
                 <View style={{ flexDirection: isSmall ? 'column' : 'row', gap: 24 }}>
                     {[
-                        { id: 'OFI', name: 'Operating Flow Index', desc: 'Real-time operational health' },
-                        { id: 'TFDI', name: 'Total Financial Dependency', desc: 'Risk and dependency analysis' },
-                        { id: 'SER', name: 'Stability Efficiency Ratio', desc: 'Growth sustainability metric' }
+                        { id: 'OFI', name: t('landing.vanguard.ofi_name'), desc: t('landing.vanguard.ofi_desc') },
+                        { id: 'TFDI', name: t('landing.vanguard.tfdi_name'), desc: t('landing.vanguard.tfdi_desc') },
+                        { id: 'SER', name: t('landing.vanguard.ser_name'), desc: t('landing.vanguard.ser_desc') }
                     ].map((m, i) => (
                         <GlassCard key={i} style={{ flex: 1 }}>
                             <Text style={{ color: ACCENT, fontSize: 32, fontWeight: '900', marginBottom: 16, fontFamily: 'Inter-Bold' }}>{m.id}</Text>
@@ -261,9 +261,9 @@ function TestimonialsSection() {
     return (
         <View style={{ paddingHorizontal: 24, paddingVertical: 120 }}>
             <View style={{ maxWidth: 1200, marginHorizontal: 'auto', width: '100%' }}>
-                <SectionHeading 
+                <SectionHeading
                     title={t('landing.testimonials.title')}
-                    badge="Testimonials"
+                    badge={t('landing.testimonials.badge')}
                 />
 
                 <View style={{ flexDirection: isSmall ? 'column' : 'row', gap: 24 }}>

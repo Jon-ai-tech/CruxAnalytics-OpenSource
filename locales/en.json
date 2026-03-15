@@ -482,7 +482,7 @@
       "badge": "100% Free • No registration",
       "title": "Discover if your business is at risk",
       "subtitle": "80% of businesses fail because they don't know their numbers. CruxAnalytics tells you exactly what to do to avoid it.",
-      "cta": "Analyze my business →",
+      "cta": "Analyze my business",
       "privacy": "100% private data",
       "results": "Results in 2 min",
       "ai": "With explanatory AI"
@@ -516,6 +516,7 @@
       "visual_health": "Healthy"
     },
     "features": {
+      "badge": "Features",
       "title": "6 tools. One single goal.",
       "subtitle": "Make better decisions for your business",
       "f1_title": "Break-Even Point",
@@ -531,7 +532,19 @@
       "f6_title": "Marketing ROI",
       "f6_desc": "Measure which channel gives you the best return for every dollar invested."
     },
+    "vanguard": {
+      "badge": "Innovation",
+      "title": "Vanguard Metrics",
+      "subtitle": "Proprietary indicators for deep financial insight",
+      "ofi_name": "Operating Flow Index",
+      "ofi_desc": "Real-time operational health",
+      "tfdi_name": "Total Financial Dependency",
+      "tfdi_desc": "Risk and dependency analysis",
+      "ser_name": "Stability Efficiency Ratio",
+      "ser_desc": "Growth sustainability metric"
+    },
     "testimonials": {
+      "badge": "Testimonials",
       "title": "What entrepreneurs are saying",
       "t1_quote": "I discovered I was losing money on a product. Now I know exactly how much to charge.",
       "t1_author": "Maria Garcia",
@@ -546,7 +559,7 @@
     "cta": {
       "title": "Ready to know the truth about your business?",
       "subtitle": "In 2 minutes you will have more clarity than in months of intuition. No cost. No registration. No tricks.",
-      "button": "Start free analysis →",
+      "button": "Start free analysis",
       "privacy": "Your data never leaves your device. 100% private."
     },
     "footer": {
