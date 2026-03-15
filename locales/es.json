@@ -675,7 +675,7 @@
       "badge": "100% Gratis • Sin registro",
       "title": "Descubre si tu negocio está en riesgo",
       "subtitle": "El 80% de los negocios quiebran porque no conocen sus números. CruxAnalytics te dice exactamente qué hacer para evitarlo.",
-      "cta": "Analizar mi negocio →",
+      "cta": "Analizar mi negocio",
       "privacy": "Datos 100% privados",
       "results": "Resultados en 2 min",
       "ai": "Con IA explicativa"
@@ -709,6 +709,7 @@
       "visual_health": "Saludable"
     },
     "features": {
+      "badge": "Características",
       "title": "6 herramientas. Un solo objetivo.",
       "subtitle": "Tomar mejores decisiones para tu negocio",
       "f1_title": "Punto de Equilibrio",
@@ -724,7 +725,19 @@
       "f6_title": "ROI de Marketing",
       "f6_desc": "Mide qué canal te da mejor retorno por cada peso invertido."
     },
+    "vanguard": {
+      "badge": "Innovación",
+      "title": "Métricas Vanguard",
+      "subtitle": "Indicadores propietarios para una visión financiera profunda",
+      "ofi_name": "Índice de Flujo Operativo",
+      "ofi_desc": "Salud operativa en tiempo real",
+      "tfdi_name": "Dependencia Financiera Total",
+      "tfdi_desc": "Análisis de riesgo y dependencia",
+      "ser_name": "Ratio de Eficiencia Estable",
+      "ser_desc": "Métrica de sostenibilidad del crecimiento"
+    },
     "testimonials": {
+      "badge": "Testimonios",
       "title": "Lo que dicen los emprendedores",
       "t1_quote": "Descubrí que estaba perdiendo dinero en un producto. Ahora sé exactamente cuánto cobrar.",
       "t1_author": "María García",
@@ -739,7 +752,7 @@
     "cta": {
       "title": "¿Listo para conocer la verdad sobre tu negocio?",
       "subtitle": "En 2 minutos tendrás más claridad que en meses de intuición. Sin costo. Sin registro. Sin trucos.",
-      "button": "Comenzar análisis gratis →",
+      "button": "Comenzar análisis gratis",
       "privacy": "Tus datos nunca salen de tu dispositivo. 100% privado."
     },
     "footer": {
